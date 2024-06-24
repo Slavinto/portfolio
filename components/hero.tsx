@@ -7,7 +7,7 @@ import {
     heroIntroductionText,
     heroCTAButtonText,
 } from "@/data";
-import { TextGenerateEffect } from "./ui/text-generate-effect";
+import { TextGenerateEffect } from "./ui";
 
 const Hero = () => {
     const words = "Bringing you fast and reliable solutions for the web";

@@ -1,6 +1,7 @@
 "use client";
 import Hero from "@/components/hero";
 import ThemeToggleButton from "@/components/theme-toggle-button";
+import { DotBackground } from "@/components/ui";
 
 export default function Home() {
     return (

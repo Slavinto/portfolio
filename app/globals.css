@@ -71,13 +71,17 @@ body {
 
 @layer base {
     * {
-        @apply border-border !scroll-smooth;
+        /* @apply border-border !scroll-smooth; */
     }
 }
 
 @layer utilities {
-    .btn-bg {
-        background-color: theme("colors.blue.500 /75%");
+    .btn-gradient {
+        background: linear-gradient(
+            90deg,
+            rgba(22, 26, 49, 1) 0%,
+            rgba(6, 9, 31, 1) 100%
+        );
     }
     .text-balance {
         text-wrap: balance;
