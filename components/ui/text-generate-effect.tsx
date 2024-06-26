@@ -6,9 +6,11 @@ import { cn } from "@/utils/cn";
 export const TextGenerateEffect = ({
     words,
     className,
+    textClassNames,
 }: {
     words: string;
     className?: string;
+    textClassNames?: string;
 }) => {
     const [scope, animate] = useAnimate();
     let wordsArray = words.split(" ");
@@ -32,13 +34,11 @@ export const TextGenerateEffect = ({
                     return (
                         <motion.span
                             key={word + idx}
-                            className={`dark:text-white text-black font-black
-                                ${
-                                    word === "reliable" || word === "fast"
-                                        ? "text-purple-300"
-                                        : "text-black-200"
-                                }
-                                 opacity-0`}
+                            className={`font-black dark:text-white text-black-100 ${
+                                word === "fast" || word === "reliable"
+                                    ? "!text-purple"
+                                    : ""
+                            } opacity-0`}
                         >
                             {word}{" "}
                         </motion.span>
@@ -49,11 +49,11 @@ export const TextGenerateEffect = ({
     };
 
     return (
-        <div className={cn("font-bold", className)}>
-            <div className='mt-4'>
-                <div className=' dark:text-white text-black text-2xl leading-snug tracking-wide'>
-                    {renderWords()}
-                </div>
+        <div className={cn(className)}>
+            <div
+                className={`text-2xl leading-snug tracking-wide ${textClassNames}`}
+            >
+                {renderWords()}
             </div>
         </div>
     );

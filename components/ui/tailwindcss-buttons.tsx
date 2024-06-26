@@ -3,16 +3,30 @@ import React from "react";
 import { IconClipboard } from "@tabler/icons-react";
 import { cn } from "@/utils/cn";
 
+const Icon = ({ icon }: { icon?: string | React.ReactNode }) => {
+    return (
+        <>
+            {icon ? (
+                icon
+            ) : (
+                <IconClipboard className='absolute top-2 right-2 text-neutral-300 group-hover/btn:block hidden h-4 w-4 transition duration-200' />
+            )}
+        </>
+    );
+};
+
 export const ButtonsCard = ({
     children,
     className,
     onClick,
     icon,
+    iconPosition = "right",
 }: {
     children?: React.ReactNode;
     className?: string;
     onClick?: () => void;
     icon?: string | React.ReactNode;
+    iconPosition?: "left" | "right";
 }) => {
     return (
         <div
@@ -22,14 +36,9 @@ export const ButtonsCard = ({
                 className
             )}
         >
-            <div className='absolute inset-0 dark:bg-dot-white/[0.1] bg-dot-black/[0.1]' />
-            {icon ? (
-                icon
-            ) : (
-                <IconClipboard className='absolute top-2 right-2 text-neutral-300 group-hover/btn:block hidden h-4 w-4 transition duration-200' />
-            )}
-
+            {icon && iconPosition === "left" && <Icon icon={icon} />}
             <div className='relative z-40'>{children}</div>
+            {icon && iconPosition === "right" && <Icon icon={icon} />}
         </div>
     );
 };

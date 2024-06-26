@@ -83,6 +83,24 @@ body {
             rgba(6, 9, 31, 1) 100%
         );
     }
+
+    .btn-gradient-light {
+        background: linear-gradient(
+            -90deg,
+            rgba(203, 172, 249, 1) 0%,
+            rgba(235, 235, 235, 1) 100%
+        );
+    }
+
+    .full-width {
+        width: 100vw;
+        position: relative;
+        left: 50%;
+        right: 50%;
+        margin-left: -50vw;
+        margin-right: -50vw;
+    }
+
     .text-balance {
         text-wrap: balance;
     }

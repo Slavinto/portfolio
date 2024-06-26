@@ -7,19 +7,34 @@ import {
     heroIntroductionText,
     heroCTAButtonText,
 } from "@/data";
-import { TextGenerateEffect } from "./ui";
+import { ButtonsCard, DotBackground, TextGenerateEffect } from "./ui";
+import { BsArrow90DegLeft } from "react-icons/bs";
 
 const Hero = () => {
-    const words = "Bringing you fast and reliable solutions for the web";
+    const handleClickCta = () => {};
+
     return (
-        <section className='w-full h-32 flex flex-col items-center'>
-            <h3 className='uppercase font-normal'>{heroSubheading}</h3>
-            <h1 className='text-white text-center font-bold text-6xl '>
-                <TextGenerateEffect
-                    words={heroMainHeading}
-                    className='!text-white-100 font-bold text-5xl'
-                />
-            </h1>
+        <section className='w-full h-32 pt-[150px]'>
+            <DotBackground className={"w-full"}>
+                <div className='flex flex-col items-center text-center gap-3'>
+                    <h3 className='uppercase font-normal text-xs md:text-base'>
+                        {heroSubheading}
+                    </h3>
+                    <TextGenerateEffect
+                        words={heroMainHeading}
+                        className='relative z-10 max-w-[400px] md:max-w-[670px] xl:max-w-[760px]'
+                        textClassNames='font-bold !text-white-100 text-3xl md:text-5xl lg:text-6xl'
+                    />
+                    <p className=''>{heroIntroductionText}</p>
+                    <ButtonsCard
+                        className='dark:btn-gradient btn-gradient-light w-full md:w-[200px] lg:w-[220px] h-[66px] gap-1'
+                        icon={<BsArrow90DegLeft className='rotate-90' />}
+                        onClick={handleClickCta}
+                    >
+                        {heroCTAButtonText}
+                    </ButtonsCard>
+                </div>
+            </DotBackground>
         </section>
     );
 };
