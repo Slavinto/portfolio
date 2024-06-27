@@ -14,7 +14,7 @@ const Hero = () => {
     const handleClickCta = () => {};
 
     return (
-        <section className='w-full h-32 pt-[150px]'>
+        <section className='w-full pt-[150px] h-fit'>
             <DotBackground className={"w-full"}>
                 <div className='flex flex-col items-center text-center gap-3'>
                     <h3 className='uppercase font-normal text-xs md:text-base'>
