@@ -40,7 +40,7 @@ body {
 
     .dark {
         --background: hsl(233, 100%, 5%);
-        --foreground: hsl(0 0% 98%);
+        --foreground: hsl(0, 0%, 98%);
 
         --card: hsl(233 10% 3.9%);
         --card-foreground: hsl(0 0% 98%);
@@ -72,6 +72,7 @@ body {
 @layer base {
     * {
         /* @apply border-border !scroll-smooth; */
+        @apply dark:text-white-300 text-black-200;
     }
 }
 

@@ -7,7 +7,7 @@ import {
     heroIntroductionText,
     heroCTAButtonText,
 } from "@/data";
-import { ButtonsCard, DotBackground, TextGenerateEffect } from "./ui";
+import { ButtonsCard, DotBackground, Scroller, TextGenerateEffect } from "./ui";
 import { BsArrow90DegLeft } from "react-icons/bs";
 
 const Hero = () => {
@@ -17,6 +17,7 @@ const Hero = () => {
         <section className='w-full pt-[150px] h-fit'>
             <DotBackground className={"w-full"}>
                 <div className='flex flex-col items-center text-center gap-3'>
+                    <Scroller />
                     <h3 className='uppercase font-normal text-xs md:text-base'>
                         {heroSubheading}
                     </h3>

@@ -21,7 +21,14 @@ const ThemeToggleButton = () => {
             className='fixed z-10 top-4 right-4 border-2 rounded-xl w-12 h-12 flex items-center justify-center dark:btn-gradient btn-gradient-light'
             icon={
                 theme === "dark"
-                    ? domLoaded && <LuSunMedium size={24} />
+                    ? domLoaded && (
+                          <LuSunMedium
+                              color={
+                                  theme === "dark" ? "white-300" : "black-200"
+                              }
+                              size={24}
+                          />
+                      )
                     : domLoaded && <LuMoon size={24} />
             }
         />

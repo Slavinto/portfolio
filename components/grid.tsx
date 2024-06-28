@@ -56,6 +56,9 @@ const SkeletonOne = () => {
                 duration: 0.2,
             },
         },
+        tap: {
+            scale: 2,
+        },
     };
 
     return (
