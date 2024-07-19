@@ -6,17 +6,20 @@ import { gridItems } from "@/data";
 
 export function Grid() {
     return (
-        <BentoGrid className='max-w-4xl mx-auto md:auto-rows-[20rem] pt-16'>
-            {gridItems.map((item, i) => (
-                <BentoGridItem
-                    key={i}
-                    title={item.title}
-                    description={item.description}
-                    header={item.header}
-                    className={cn("[&>p:text-lg]", item.className)}
-                    icon={item.icon}
-                />
-            ))}
+        <BentoGrid className='max-w-4xl mx-auto auto-rows-[12rem] md:auto-rows-[10rem] pt-[10rem]'>
+            {gridItems.map(
+                ({ id, title, description, header, className, icon }) => (
+                    <BentoGridItem
+                        key={id}
+                        id={id}
+                        title={title}
+                        description={description}
+                        header={header}
+                        className={cn("relative [&>p:text-lg]", className)}
+                        icon={icon}
+                    />
+                )
+            )}
         </BentoGrid>
     );
 }

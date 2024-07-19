@@ -70,6 +70,9 @@ body {
 }
 
 @layer base {
+    body {
+        @apply h-screen;
+    }
     * {
         /* @apply border-border !scroll-smooth; */
         @apply dark:text-white-300 text-black-200;
@@ -77,6 +80,17 @@ body {
 }
 
 @layer utilities {
+    .center-absolute {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+    }
+
+    .icon-bg {
+        background-color: rgb(72, 46, 158);
+    }
+
     .btn-gradient {
         background: linear-gradient(
             90deg,
@@ -90,6 +104,22 @@ body {
             -90deg,
             rgba(203, 172, 249, 1) 0%,
             rgba(235, 235, 235, 1) 100%
+        );
+    }
+
+    .header-gradient-light {
+        background: radial-gradient(
+            ellipse,
+            rgb(252, 243, 255) 12%,
+            rgb(203, 172, 249) 72%
+        );
+    }
+
+    .header-gradient-dark {
+        background: radial-gradient(
+            ellipse,
+            rgba(72, 46, 158, 0.9489846964176295) 12%,
+            rgba(1, 8, 25, 0.96) 72%
         );
     }
 

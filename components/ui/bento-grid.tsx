@@ -1,4 +1,5 @@
 import { cn } from "@/utils/cn";
+import { BackgroundGradientAnimation } from "./background-gradient-animation";
 
 export const BentoGrid = ({
     className,
@@ -10,7 +11,7 @@ export const BentoGrid = ({
     return (
         <div
             className={cn(
-                "grid md:auto-rows-[18rem] grid-cols-1 md:grid-cols-3 gap-4 max-w-7xl mx-auto ",
+                "grid grid-cols-1 md:grid-cols-3 gap-4 max-w-7xl mx-auto ",
                 className
             )}
         >
@@ -20,12 +21,14 @@ export const BentoGrid = ({
 };
 
 export const BentoGridItem = ({
+    id,
     className,
     title,
     description,
     header,
     icon,
 }: {
+    id: number;
     className?: string;
     title?: string | React.ReactNode;
     description?: string | React.ReactNode;
@@ -34,10 +37,15 @@ export const BentoGridItem = ({
 }) => {
     return (
         <div
-            className={cn(
-                "row-span-1 rounded-xl group/bento hover:shadow-xl transition duration-200 shadow-input dark:shadow-none p-4 dark:bg-black dark:border-white/[0.2] bg-white border border-transparent justify-between flex flex-col space-y-4",
-                className
-            )}
+            className={`${
+                id === 1
+                    ? "md:col-start-1 md:col-end-1 md:row-start-1 md:row-end-2"
+                    : id === 2
+                    ? "md:col-start-1 md:col-end-1 md:row-start-2 md:row-end-3"
+                    : id === 3
+                    ? "md:col-start-2 md:col-end-4 md:row-start-1"
+                    : "col-start-auto col-end-auto"
+            } rounded-xl group/bento hover:shadow-xl transition duration-200 shadow-input dark:shadow-none p-4 dark:bg-black-100 dark:border-white/[0.2] bg-white border border-transparent justify-between flex flex-col ${className}`}
         >
             {header}
             <div className='group-hover/bento:translate-x-2 transition duration-200'>
@@ -49,6 +57,11 @@ export const BentoGridItem = ({
                     {description}
                 </div>
             </div>
+            {id === 4 ? (
+                <BackgroundGradientAnimation containerClassName='absolute -z-10 w-full h-full rounded-xl' />
+            ) : (
+                <div className='absolute left-0 top-0 -z-10 w-full h-full rounded-xl dark:header-gradient-dark header-gradient-light' />
+            )}
         </div>
     );
 };
