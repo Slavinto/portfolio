@@ -73,13 +73,22 @@ body {
     body {
         @apply h-screen;
     }
+
     * {
         /* @apply border-border !scroll-smooth; */
         @apply dark:text-white-300 text-black-200;
     }
+
+    path {
+        @apply themed-text-icons;
+    }
 }
 
 @layer utilities {
+    .themed-text-icons {
+        @apply text-neutral-600 dark:text-neutral-200 border-neutral-600 dark:border-neutral-200;
+    }
+
     .center-absolute {
         position: absolute;
         left: 50%;

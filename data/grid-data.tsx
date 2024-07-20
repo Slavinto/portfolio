@@ -1,20 +1,84 @@
 import { LuBook } from "react-icons/lu";
-import { FaReact } from "react-icons/fa";
+import { FaReact, FaCheck, FaRegCopy } from "react-icons/fa";
 import { BsBinoculars } from "react-icons/bs";
 import { SiGraphql } from "react-icons/si";
+import { TbBrandTypescript } from "react-icons/tb";
 import { RiTailwindCssLine, RiNextjsLine } from "react-icons/ri";
 
 import { motion } from "framer-motion";
 import Image from "next/image";
+import { ButtonsCard } from "@/components/ui";
+import { useState } from "react";
 
 const HeaderOne = () => {
     return <div className=''></div>;
 };
 
+const HeaderThree = () => {
+    return (
+        <div className='flex items-center justify-center'>
+            <div className='flex center-absolute '>
+                {techStackItems.map(({ id, icon }) => (
+                    <div
+                        key={id}
+                        className={`${
+                            id !== 1 ? "-ml-1 " : ""
+                        }p-2 rounded-full border dark:border-white-100 border-black-400 dark:icon-bg bg-primary-foreground`}
+                    >
+                        {icon}
+                    </div>
+                ))}
+            </div>
+        </div>
+    );
+};
+
+const HeaderFour = () => {
+    const copy = <FaRegCopy className='size-5' />;
+    const check = <FaCheck className='size-5' />;
+
+    const text1 = "Copy My Email";
+    const text2 = "Email Copied";
+
+    const [icon, setIcon] = useState(copy);
+    const [text, setText] = useState(text1);
+
+    const handleCopy = () => {
+        navigator.clipboard
+            .writeText("slava3669@gmail.com")
+            .then(() => {
+                setIcon(check);
+                setText(text2);
+                setTimeout(() => {
+                    setIcon(copy);
+                    setText(text1);
+                }, 1000);
+            })
+            .catch((err) => {
+                console.error("Error copying text to clipboard:", err);
+            });
+    };
+
+    return (
+        <div className='center-absolute'>
+            <ButtonsCard
+                onClick={handleCopy}
+                icon={icon}
+                iconPosition='left'
+                className='w-[250px] h-[70px] dark:bg-transparent bg-transparent border themed-text-icons transform hover:-translate-y-1 transition duration-400'
+            >
+                <button className='p-2 rounded-lg font-bold themed-text-icons'>
+                    {text}
+                </button>
+            </ButtonsCard>
+        </div>
+    );
+};
+
 const techStackItems = [
     {
         id: 1,
-        icon: <RiNextjsLine className='w-6 h-6' />,
+        icon: <RiNextjsLine stroke='#fff' className='w-6 h-6' />,
     },
     {
         id: 2,
@@ -22,7 +86,7 @@ const techStackItems = [
     },
     {
         id: 3,
-        icon: <SiGraphql className='w-6 h-6' />,
+        icon: <TbBrandTypescript className='w-6 h-6' />,
     },
 ];
 
@@ -38,7 +102,7 @@ export const gridItems = [
         ),
         header: <HeaderOne />,
         className: "relative z-10",
-        icon: <LuBook className='h-6 w-6 text-neutral-500' />,
+        icon: <LuBook className='h-6 w-6' />,
     },
     {
         id: 2,
@@ -60,36 +124,16 @@ export const gridItems = [
                 I strive to learn something new every day
             </span>
         ),
-        header: (
-            <div className='flex center-absolute items-center justify-center'>
-                <div className='flex'>
-                    {techStackItems.map(({ id, icon }) => (
-                        <div
-                            key={id}
-                            className={`${
-                                id !== 1 ? "-ml-1 " : ""
-                            }p-2 rounded-full border-2 dark:border-white-100 border-black-400 dark:icon-bg bg-primary-foreground`}
-                        >
-                            {icon}
-                        </div>
-                    ))}
-                </div>
-            </div>
-        ),
+        header: <HeaderThree />,
         className: "md:col-span-2 md:row-span-2 z-10",
         icon: <FaReact className='h-6 w-6 text-neutral-500' />,
     },
     {
         id: 4,
-        title: "Understand the problem",
-        description: (
-            <span className='text-sm'>
-                I prioritize analytical thinking, which helps to find the best
-                solution for the problem
-            </span>
-        ),
-        header: <HeaderOne />,
-        className: "md:col-span-3 md:row-span-2 relative z-10",
-        icon: <LuBook className='h-6 w-6 text-neutral-500' />,
+        title: "",
+        description: <></>,
+        header: <HeaderFour />,
+        className: "md:col-span-3 md:row-span-2 z-10",
+        icon: <></>,
     },
 ];

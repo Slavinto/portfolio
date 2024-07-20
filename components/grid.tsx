@@ -6,7 +6,7 @@ import { gridItems } from "@/data";
 
 export function Grid() {
     return (
-        <BentoGrid className='max-w-4xl mx-auto auto-rows-[12rem] md:auto-rows-[10rem] pt-[10rem]'>
+        <BentoGrid className='max-w-4xl mx-auto auto-rows-[14rem] md:auto-rows-[10rem] pt-[10rem]'>
             {gridItems.map(
                 ({ id, title, description, header, className, icon }) => (
                     <BentoGridItem
