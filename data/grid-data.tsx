@@ -17,17 +17,19 @@ const HeaderOne = () => {
 const HeaderThree = () => {
     return (
         <div className='flex items-center justify-center'>
-            <div className='flex center-absolute '>
-                {techStackItems.map(({ id, icon }) => (
-                    <div
-                        key={id}
-                        className={`${
-                            id !== 1 ? "-ml-1 " : ""
-                        }p-2 rounded-full border dark:border-white-100 border-black-400 dark:icon-bg bg-primary-foreground`}
-                    >
-                        {icon}
-                    </div>
-                ))}
+            <div className='center-absolute'>
+                <div className='flex transform hover:scale-110 transition duration-400'>
+                    {techStackItems.map(({ id, icon }) => (
+                        <div
+                            key={id}
+                            className={`${
+                                id !== 1 ? "-ml-1 " : ""
+                            }p-2 rounded-full border dark:border-white-100 border-black-400 dark:icon-bg-dark icon-bg-light`}
+                        >
+                            {icon}
+                        </div>
+                    ))}
+                </div>
             </div>
         </div>
     );

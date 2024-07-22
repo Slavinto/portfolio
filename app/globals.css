@@ -96,8 +96,20 @@ body {
         transform: translate(-50%, -50%);
     }
 
-    .icon-bg {
-        background-color: rgb(72, 46, 158);
+    .icon-bg-dark {
+        background: radial-gradient(
+            ellipse,
+            rgba(145, 100, 213, 0.8) 1%,
+            rgba(72, 46, 158, 1) 100%
+        );
+    }
+
+    .icon-bg-light {
+        background: radial-gradient(
+            ellipse,
+            rgba(208, 182, 247, 0.8) 1%,
+            rgba(103, 71, 151, 0.9) 100%
+        );
     }
 
     .btn-gradient {
