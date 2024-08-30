@@ -76,7 +76,6 @@ export const BackgroundGradientAnimation = ({
             "--gradient-background-end",
             gradientColors.gradientBackgroundEnd
         );
-        console.log("useeffect should work");
         document.body.style.setProperty("--first-color", firstColor);
         document.body.style.setProperty("--second-color", secondColor);
         document.body.style.setProperty("--third-color", thirdColor);

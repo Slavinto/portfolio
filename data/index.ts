@@ -9,3 +9,6 @@ export const heroCTAButtonText = "See my work";
 // ==========================grid=section======================
 export { gridItems } from "./grid-data";
 // ==========================grid=section======================
+// ==========================menu=items========================
+export { menuItems } from "./menu-data";
+// ==========================menu=items========================
