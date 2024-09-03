@@ -160,8 +160,10 @@ const MenuButton = () => {
     const menuItemVariants = {
         menuOpenItem1: {
             rotate: "45deg",
+            y: "0.1rem",
         },
         menuOpenItem2: {
+            y: "0.1rem",
             rotate: "-45deg",
         },
         menuOpenItem3: {
@@ -170,12 +172,14 @@ const MenuButton = () => {
         },
 
         menuCloseItem1: {
+            y: "0rem",
             rotate: "0deg",
         },
         menuCloseItem1Initial: {
             top: "0.75rem",
         },
         menuCloseItem2: {
+            y: "0rem",
             rotate: "0deg",
         },
         menuCloseItem2Initial: {
@@ -203,7 +207,7 @@ const MenuButton = () => {
         <motion.div ref={scope} className='fixed z-50 top-[5rem] right-4'>
             <motion.div
                 variants={menuContainer}
-                className='dark:bg-background bg-white dark:border-white/[0.2] flex justify-center relative rounded-lg menu-container p-8'
+                className='dark:bg-background bg-white dark:border-white/[0.2] flex justify-center relative rounded-lg menu-container radial-gradient'
                 style={{ width: "0rem", height: "0rem", borderWidth: "0px" }}
             >
                 <motion.div
@@ -212,7 +216,7 @@ const MenuButton = () => {
                         isMenuOpen ? "menuItemsVisible" : "menuItemsHidden"
                     }
                     initial={{ opacity: 0 }}
-                    className='menu-items-container flex flex-col gap-8'
+                    className='menu-items-container linear-mask flex flex-col gap-8'
                 >
                     {menuItems.map(({ id, url, title, icon }) => (
                         <motion.div
@@ -246,7 +250,7 @@ const MenuButton = () => {
                             variants={menuItemVariants}
                             transition={transitions.spanTransition}
                             style={{
-                                width: "2rem",
+                                width: "1.8rem",
                                 height: "5%",
                                 top: "0.75rem",
                                 left: "0.5rem",
@@ -257,7 +261,7 @@ const MenuButton = () => {
                             variants={menuItemVariants}
                             transition={transitions.spanTransition}
                             style={{
-                                width: "2rem",
+                                width: "1.8rem",
                                 height: "5%",
                                 top: "1.25rem",
                                 left: "0.5rem",
@@ -268,10 +272,10 @@ const MenuButton = () => {
                             variants={menuItemVariants}
                             transition={transitions.spanTransition}
                             style={{
-                                width: "1rem",
+                                width: "0.9rem",
                                 height: "5%",
                                 top: "1.75rem",
-                                right: "0.4rem",
+                                right: "0.5rem",
                             }}
                             className='span-item s-item-3 dark:bg-white-300 bg-black-200 absolute'
                         ></motion.span>
