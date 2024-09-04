@@ -38,7 +38,7 @@ const MenuButton = () => {
                 menuContainer.menuItemsHide.transition,
             ],
         ]);
-
+        // animate span items from center to initial positions
         await animate([
             [
                 ".s-item-1",
@@ -56,8 +56,8 @@ const MenuButton = () => {
                 { ...transitions.spanTransition },
             ],
         ]);
-        // await animate([[".menu-item", { opacity: 0 }, { at: 0.4 }]]);
     };
+
     const openMenu = async () => {
         //absolute positioning in the center
         await animate([
@@ -204,10 +204,13 @@ const MenuButton = () => {
     };
 
     return (
-        <motion.div ref={scope} className='fixed z-50 top-[5rem] right-4'>
+        <motion.div
+            ref={scope}
+            className='fixed z-50 top-[5rem] right-4 cursor-pointer'
+        >
             <motion.div
                 variants={menuContainer}
-                className='dark:bg-background bg-white dark:border-white/[0.2] flex justify-center relative rounded-lg menu-container radial-gradient'
+                className='dark:bg-background bg-white dark:border-white/[0.2] flex justify-center relative rounded-lg menu-container '
                 style={{ width: "0rem", height: "0rem", borderWidth: "0px" }}
             >
                 <motion.div
@@ -216,7 +219,7 @@ const MenuButton = () => {
                         isMenuOpen ? "menuItemsVisible" : "menuItemsHidden"
                     }
                     initial={{ opacity: 0 }}
-                    className='menu-items-container linear-mask flex flex-col gap-8'
+                    className='menu-items-container flex flex-col gap-8'
                 >
                     {menuItems.map(({ id, url, title, icon }) => (
                         <motion.div
@@ -231,7 +234,7 @@ const MenuButton = () => {
                             </motion.div>
                         </motion.div>
                     ))}
-                </motion.div>{" "}
+                </motion.div>
                 <motion.div
                     onClick={handleMenuClick}
                     style={{
@@ -244,7 +247,7 @@ const MenuButton = () => {
                 >
                     <motion.div
                         variants={menuVariants}
-                        className='span-container w-full h-full flex flex-col items-end relative p-2'
+                        className='span-container linear-mask w-full h-full flex flex-col items-end relative p-2'
                     >
                         <motion.span
                             variants={menuItemVariants}
