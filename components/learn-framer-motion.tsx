@@ -1,13 +1,20 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { motion, useAnimate, usePresence, Variants } from "framer-motion";
+import {
+    motion,
+    stagger,
+    useAnimate,
+    usePresence,
+    Variants,
+} from "framer-motion";
 import { menuItems } from "@/data";
 import Link from "next/link";
 
 const MenuButton = () => {
     const [scope, animate] = useAnimate();
     const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const staggerMenuItems = stagger(0.2, { startDelay: 0.15 });
 
     const closeMenu = async () => {
         await animate([
@@ -110,12 +117,24 @@ const MenuButton = () => {
                 menuContainer.menuItemsShow.transition,
             ],
         ]);
+
+        // show menu items with stagger
+        animate([
+            [
+                ".menu-item",
+                { opacity: 1 },
+                { delay: isMenuOpen ? staggerMenuItems : 0 },
+            ],
+        ]);
     };
 
     const handleMenuClick = () => {
         setIsMenuOpen((prev) => !prev);
-        isMenuOpen ? closeMenu() : openMenu();
     };
+
+    useEffect(() => {
+        isMenuOpen ? closeMenu() : openMenu();
+    }, [isMenuOpen]);
 
     const menuVariants = {
         menuOpen: {
@@ -219,10 +238,13 @@ const MenuButton = () => {
                         isMenuOpen ? "menuItemsVisible" : "menuItemsHidden"
                     }
                     initial={{ opacity: 0 }}
-                    className='menu-items-container flex flex-col gap-8'
+                    className='
+                    menu-items-container
+                     flex flex-col gap-8 opacity-100'
                 >
                     {menuItems.map(({ id, url, title, icon }) => (
                         <motion.div
+                            animate={{}}
                             className='menu-item flex gap-2 items-center uppercase text-3xl'
                             key={id}
                         >

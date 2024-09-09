@@ -91,6 +91,10 @@ body {
         @apply text-neutral-600 dark:text-neutral-200 border-neutral-600 dark:border-neutral-200;
     }
 
+    .cp-button {
+        clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+    }
+
     .center-absolute {
         position: absolute;
         left: 50%;
@@ -103,15 +107,14 @@ body {
             ellipse,
             rgba(145, 100, 213, 0.8) 1%,
             rgba(72, 46, 158, 1) 100%
-            #a2ef66
         );
     }
 
     .icon-bg-light {
         background: radial-gradient(
             ellipse,
-            rgba(208, 182, 247, 0.8) 1%,
-            rgba(103, 71, 151, 0.9) 100%
+            rgba(255, 255, 255, 0.8) 1%,
+            rgb(190, 184, 201) 100%
         );
     }
 
@@ -134,8 +137,9 @@ body {
     .btn-gradient-light {
         background: linear-gradient(
             -90deg,
-            rgba(203, 172, 249, 1) 0%,
-            rgba(235, 235, 235, 1) 100%
+            rgba(235, 235, 235, 1) 0%,
+            rgb(212, 202, 232) 100%
+            /* rgba(203, 172, 249, 1) 0%, */
         );
     }
 
@@ -143,7 +147,7 @@ body {
         background: radial-gradient(
             ellipse,
             rgb(252, 243, 255) 12%,
-            rgb(203, 172, 249) 72%
+            rgb(227, 213, 246) 72%
         );
     }
 

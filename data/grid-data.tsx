@@ -54,7 +54,7 @@ const HeaderFour = () => {
                 setTimeout(() => {
                     setIcon(copy);
                     setText(text1);
-                }, 1000);
+                }, 500);
             })
             .catch((err) => {
                 console.error("Error copying text to clipboard:", err);
