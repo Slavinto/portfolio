@@ -14,25 +14,29 @@ const Hero = () => {
     const handleClickCta = () => {};
 
     return (
-        <section className='w-full pt-[150px] h-fit'>
+        <section className='w-full pt-[12.5rem] h-fit'>
             <DotBackground className={"w-full"}>
                 <div className='flex flex-col items-center text-center gap-3'>
                     <Scroller />
-                    <h3 className='uppercase font-normal text-xs md:text-base'>
+                    <h3 className='uppercase font-normal text-base md:text-lg lg:text-xl xl:text-3xl'>
                         {heroSubheading}
                     </h3>
                     <TextGenerateEffect
                         words={heroMainHeading}
-                        className='relative z-10 max-w-[400px] md:max-w-[670px] xl:max-w-[760px]'
-                        textClassNames='font-bold !text-white-100 text-3xl md:text-5xl lg:text-6xl'
+                        className='relative z-10 w-full md:max-w-[60rem] lg:max-w-[75rem] xl:max-w-[90rem] lg:py-6 md:py-4 xl:py-8'
+                        textClassNames='font-black !text-white-100 text-6xl md:text-7xl lg:text-8xl xl:text-9xl'
                     />
-                    <p className=''>{heroIntroductionText}</p>
+                    <p className='font-normal text-base md:text-lg lg:text-xl xl:text-3xl'>
+                        {heroIntroductionText}
+                    </p>
                     <ButtonsCard
-                        className='dark:btn-gradient btn-gradient-light w-full md:w-[200px] lg:w-[220px] h-[66px] gap-1'
+                        className='dark:btn-gradient btn-gradient-light xl:w-[35rem] xl:h-40 lg:w-[25rem] lg:h-[8rem] md:w-[20rem] md:h-[6rem] h-[4rem] w-[15rem] gap-1 mt-[2rem] md:mt-[4rem]'
                         icon={<BsArrow90DegLeft className='rotate-90' />}
                         onClick={handleClickCta}
                     >
-                        {heroCTAButtonText}
+                        <p className='font-normal text-base md:text-xl lg:text-2xl xl:text-3xl'>
+                            {heroCTAButtonText}
+                        </p>
                     </ButtonsCard>
                 </div>
             </DotBackground>
