@@ -14,7 +14,7 @@ const Hero = () => {
     const handleClickCta = () => {};
 
     return (
-        <section className='w-full pt-[12.5rem] h-fit'>
+        <section id='hero' className='w-full pt-[12.5rem] h-fit'>
             <DotBackground className={"w-full"}>
                 <div className='flex flex-col items-center text-center gap-3'>
                     <Scroller />
@@ -23,7 +23,7 @@ const Hero = () => {
                     </h3>
                     <TextGenerateEffect
                         words={heroMainHeading}
-                        className='relative z-10 w-full md:max-w-[60rem] lg:max-w-[75rem] xl:max-w-[90rem] lg:py-6 md:py-4 xl:py-8'
+                        className='relative content-container z-10 lg:py-6 md:py-4 xl:py-8'
                         textClassNames='font-black !text-white-100 text-6xl md:text-7xl lg:text-8xl xl:text-9xl'
                     />
                     <p className='font-normal text-base md:text-lg lg:text-xl xl:text-3xl'>

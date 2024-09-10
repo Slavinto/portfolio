@@ -15,7 +15,7 @@ const MenuButton = () => {
     const [scope, animate] = useAnimate();
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const staggerMenuItems = stagger(0.2, { startDelay: 0.15 });
-
+    console.log(isMenuOpen);
     const closeMenu = async () => {
         await animate([
             [".s-item-1", menuItemVariants.menuCloseItem1, { at: 0.4 }],
@@ -133,7 +133,7 @@ const MenuButton = () => {
     };
 
     useEffect(() => {
-        isMenuOpen ? closeMenu() : openMenu();
+        isMenuOpen ? openMenu() : closeMenu();
     }, [isMenuOpen]);
 
     const menuVariants = {
@@ -246,7 +246,7 @@ const MenuButton = () => {
                         <motion.div
                             onClick={() => {
                                 document.getElementById(url)?.scrollIntoView();
-                                handleMenuClick();
+                                setIsMenuOpen(false);
                             }}
                             animate={{}}
                             className='menu-item flex gap-2 items-center uppercase text-3xl'

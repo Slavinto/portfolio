@@ -24,7 +24,7 @@ const HeaderThree = () => {
                             key={id}
                             className={`${
                                 id !== 1 ? "-ml-1 " : ""
-                            }p-2 rounded-full border dark:border-white-100 border-black-400 dark:icon-bg-dark icon-bg-light`}
+                            }p-2 rounded-full border dark:border-white-100 border-black-400 dark:icon-bg-dark icon-bg-light invisible sm:visible`}
                         >
                             {icon}
                         </div>
