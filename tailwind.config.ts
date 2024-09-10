@@ -20,6 +20,8 @@ module.exports = {
     theme: {
         extend: {
             animation: {},
+            fontSize: {},
+            fontWeight: {},
             colors: {
                 black: {
                     DEFAULT: "#000",
