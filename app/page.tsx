@@ -3,6 +3,7 @@ import Footer from "@/components/footer";
 import { Grid } from "@/components/grid";
 import Hero from "@/components/hero";
 import MenuButton from "@/components/learn-framer-motion";
+import Projects from "@/components/projects";
 import ThemeToggleButton from "@/components/theme-toggle-button";
 
 export default function Home() {
@@ -12,6 +13,7 @@ export default function Home() {
             <ThemeToggleButton />
             <Hero />
             <Grid />
+            <Projects />
             <Footer />
         </main>
     );
