@@ -244,15 +244,19 @@ const MenuButton = () => {
                 >
                     {menuItems.map(({ id, url, title, icon }) => (
                         <motion.div
+                            onClick={() => {
+                                document.getElementById(url)?.scrollIntoView();
+                                handleMenuClick();
+                            }}
                             animate={{}}
                             className='menu-item flex gap-2 items-center uppercase text-3xl'
                             key={id}
                         >
                             <motion.div>{icon}</motion.div>
                             <motion.div>
-                                <Link className='' href={url}>
-                                    {title}
-                                </Link>
+                                {/* <Link className='' href={url}> */}
+                                {title}
+                                {/* </Link> */}
                             </motion.div>
                         </motion.div>
                     ))}
