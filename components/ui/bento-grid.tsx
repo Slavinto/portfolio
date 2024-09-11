@@ -12,7 +12,7 @@ export const BentoGrid = ({
     return (
         <div
             className={cn(
-                "grid grid-cols-1 md:grid-cols-3 gap-4 max-w-7xl mx-auto ",
+                "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 max-w-7xl mx-auto ",
                 className
             )}
         >
@@ -40,19 +40,21 @@ export const BentoGridItem = ({
         <div
             className={`${
                 id === 1
-                    ? "md:col-start-1 md:col-end-1 md:row-start-1 md:row-end-2"
+                    ? "lg:col-start-1 lg:col-end-1 lg:row-start-1 lg:row-end-2"
                     : id === 2
-                    ? "md:col-start-1 md:col-end-1 md:row-start-2 md:row-end-3"
+                    ? "lg:col-start-1 lg:col-end-1 lg:row-start-2 lg:row-end-3"
                     : id === 3
-                    ? "md:col-start-2 md:col-end-4 md:row-start-1 "
-                    : "col-start-auto col-end-auto relative"
-            } rounded-xl group/bento hover:shadow-xl transition duration-200 shadow-input dark:shadow-none p-4 dark:bg-black-100 dark:border-white/[0.2] bg-white border border-transparent justify-between flex flex-col ${className}`}
+                    ? "lg:col-start-2 lg:col-end-4 lg:row-start-1 "
+                    : "col-start-auto col-end-auto lg:col-start-1 lg:col-end-4 relative"
+            } rounded-xl group/bento hover:shadow-xl transition duration-200 shadow-input dark:shadow-none p-4 dark:bg-black-100 dark:border-white/[0.2] bg-white border border-transparent justify-between ${className}`}
         >
             {header}
-            <div className='group-hover/bento:translate-x-2 transition duration-200'>
-                {icon}
-                <div className='font-sans font-bold themed-text-icons mb-2 mt-2'>
-                    {title}
+            <div className='group-hover/bento:translate-x-2 transition duration-200 flex flex-col gap-1 '>
+                <div className='flex gap-2 items-center'>
+                    {icon}
+                    <div className='font-sans font-bold themed-text-icons mb-2 mt-2'>
+                        {title}
+                    </div>
                 </div>
                 <div className='font-sans font-normal text-xs themed-text-icons'>
                     {description}

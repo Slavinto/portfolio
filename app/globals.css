@@ -95,6 +95,18 @@ body {
         @apply text-neutral-600 dark:text-neutral-200 border-neutral-600 dark:border-neutral-200;
     }
 
+    .responsive-icons {
+        @apply w-6 h-6 md:w-8 md:h-8 lg:w-10 lg:h-10 xl:w-12 xl:h-12;
+    }
+
+    .grid-item-header {
+        @apply text-sm md:text-lg lg:text-xl xl:text-2xl font-bold;
+    }
+
+    .grid-description-text {
+        @apply text-sm md:text-lg xl:text-xl tracking-wider;   
+    }
+
     .cp-button {
         clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
     }

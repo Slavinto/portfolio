@@ -24,7 +24,7 @@ const HeaderThree = () => {
                             key={id}
                             className={`${
                                 id !== 1 ? "-ml-1 " : ""
-                            }p-2 rounded-full border dark:border-white-100 border-black-400 dark:icon-bg-dark icon-bg-light invisible sm:visible`}
+                            }p-2 rounded-full border dark:border-white-100 border-black-400 dark:icon-bg-dark icon-bg-light invisible md:visible`}
                         >
                             {icon}
                         </div>
@@ -67,7 +67,7 @@ const HeaderFour = () => {
                 onClick={handleCopy}
                 icon={icon}
                 iconPosition='left'
-                className='w-[250px] h-[70px] dark:bg-transparent bg-transparent border themed-text-icons transform hover:-translate-y-1 transition duration-400'
+                className='w-48 md:w-[250px] lg:w-[400px] xl:w-[500px] h-[70px] lg:h-[140px] xl:h-[180px] dark:bg-transparent bg-transparent border themed-text-icons transform hover:-translate-y-1 transition duration-400'
             >
                 <button className='p-2 rounded-lg font-bold themed-text-icons'>
                     {text}
@@ -80,55 +80,55 @@ const HeaderFour = () => {
 const techStackItems = [
     {
         id: 1,
-        icon: <RiNextjsLine stroke='#fff' className='w-6 h-6' />,
+        icon: <RiNextjsLine stroke='#fff' className='responsive-icons' />,
     },
     {
         id: 2,
-        icon: <RiTailwindCssLine className='w-6 h-6' />,
+        icon: <RiTailwindCssLine className='responsive-icons' />,
     },
     {
         id: 3,
-        icon: <TbBrandTypescript className='w-6 h-6' />,
+        icon: <TbBrandTypescript className='responsive-icons' />,
     },
 ];
 
 export const gridItems = [
     {
         id: 1,
-        title: "Understand the problem",
+        title: <h4 className='grid-item-header'>Understand the problem</h4>,
         description: (
-            <span className='text-sm'>
+            <span className='grid-description-text'>
                 I prioritize analytical thinking, which helps to find the best
                 solution for the problem
             </span>
         ),
         header: <HeaderOne />,
         className: "relative z-10",
-        icon: <LuBook className='h-6 w-6' />,
+        icon: <LuBook className='responsive-icons' />,
     },
     {
         id: 2,
-        title: "Detailed approach",
+        title: <h4 className='grid-item-header'>Detailed approach</h4>,
         description: (
-            <span className='text-sm'>
+            <span className='grid-description-text'>
                 I pay attention to detail - this is important for quality code
             </span>
         ),
         header: <HeaderOne />,
         className: "relative z-10",
-        icon: <BsBinoculars className='h-6 w-6 text-neutral-500' />,
+        icon: <BsBinoculars className='responsive-icons text-neutral-500' />,
     },
     {
         id: 3,
-        title: "My tech stack",
+        title: <h4 className='grid-item-header'>My tech stack</h4>,
         description: (
-            <span className='text-sm max-w-56'>
+            <span className='grid-description-text max-w-56'>
                 I strive to learn something new every day
             </span>
         ),
         header: <HeaderThree />,
         className: "md:col-span-2 md:row-span-2 z-10",
-        icon: <FaReact className='h-6 w-6 text-neutral-500' />,
+        icon: <FaReact className='responsive-icons text-neutral-500' />,
     },
     {
         id: 4,

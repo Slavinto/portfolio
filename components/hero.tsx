@@ -11,7 +11,9 @@ import { ButtonsCard, DotBackground, Scroller, TextGenerateEffect } from "./ui";
 import { BsArrow90DegLeft } from "react-icons/bs";
 
 const Hero = () => {
-    const handleClickCta = () => {};
+    const handleClickCta = () => {
+        document.getElementById("my-projects")?.scrollIntoView();
+    };
 
     return (
         <section id='hero' className='w-full pt-[12.5rem] h-fit'>

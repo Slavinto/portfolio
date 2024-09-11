@@ -8,7 +8,7 @@ export function Grid() {
     return (
         <section className='content-container mx-auto'>
             <motion.div id='about' initial='hidden' whileInView='visible'>
-                <BentoGrid className='auto-rows-[8rem] md:auto-rows-[10rem] lg:auto-rows-[12rem] xl:auto-rows-[15rem] px-12 pt-[12.5rem]'>
+                <BentoGrid className='auto-cols-auto auto-rows-[9rem] md:auto-rows-[11rem] lg:auto-rows-[12rem] xl:auto-rows-[15rem] sm:px-12 pt-[12.5rem]'>
                     {gridItems.map(
                         ({
                             id,
