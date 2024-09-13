@@ -155,7 +155,7 @@ const MenuButton = () => {
 
     const menuContainer = {
         containerOpen: {
-            width: "50vw",
+            width: "20rem",
             height: "50vh",
             borderWidth: "2px",
             transition: {
@@ -164,16 +164,22 @@ const MenuButton = () => {
             },
         },
         containerClose: {
-            width: "2.5rem",
-            height: "2.5rem",
+            width: "0rem",
+            height: "0vh",
             borderWidth: "0px",
         },
         menuItemsShow: {
             opacity: 1,
+            display: "flex",
             y: "18px",
             transition: { at: "-0.2" },
         },
-        menuItemsHide: { opacity: 0, y: "-12px", transition: { at: "-0.2" } },
+        menuItemsHide: {
+            opacity: 0,
+            display: "none",
+            y: "-12px",
+            transition: { at: "-0.2" },
+        },
     };
 
     const menuItemVariants = {
@@ -223,24 +229,21 @@ const MenuButton = () => {
     };
 
     return (
-        <motion.div
-            ref={scope}
-            className='fixed z-50 top-[5rem] right-4 cursor-pointer'
-        >
+        <motion.div ref={scope} className='fixed z-50 top-[5rem] right-4'>
             <motion.div
                 variants={menuContainer}
-                className='dark:bg-background bg-white dark:border-white/[0.2] flex justify-center relative rounded-lg menu-container '
-                style={{ width: "0rem", height: "0rem", borderWidth: "0px" }}
+                className='dark:bg-background bg-white dark:border-white/[0.2] flex justify-center 
+                relative rounded-lg menu-container'
+                // style={{ width: "0rem", height: "0rem", borderWidth: "0px" }}
             >
                 <motion.div
-                    variants={menuContainer}
-                    animate={
-                        isMenuOpen ? "menuItemsVisible" : "menuItemsHidden"
-                    }
-                    initial={{ opacity: 0 }}
+                    // animate={
+                    //     isMenuOpen ? "menuItemsVisible" : "menuItemsHidden"
+                    // }
+                    initial={{ display: "none" }}
                     className='
                     menu-items-container
-                     flex flex-col gap-8 opacity-100'
+                     flex flex-col px-16 pt-6 gap-8 opacity-100'
                 >
                     {menuItems.map(({ id, url, title, icon }) => (
                         <motion.div
@@ -249,7 +252,7 @@ const MenuButton = () => {
                                 setIsMenuOpen(false);
                             }}
                             animate={{}}
-                            className='menu-item flex gap-2 items-center uppercase text-3xl'
+                            className='menu-item cursor-pointer flex gap-2 items-center uppercase text-3xl'
                             key={id}
                         >
                             <motion.div>{icon}</motion.div>
@@ -269,7 +272,7 @@ const MenuButton = () => {
                     }}
                     variants={menuWrapper}
                     className='span-wrapper absolute dark:btn-gradient btn-gradient-light border-neutral-100 border-2 dark:border-white/[0.2] w-12 h-12 rounded-lg 
-                    flex items-center justify-center'
+                    flex items-center justify-center cursor-pointer'
                 >
                     <motion.div
                         variants={menuVariants}
