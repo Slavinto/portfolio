@@ -18,7 +18,7 @@ const ThemeToggleButton = () => {
     return (
         <ButtonsCard
             onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-            className='fixed z-50 top-4 right-4 border-2 rounded-xl w-12 h-12 flex items-center justify-center dark:btn-gradient btn-gradient-light'
+            className='cursor-pointer fixed z-50 top-4 right-4 border-2 rounded-xl w-12 h-12 flex items-center justify-center dark:btn-gradient btn-gradient-light'
             icon={
                 theme === "dark"
                     ? domLoaded && (

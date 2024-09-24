@@ -234,8 +234,7 @@ const MenuButton = () => {
         <motion.div ref={scope} className='fixed z-50 top-[5rem] right-4'>
             <motion.div
                 variants={menuContainer}
-                className='dark:bg-background bg-white dark:border-white/[0.2] flex justify-center 
-                relative rounded-lg menu-container'
+                className='dark:bg-background bg-white dark:border-white/[0.2] flex justify-center relative rounded-lg menu-container'
                 // style={{ width: "0rem", height: "0rem", borderWidth: "0px" }}
                 style={
                     {
@@ -281,7 +280,7 @@ const MenuButton = () => {
                         right: "0rem",
                     }}
                     variants={menuWrapper}
-                    className='span-wrapper absolute dark:btn-gradient btn-gradient-light border-neutral-100 border-2 dark:border-white/[0.2] w-12 h-12 rounded-lg 
+                    className='dark:hover:border-neutral-500 hover:border-neutral-200 span-wrapper absolute dark:btn-gradient btn-gradient-light border-neutral-100 border-2 dark:border-white/[0.2] w-12 h-12 rounded-lg 
                     flex items-center justify-center cursor-pointer'
                 >
                     <motion.div

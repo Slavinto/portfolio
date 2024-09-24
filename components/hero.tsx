@@ -32,7 +32,7 @@ const Hero = () => {
                         {heroIntroductionText}
                     </p>
                     <ButtonsCard
-                        className='dark:btn-gradient btn-gradient-light lg:w-[25rem] lg:h-[8rem] md:w-[20rem] md:h-[6rem] h-[4rem] w-[15rem] gap-1 mt-[2rem] md:mt-[4rem]'
+                        className='cursor-pointer dark:btn-gradient btn-gradient-light lg:w-[25rem] lg:h-[8rem] md:w-[20rem] md:h-[6rem] h-[4rem] w-[15rem] gap-1 mt-[2rem] md:mt-[4rem]'
                         icon={<BsArrow90DegLeft className='rotate-90' />}
                         onClick={handleClickCta}
                     >
