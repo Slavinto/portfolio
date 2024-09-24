@@ -5,6 +5,7 @@ import Hero from "@/components/hero";
 import MenuButton from "@/components/learn-framer-motion";
 import Projects from "@/components/projects";
 import ThemeToggleButton from "@/components/theme-toggle-button";
+import Image from "next/image";
 
 export default function Home() {
     return (

@@ -135,7 +135,7 @@ export const gridItems = [
         title: "",
         description: <></>,
         header: <HeaderFour />,
-        className: "md:col-span-3 md:row-span-2 z-10",
+        className: "md:col-span-2 md:row-span-2 z-10",
         icon: <></>,
     },
 ];

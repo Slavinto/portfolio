@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { CSSProperties, useEffect, useState } from "react";
 import {
     motion,
     stagger,
@@ -155,8 +155,9 @@ const MenuButton = () => {
 
     const menuContainer = {
         containerOpen: {
-            width: "20rem",
-            height: "50vh",
+            // width: "20rem",
+            width: "var(--width-to)",
+            height: "var(--height-to)",
             borderWidth: "2px",
             transition: {
                 duration: 0.2,
@@ -164,8 +165,9 @@ const MenuButton = () => {
             },
         },
         containerClose: {
-            width: "0rem",
-            height: "0vh",
+            // width: "0rem",
+            width: "var(--width-from)",
+            height: "var(--height-from)",
             borderWidth: "0px",
         },
         menuItemsShow: {
@@ -235,6 +237,14 @@ const MenuButton = () => {
                 className='dark:bg-background bg-white dark:border-white/[0.2] flex justify-center 
                 relative rounded-lg menu-container'
                 // style={{ width: "0rem", height: "0rem", borderWidth: "0px" }}
+                style={
+                    {
+                        "--width-from": "0rem",
+                        "--width-to": "20rem",
+                        "--height-from": "0rem",
+                        "--height-to": "40rem",
+                    } as CSSProperties
+                }
             >
                 <motion.div
                     // animate={
