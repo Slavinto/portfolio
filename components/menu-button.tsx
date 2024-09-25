@@ -10,9 +10,10 @@ import {
 } from "framer-motion";
 import { menuItems } from "@/data";
 import Link from "next/link";
+import { useSafeAnimate } from "@/utils/hooks";
 
 const MenuButton = () => {
-    const [scope, animate] = useAnimate();
+    const [scope, animate] = useSafeAnimate();
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const staggerMenuItems = stagger(0.2, { startDelay: 0.15 });
     console.log(isMenuOpen);
@@ -266,9 +267,13 @@ const MenuButton = () => {
                         >
                             <motion.div>{icon}</motion.div>
                             <motion.div>
-                                {/* <Link className='' href={url}> */}
-                                {title}
-                                {/* </Link> */}
+                                {url === "blog" ? (
+                                    <Link className='' href={url}>
+                                        {title}
+                                    </Link>
+                                ) : (
+                                    title
+                                )}
                             </motion.div>
                         </motion.div>
                     ))}
