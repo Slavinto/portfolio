@@ -8,25 +8,29 @@ export const menuItems = [
     {
         id: 1,
         title: "Home",
-        url: "hero",
+        sectionId: "hero",
+        url: "/",
         icon: <RiHome6Line />,
     },
     {
         id: 2,
         title: "About",
-        url: "about",
+        sectionId: "about",
+        url: "/",
         icon: <IoPersonOutline />,
     },
     {
         id: 3,
         title: "Projects",
-        url: "my-projects",
+        sectionId: "my-projects",
+        url: "/",
         icon: <LiaProjectDiagramSolid />,
     },
     {
         id: 4,
         title: "Blog",
-        url: "blog",
+        sectionId: "blog",
+        url: "/blog",
         icon: <BsJournalRichtext />,
     },
 ];

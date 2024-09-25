@@ -1,22 +1,18 @@
 "use client";
 
 import React, { CSSProperties, useEffect, useState } from "react";
-import {
-    motion,
-    stagger,
-    useAnimate,
-    usePresence,
-    Variants,
-} from "framer-motion";
+import { motion, stagger } from "framer-motion";
 import { menuItems } from "@/data";
-import Link from "next/link";
 import { useSafeAnimate } from "@/utils/hooks";
+import { useRouter, usePathname } from "next/navigation";
 
 const MenuButton = () => {
+    const pathname = usePathname();
+    const router = useRouter();
     const [scope, animate] = useSafeAnimate();
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const staggerMenuItems = stagger(0.2, { startDelay: 0.15 });
-    console.log(isMenuOpen);
+
     const closeMenu = async () => {
         await animate([
             [".s-item-1", menuItemVariants.menuCloseItem1, { at: 0.4 }],
@@ -255,10 +251,11 @@ const MenuButton = () => {
                     menu-items-container
                      flex flex-col px-16 pt-6 gap-8 opacity-100'
                 >
-                    {menuItems.map(({ id, url, title, icon }) => (
+                    {menuItems.map(({ id, sectionId, url, title, icon }) => (
                         <motion.div
                             onClick={() => {
-                                document.getElementById(url)?.scrollIntoView();
+                                const el = document.getElementById(sectionId);
+                                el ? el.scrollIntoView() : router.push(url);
                                 setIsMenuOpen(false);
                             }}
                             animate={{}}
@@ -266,15 +263,7 @@ const MenuButton = () => {
                             key={id}
                         >
                             <motion.div>{icon}</motion.div>
-                            <motion.div>
-                                {url === "blog" ? (
-                                    <Link className='' href={url}>
-                                        {title}
-                                    </Link>
-                                ) : (
-                                    title
-                                )}
-                            </motion.div>
+                            <motion.div>{title}</motion.div>
                         </motion.div>
                     ))}
                 </motion.div>
