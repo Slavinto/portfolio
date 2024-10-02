@@ -2,6 +2,7 @@
 
 import { LuSunMedium } from "react-icons/lu";
 import { LuMoon } from "react-icons/lu";
+import { FaRegQuestionCircle } from "react-icons/fa";
 
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
@@ -20,16 +21,16 @@ const ThemeToggleButton = () => {
             onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
             className='cursor-pointer fixed z-50 top-4 right-4 border-2 rounded-xl w-12 h-12 flex items-center justify-center dark:btn-gradient btn-gradient-light'
             icon={
-                theme === "dark"
-                    ? domLoaded && (
-                          <LuSunMedium
-                              color={
-                                  theme === "dark" ? "white-300" : "black-200"
-                              }
-                              size={24}
-                          />
-                      )
-                    : domLoaded && <LuMoon size={24} />
+                !domLoaded ? (
+                    <FaRegQuestionCircle size={24} />
+                ) : theme === "dark" ? (
+                    <LuSunMedium
+                        color={theme === "dark" ? "white-300" : "black-200"}
+                        size={24}
+                    />
+                ) : (
+                    <LuMoon size={24} />
+                )
             }
         />
     );

@@ -26,11 +26,18 @@ export const menuItems = [
         url: "/",
         icon: <LiaProjectDiagramSolid />,
     },
-    {
-        id: 4,
-        title: "Blog",
-        sectionId: "blog",
-        url: "/blog",
-        icon: <BsJournalRichtext />,
-    },
+    // {
+    //     id: 4,
+    //     title: "Blog",
+    //     sectionId: "blog",
+    //     url: "/blog",
+    //     icon: <BsJournalRichtext />,
+    // },
+    // {
+    //     id: 5,
+    //     title: "Test",
+    //     sectionId: "test",
+    //     url: "/just-for-test-route",
+    //     icon: <BsJournalRichtext />,
+    // },
 ];
