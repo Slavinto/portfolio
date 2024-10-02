@@ -17,23 +17,18 @@ export const metadata: Metadata = {
 export default function RootLayout({
     children,
     menu,
-    blog,
 }: Readonly<{
     children: React.ReactNode;
     menu: React.ReactNode;
-    blog: React.ReactNode;
 }>) {
-    // console.log(menu);
     return (
         <html lang='en' suppressHydrationWarning className=''>
             <body className={`${inter.className} h-full`}>
                 <ThemeProvider attribute='class'>
                     <main className='relative px-4 w-full h-full flex flex-col text-foreground bg-background'>
                         <ThemeToggleButton />
-                        {/* <MenuButton /> */}
                         {menu}
-                        {/* {blog} */}
-                        <Suspense fallback={<Loading />}>{children}</Suspense>
+                        {children}
                     </main>
                 </ThemeProvider>
             </body>

@@ -18,7 +18,6 @@ export default function Home() {
     return (
         <>
             <Hero />
-            <GridSkeleton />
             <Grid />
             <Projects />
             <Footer />

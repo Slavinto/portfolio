@@ -53,13 +53,12 @@ export const HeroSkeleton = () => {
     return (
         <section
             id='hero'
-            className='w-full flex items-center justify-center pt-[12.5rem] h-fit'
+            className='sm:px-12 pt-[12.5rem] content-container mx-auto'
         >
-            <div className='flex flex-col gap-6 md:gap-10 lg:gap-12 skeleton-container-light dark:skeleton-container-dark items-center justify-center text-center bg-skeleton rounded-3xl w-full h-[35vh] md:h-[40vh] md:w-[600px] lg:w-[900px] xl:w-[1200px] xl:h-[50vh] p-4 md:p-8 lg:p-12 xl:p-24'>
-                <div className='rounded-3xl w-full h-[15%] md:h-[20%] dark:bg-white-200/10 bg-white/20'></div>
-                <div className='rounded-3xl w-full h-[15%] md:h-[20%] dark:bg-white-200/10 bg-white/20'></div>
-                <div className='rounded-3xl w-full h-[15%] md:h-[20%] dark:bg-white-200/10 bg-white/20'></div>
-                <div className='rounded-3xl w-full h-[15%] md:h-[20%] dark:bg-white-200/10 bg-white/20'></div>
+            <div className='flex flex-col gap-6 md:gap-10 lg:gap-12 skeleton-container-light dark:skeleton-container-dark items-center justify-center text-center bg-skeleton rounded-3xl w-full h-fit p-4 md:p-8 lg:p-12 xl:p-24'>
+                <div className='rounded-3xl w-full h-[5rem] md:h-[10rem] dark:bg-white-200/10 bg-white/20'></div>
+                <div className='rounded-3xl w-full h-[5rem] md:h-[10rem] dark:bg-white-200/10 bg-white/20'></div>
+                <div className='rounded-3xl w-full h-[5rem] md:h-[10rem] dark:bg-white-200/10 bg-white/20'></div>
             </div>
         </section>
     );
