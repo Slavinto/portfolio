@@ -116,41 +116,30 @@ body {
             background-color: hsl(231, 38%, 14%);
             opacity: 1;
         }
-            
-          /* 0% {
-            transform: scale(0.99);
-            background-color: rgba(22, 26, 49, 1);
-        }
-        
-        70% {
-            transform: scale(1);
-            background-color: rgba(22, 26, 49, 0.3);
-        }
-        
-        100% {
-            transform: scale(0.99);
-            background-color: rgba(22, 26, 49, 1);
-        } */
+
     }
 
     .skeleton-container-light {
-        animation: skeleton-pulse-light 1s ease-in-out infinite;
+        animation: skeleton-pulse-light 2s ease-in-out infinite;
     }
 
     @keyframes skeleton-pulse-light {
         0% {
             transform: scale(0.99);
-            background-color: hsla(264, 57%, 61%, 0.3);
+            background-color: hsl(264, 43%, 70%);
+            opacity: .6;
         }
         
         70% {
             transform: scale(1);
-            background-color: hsla(0, 0%, 32%, 0.1);
+            background-color: hsl(264, 43%, 70%);
+            opacity: .3;
         }
         
         100% {
             transform: scale(0.99);
-            background-color: hsla(264, 57%, 61%, 0.3);
+            background-color: hsl(264, 43%, 70%);
+            opacity: .6;
         }
     }
 
