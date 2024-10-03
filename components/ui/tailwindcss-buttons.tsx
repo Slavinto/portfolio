@@ -34,10 +34,6 @@ export const ButtonsCard = ({
 
     const handleButtonClick = () => {
         onClick && onClick();
-        // animate([
-        //     [scope.current, { y: "-0.4rem", scale: "2" }, { at: "0.2" }],
-        //     [scope.current, { y: "0rem", scale: "1" }, { at: "+0.1" }],
-        // ]);
     };
 
     const buttonVariants = {
@@ -59,7 +55,7 @@ export const ButtonsCard = ({
             variants={buttonVariants}
             onClick={handleButtonClick}
             whileTap={"pressed"}
-            // onTap
+            style={{ scale: 1 }}
             className={cn(
                 "bg-white rounded-xl border border-neutral-100 dark:bg-black dark:border-white/[0.2] hover:border-neutral-200 dark:hover:border-neutral-500 group/btn overflow-hidden relative flex items-center justify-center",
                 className

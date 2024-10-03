@@ -1,4 +1,3 @@
-"use client";
 import { cn } from "@/utils/cn";
 import { motion } from "framer-motion";
 import { BentoGrid, BentoGridItem } from "@/components/ui";

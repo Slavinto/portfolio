@@ -1,5 +1,3 @@
-"use client";
-
 import React from "react";
 import {
     heroMainHeading,
@@ -9,7 +7,6 @@ import {
 } from "@/data";
 import { ButtonsCard, DotBackground, Scroller, TextGenerateEffect } from "./ui";
 import { BsArrow90DegLeft } from "react-icons/bs";
-import { motion } from "framer-motion";
 
 const Hero = () => {
     const handleClickCta = () => {

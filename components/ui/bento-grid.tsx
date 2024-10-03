@@ -73,23 +73,29 @@ export const BentoGridItem = ({
                 {id === 1 ? (
                     <Image
                         className='rounded-xl -z-20'
-                        src='/images/grid-bg-1.jpg'
+                        src='/images/grid-bg-1.webp'
                         alt='texture image'
                         fill
+                        sizes='(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 25vw'
+                        priority={true}
                     />
                 ) : id === 2 ? (
                     <Image
                         className='rounded-xl -z-20'
-                        src='/images/grid-bg-3.jpg'
+                        src='/images/grid-bg-3.webp'
                         alt='texture image'
                         fill
+                        sizes='(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 25vw'
+                        priority={true}
                     />
                 ) : id === 3 ? (
                     <Image
                         className='rounded-xl -z-20'
-                        src='/images/grid-bg-2.jpg'
+                        src='/images/grid-bg-2.webp'
                         alt='texture image'
                         fill
+                        sizes='(max-width: 1024px) 100vw, 75vw'
+                        priority={true}
                     />
                 ) : (
                     <></>
