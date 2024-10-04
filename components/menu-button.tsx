@@ -7,7 +7,6 @@ import { useSafeAnimate } from "@/utils/hooks";
 import { useRouter, usePathname } from "next/navigation";
 
 const MenuButton = () => {
-    const pathname = usePathname();
     const router = useRouter();
     const [scope, animate] = useSafeAnimate();
     const [isMenuOpen, setIsMenuOpen] = useState(false);

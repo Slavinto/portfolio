@@ -1,7 +1,5 @@
 import { RiHome6Line } from "react-icons/ri";
-import { FaRegAddressBook } from "react-icons/fa6";
-import { LiaProjectDiagramSolid } from "react-icons/lia";
-import { BsJournalRichtext } from "react-icons/bs";
+import { VscGithubAlt } from "react-icons/vsc";
 import { IoPersonOutline } from "react-icons/io5";
 
 export const menuItems = [
@@ -23,8 +21,8 @@ export const menuItems = [
         id: 3,
         title: "Projects",
         sectionId: "my-projects",
-        url: "/",
-        icon: <LiaProjectDiagramSolid />,
+        url: "https://github.com/Slavinto?tab=repositories",
+        icon: <VscGithubAlt />,
     },
     // {
     //     id: 4,
