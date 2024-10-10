@@ -14,7 +14,7 @@ const Hero = () => {
     };
 
     return (
-        <section id='hero' className='w-full pt-[12.5rem] h-fit'>
+        <section id='hero' className='w-full pt-[9.5rem] h-fit'>
             <DotBackground className={"w-full"}>
                 <div className='flex flex-col items-center text-center gap-3'>
                     <Scroller />
@@ -50,7 +50,7 @@ export const HeroSkeleton = () => {
     return (
         <section
             id='hero'
-            className='sm:px-12 pt-[12.5rem] content-container mx-auto'
+            className='sm:px-12 pt-[9.5rem] content-container mx-auto'
         >
             <div className='flex flex-col gap-6 md:gap-10 lg:gap-12 skeleton-container-light dark:skeleton-container-dark items-center justify-center text-center bg-skeleton rounded-3xl w-full h-fit p-4 md:p-8 lg:p-12 xl:p-24'>
                 <div className='rounded-3xl w-full h-[5rem] md:h-[10rem] dark:bg-white-200/10 bg-white/20'></div>

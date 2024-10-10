@@ -197,7 +197,7 @@ const CloseIcon = () => {
     return (
         <button
             onClick={() => setOpen(false)}
-            className='absolute top-4 right-4 group'
+            className='absolute top-4 right-4 group border-transparent dark:border-neutral-800 border rounded-md '
         >
             <svg
                 xmlns='http://www.w3.org/2000/svg'
@@ -206,14 +206,14 @@ const CloseIcon = () => {
                 viewBox='0 0 24 24'
                 fill='none'
                 stroke='currentColor'
-                strokeWidth='2'
+                strokeWidth='1'
                 strokeLinecap='round'
                 strokeLinejoin='round'
                 className='text-black dark:text-white h-6 w-6 group-hover:scale-110 group-hover:rotate-1 transition duration-200'
             >
-                <path stroke='2' d='M0 0h24v24H0z' fill='none' />
-                <path d='M18 6l-12 12' />
-                <path d='M6 6l12 12' />
+                {/* <path stroke='2' d='M0 0h24v24H0z' fill='none' /> */}
+                <path d='M18 6l-12 12' strokeWidth='2' stroke='currentColor' />
+                <path d='M6 6l12 12' strokeWidth='2' stroke='currentColor' />
             </svg>
         </button>
     );

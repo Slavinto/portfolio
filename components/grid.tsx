@@ -7,7 +7,7 @@ const Grid = () => {
     return (
         <section className='content-container mx-auto'>
             <motion.div id='about' initial='hidden' whileInView='visible'>
-                <BentoGrid className='auto-cols-auto auto-rows-[9rem] md:auto-rows-[11rem] lg:auto-rows-[12rem] xl:auto-rows-[15rem] sm:px-12 pt-[12.5rem]'>
+                <BentoGrid className='auto-cols-auto auto-rows-[9rem] md:auto-rows-[11rem] lg:auto-rows-[12rem] xl:auto-rows-[15rem] sm:px-12 pt-[13rem]'>
                     {gridItems.map(
                         ({
                             id,
@@ -43,7 +43,7 @@ export const GridSkeleton = () => {
     return (
         <section
             id='about'
-            className='sm:px-12 pt-[12.5rem] content-container mx-auto'
+            className='sm:px-12 pt-[13rem] content-container mx-auto'
         >
             <div className='skeleton-container-light dark:skeleton-container-dark grid gap-3 md:gap-5 lg:gap-7 auto-cols-auto md:grid-cols-4 lg:grid-cols-3 auto-rows-[9rem] md:auto-rows-[11rem] lg:auto-rows-[12rem] xl:auto-rows-[15rem] items-stretch justify-items-stretch rounded-3xl p-4 md:p-8 lg:p-12 xl:p-24'>
                 <div className='rounded-3xl w-full h-full md:col-start-1 md:col-span-2 lg:col-start-1 lg:col-span-1 dark:bg-white-200/10 bg-white/20 ' />

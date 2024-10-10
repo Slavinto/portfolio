@@ -123,7 +123,11 @@ export const gridItems = [
         title: <h4 className='grid-item-header'>My tech stack</h4>,
         description: (
             <span className='grid-description-text max-w-56'>
-                I strive to learn something new every day
+                {/* I strive to learn something new every day */}
+                Full-stack web developer with a strong background in both
+                front-end and back-end development. Skilled in HTML, CSS,
+                JavaScript. Dedicated to delivering high-quality and innovative
+                solutions. Let′s collaborate!
             </span>
         ),
         header: <HeaderThree />,
