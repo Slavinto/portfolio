@@ -16,8 +16,8 @@ const ModalMenu = () => {
                 {/* just a button component with styles */}
                 <ModalMenuButton />
             </ModalTrigger>
-            <ModalBody className='w-full md:max-w-[50%] lg:max-w-[40%] xl:max-w-[30%] max-h-[30%] md:max-h-[50%] items-center'>
-                <ModalContent className='justify-center md:p-[6.5rem] lg:p-[9rem]'>
+            <ModalBody className='w-full sm:rounded-xl sm:max-w-[50%] lg:max-w-[40%] xl:max-w-[30%] max-h-[30%] md:max-h-[50%] items-center'>
+                <ModalContent>
                     <MenuItems />
                 </ModalContent>
             </ModalBody>

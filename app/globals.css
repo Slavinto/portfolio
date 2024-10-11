@@ -71,6 +71,7 @@ body {
         --border: hsl(233 3.7% 15.9%);
         --input: hsl(233 3.7% 15.9%);
         --ring: hsl(233 4.9% 83.9%);
+        /* --ring: #b8b8c2; */
 
         --radius: hsl(0.5rem);
 
@@ -141,6 +142,14 @@ body {
             background-color: hsl(264, 43%, 70%);
             opacity: .6;
         }
+    }
+
+    .text-stroke {
+        -webkit-text-stroke: 1px rgb(255, 255, 255);
+    }
+
+    .blog-header {
+        @apply absolute top-0 left-0 right-0 h-[40vh] 
     }
 
     .content-container {

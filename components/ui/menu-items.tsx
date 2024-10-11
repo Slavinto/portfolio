@@ -18,7 +18,7 @@ const MenuItems = () => {
                         setOpen(false);
                     }}
                     animate={{}}
-                    className='menu-item cursor-pointer flex gap-2 items-center uppercase text-3xl lg:text-4xl xl:text-5xl'
+                    className='cursor-pointer flex gap-2 items-center uppercase text-3xl lg:text-4xl xl:text-5xl'
                     key={id}
                 >
                     <motion.div>{icon}</motion.div>

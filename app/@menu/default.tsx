@@ -1,7 +1,9 @@
-import React from "react";
+"use client";
+
+import ModalMenuButton from "@/components/ui/modal-menu";
 
 const Default = () => {
-    return null;
+    return <ModalMenuButton />;
 };
 
 export default Default;

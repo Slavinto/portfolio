@@ -1,6 +1,7 @@
 import { RiHome6Line } from "react-icons/ri";
 import { VscGithubAlt } from "react-icons/vsc";
 import { IoPersonOutline } from "react-icons/io5";
+import { SlNotebook } from "react-icons/sl";
 
 export const menuItems = [
     {
@@ -24,13 +25,13 @@ export const menuItems = [
         url: "https://github.com/Slavinto?tab=repositories",
         icon: <VscGithubAlt />,
     },
-    // {
-    //     id: 4,
-    //     title: "Blog",
-    //     sectionId: "blog",
-    //     url: "/blog",
-    //     icon: <BsJournalRichtext />,
-    // },
+    {
+        id: 4,
+        title: "Blog",
+        sectionId: "blog",
+        url: "/blog",
+        icon: <SlNotebook />,
+    },
     // {
     //     id: 5,
     //     title: "Test",
