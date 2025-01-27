@@ -39,7 +39,7 @@ export const ButtonsCard = ({
     const buttonVariants = {
         pressed: {
             y: "-0.2rem",
-            scale: "0.96",
+            scale: 0.96,
             transition: {
                 ease: "inOut",
                 duration: "0.3",
