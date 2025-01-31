@@ -1,13 +1,14 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Poppins } from "next/font/google";
 import { ThemeProvider } from "next-themes";
 import "./globals.css";
 import ThemeToggleButton from "@/components/theme-toggle-button";
 import { Suspense } from "react";
 // import Loading from "./loading";
 import Home from "./page";
-
-const inter = Inter({ subsets: ["latin"] });
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import QueryProvider from "@/features/reactQuery/queryProvider";
+const poppins = Poppins({ weight: ["300", "400", "500"], subsets: ["latin"] });
 
 export const metadata: Metadata = {
     title: "Slava's portfolio",
@@ -41,16 +42,20 @@ export default function RootLayout({
                     sizes='16x16'
                     href='/icons/favicon-16x16.png'
                 />
+                {/**/}
                 <link rel='manifest' href='/site.webmanifest' />
             </head>
-            <body className={`${inter.className} h-full`}>
-                <ThemeProvider attribute='class'>
-                    <main className='relative px-4 w-full h-full flex flex-col text-foreground bg-background'>
-                        <ThemeToggleButton />
-                        {menu}
-                        {children}
-                    </main>
-                </ThemeProvider>
+            <body className={`${poppins.className} h-full`}>
+                <QueryProvider>
+                    <ThemeProvider attribute='class'>
+                        <main className='relative px-4 w-full h-full flex flex-col text-foreground bg-background'>
+                            <ThemeToggleButton />
+                            {menu}
+                            {children}
+                        </main>
+                    </ThemeProvider>
+                    <ReactQueryDevtools initialIsOpen={false} />
+                </QueryProvider>
             </body>
         </html>
     );

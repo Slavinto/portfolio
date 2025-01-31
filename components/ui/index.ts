@@ -6,3 +6,4 @@ export { default as Scroller } from "./scroller";
 export { BentoGrid, BentoGridItem } from "./bento-grid";
 export { BackgroundGradientAnimation } from "./background-gradient-animation";
 export { ModalMenuButton } from "./modal-menu-button";
+export { default as AnimatedCard } from "./AnimatedCard";

@@ -95,6 +95,13 @@ body {
 }
 
 @layer utilities {
+    /* .grid-cols-3 {
+        grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    } */
+    .grid-custom {
+        @apply grid-cols-3;
+    }
+    
     .skeleton-container-dark {
         animation: skeleton-pulse-dark 2s ease-in-out infinite;
     }

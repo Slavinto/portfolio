@@ -9,10 +9,11 @@ const colors = require("tailwindcss/colors");
 /** @type {import('tailwindcss').Config} */
 module.exports = {
     content: [
-        "./pages/**/*.{js,ts,jsx,tsx,mdx}",
+        "./app/**/*.{js,ts,jsx,tsx,mdx}",
         "./components/**/*.{js,ts,jsx,tsx,mdx}",
         "./data/**/*.{js,ts,jsx,tsx,mdx}",
-        "./app/**/*.{js,ts,jsx,tsx,mdx}",
+        "./features/**/*.{js,ts,jsx,tsx,mdx}",
+        "./pages/**/*.{js,ts,jsx,tsx,mdx}",
 
         // Or if using `src` directory:
         "./src/**/*.{js,ts,jsx,tsx,mdx}",
@@ -20,7 +21,16 @@ module.exports = {
     darkMode: "class",
     theme: {
         extend: {
+            gridTemplateColumns: {
+                "3": "repeat(3, minmax(0, 1fr))",
+            },
+            textShadow: {
+                sm: "1px 1px 2px rgba(0, 0, 0, 0.5)", // Small shadow
+                DEFAULT: "2px 2px 4px rgba(0, 0, 0, 0.7)", // Default shadow
+                lg: "3px 3px 6px rgba(0, 0, 0, 0.8)", // Large shadow
+            },
             animation: {
+                move: "move 5s linear infinite",
                 first: "moveVertical 30s ease infinite",
                 second: "moveInCircle 20s reverse infinite",
                 third: "moveInCircle 40s linear infinite",
@@ -28,6 +38,10 @@ module.exports = {
                 fifth: "moveInCircle 20s ease infinite",
             },
             keyframes: {
+                move: {
+                    "0%": { transform: "translateX(-200px)" },
+                    "100%": { transform: "translateX(200px)" },
+                },
                 moveHorizontal: {
                     "0%": {
                         transform: "translateX(-50%) translateY(-10%)",
@@ -121,10 +135,36 @@ module.exports = {
             },
             backgroundImage: {
                 btn: "linear-gradient(90deg, rgba(22,26,49,1) 0%, rgba(6,9,31,1) 100%)",
+                "card-1": "url(/images/card-bg-1.jpg)",
+                "card-2": "url(/images/grid-bg-5.jpg)",
+                "card-3": "url(/images/computer-screen.jpg)",
             },
         },
     },
     plugins: [
+        function ({ addUtilities }: { addUtilities: any }) {
+            addUtilities({
+                ".line-clamp-2": {
+                    display: "-webkit-box",
+                    "-webkit-line-clamp": "2", // Change this number for more or fewer lines
+                    "-webkit-box-orient": "vertical",
+                    overflow: "hidden",
+                },
+            });
+        },
+        function ({ addUtilities }: { addUtilities: any }) {
+            addUtilities({
+                ".text-shadow-sm": {
+                    textShadow: "1px 1px 2px rgba(0, 0, 0, 0.5)",
+                },
+                ".text-shadow": {
+                    textShadow: "2px 2px 4px rgba(0, 0, 0, 0.7)",
+                },
+                ".text-shadow-lg": {
+                    textShadow: "3px 3px 6px rgba(0, 0, 0, 0.8)",
+                },
+            });
+        },
         addVariablesForColors,
         function ({ matchUtilities, theme }: any) {
             matchUtilities(

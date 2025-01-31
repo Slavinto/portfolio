@@ -46,7 +46,7 @@ export const BentoGridItem = ({
                     : id === 3
                     ? "lg:col-start-2 lg:col-end-4 lg:row-start-1 "
                     : "col-start-auto col-end-auto lg:col-start-1 lg:col-end-4 relative"
-            } rounded-xl group/bento hover:shadow-xl transition duration-200 shadow-input dark:shadow-none p-4 dark:bg-black-100 dark:border-white/[0.2] bg-white border border-transparent justify-between ${className}`}
+            } rounded-xl group/bento hover:shadow-xl transition duration-200 shadow-input dark:shadow-none p-4 dark:bg-black-100 dark:border-white/[0.2] bg-white border border-transparent justify-between  ${className}`}
         >
             {header}
             <div className='group-hover/bento:translate-x-2 transition duration-200 flex flex-col gap-1 '>
@@ -56,7 +56,7 @@ export const BentoGridItem = ({
                         {title}
                     </div>
                 </div>
-                <div className='font-sans font-normal text-xs themed-text-icons'>
+                <div className='font-sans font-normal text-xs themed-text-icons line-clamp-3'>
                     {description}
                 </div>
             </div>

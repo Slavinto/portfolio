@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Fragment } from "react";
 import {
     heroMainHeading,
     heroSubheading,
@@ -7,10 +7,14 @@ import {
 } from "@/data";
 import { ButtonsCard, DotBackground, Scroller, TextGenerateEffect } from "./ui";
 import { BsArrow90DegLeft } from "react-icons/bs";
+import { createArrayOf } from "@/lib/helpers";
+import { useRouter } from "next/navigation";
 
 const Hero = () => {
+    const router = useRouter();
     const handleClickCta = () => {
-        document.getElementById("my-projects")?.scrollIntoView();
+        // document.getElementById("my-projects")?.scrollIntoView();
+        router.push("/github");
     };
 
     return (
@@ -46,16 +50,20 @@ const Hero = () => {
 
 export default Hero;
 
-export const HeroSkeleton = () => {
+export const HeroSkeleton = ({ repeatPattern }: { repeatPattern: number }) => {
+    const arr = createArrayOf(
+        <div className='rounded-3xl w-full h-[5rem] md:h-[10rem] dark:bg-white-200/10 bg-white/20' />,
+        repeatPattern
+    );
     return (
         <section
             id='hero'
             className='sm:px-12 pt-[9.5rem] content-container mx-auto'
         >
             <div className='flex flex-col gap-6 md:gap-10 lg:gap-12 skeleton-container-light dark:skeleton-container-dark items-center justify-center text-center bg-skeleton rounded-3xl w-full h-fit p-4 md:p-8 lg:p-12 xl:p-24'>
-                <div className='rounded-3xl w-full h-[5rem] md:h-[10rem] dark:bg-white-200/10 bg-white/20'></div>
-                <div className='rounded-3xl w-full h-[5rem] md:h-[10rem] dark:bg-white-200/10 bg-white/20'></div>
-                <div className='rounded-3xl w-full h-[5rem] md:h-[10rem] dark:bg-white-200/10 bg-white/20'></div>
+                {arr.map((pat, idx) => (
+                    <Fragment key={idx}>{pat}</Fragment>
+                ))}
             </div>
         </section>
     );
