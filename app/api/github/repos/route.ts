@@ -1,11 +1,14 @@
+import { IGitHubReposApi } from "@/features/github/githubTypes";
 import { handleError } from "@/lib/helpers";
 import axios from "axios";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
-export async function GET(req) {
+export async function GET(
+    req: NextRequest
+): Promise<NextResponse<IGitHubReposApi | { error: string }>> {
     const { searchParams } = new URL(req.url);
-    const page = searchParams.get("page") || 1;
-    const per_page = searchParams.get("per_page") || 10;
+    const page = Number(searchParams.get("page")) || 1;
+    const per_page = Number(searchParams.get("per_page")) || 4;
 
     const username = process.env.GITHUB_USERNAME;
     const token = process.env.GITHUB_PERSONAL_ACCESS_TOKEN;
@@ -18,12 +21,37 @@ export async function GET(req) {
             },
         });
         if (!response.ok) {
+            const errorText = await response.text();
+            console.error("GitHub API error: ", response.status, errorText);
             return NextResponse.json({ error: "Failed to fetch repositories" });
         }
-        const data = await response.json();
-        console.log({ data });
-        return NextResponse.json(data);
+        const linkHeader = response.headers.get("Link");
+        const totalPages = extractTotalPages(linkHeader);
+        const repos = await response.clone().json();
+
+        // console.log({ repos });
+        console.log("API Response Headers:", response.headers);
+        console.log("API Response Body:", await response.clone().json());
+
+        return NextResponse.json({
+            repos,
+            totalPages,
+            nextPage: page < totalPages ? page + 1 : null,
+        });
     } catch (error) {
         throw handleError(error);
     }
 }
+
+const extractTotalPages = (linkHeader: string | null) => {
+    if (!linkHeader) {
+        return 1;
+    }
+    try {
+        const lastPageMatch = linkHeader.match(/&page=(\d+)>; rel="last"/);
+        return lastPageMatch ? Number(lastPageMatch[1]) : 1;
+    } catch (error) {
+        console.error("Error extracting total pages: ", error);
+        return 1;
+    }
+};

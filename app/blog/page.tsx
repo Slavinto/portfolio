@@ -5,7 +5,7 @@ import React from "react";
 
 const BlogPage = () => {
     return (
-        <div className='w-full h-[50vh] flex items-center justify-center'>
+        <div className='w-full h-screen flex items-center justify-center'>
             <AnimatedCard
                 imagePath='/icons/android-chrome-192x192.png'
                 headerText='This feature is being implemented'
