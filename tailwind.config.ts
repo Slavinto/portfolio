@@ -21,8 +21,8 @@ module.exports = {
     darkMode: "class",
     theme: {
         extend: {
-            gridTemplateColumns: {
-                "3": "repeat(3, minmax(0, 1fr))",
+            fontFamily: {
+                poppins: ["var(--font-poppins)", "sans-serif"],
             },
             textShadow: {
                 sm: "1px 1px 2px rgba(0, 0, 0, 0.5)", // Small shadow

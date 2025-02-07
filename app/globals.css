@@ -2,9 +2,6 @@
 @import "tailwindcss/components";
 @import "tailwindcss/utilities";
 
-body {
-}
-
 @layer base {
     :root {
         --rotate: 360deg
@@ -81,7 +78,7 @@ body {
 
 @layer base {
     body {
-        @apply h-screen;
+        @apply h-screen bg-background;
     }
 
     * {

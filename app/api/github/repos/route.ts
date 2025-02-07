@@ -12,7 +12,7 @@ export async function GET(
 
     const username = process.env.GITHUB_USERNAME;
     const token = process.env.GITHUB_PERSONAL_ACCESS_TOKEN;
-    const GITHUB_API_URL = `https://api.github.com/users/${username}/repos?per_page=${per_page}&page=${page}`;
+    const GITHUB_API_URL = `https://api.github.com/users/${username}/repos?sort=pushed&order=desc&per_page=${per_page}&page=${page}`;
     try {
         const response = await fetch(GITHUB_API_URL, {
             headers: {

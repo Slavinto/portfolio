@@ -1,15 +1,15 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-    output: "export",
-    distDir: "dist",
+    // output: "export",
+    // distDir: "dist",
     images: {
-        unoptimized: true,
+        // unoptimized: true,
         remotePatterns: [
             { protocol: "https", hostname: "images.unsplash.com" },
         ],
     },
-    basePath: "/",
-    assetPrefix: "/",
+    // basePath: "/portfolio",
+    // assetPrefix: "/portfolio/",
 };
 
 export default nextConfig;

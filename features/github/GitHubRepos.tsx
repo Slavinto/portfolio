@@ -41,13 +41,18 @@ const GitHubRepos = () => {
     //         </div>
     //     );
     // }
+
+    // return <GitHubReposSkeleton repeatPattern={3} />;
     console.log({ data });
+
     return (isLoading || isFetchingNextPage) && (!data || !data?.pages) ? (
         <GitHubReposSkeleton repeatPattern={3} />
     ) : (
         <div className='flex flex-col gap-4 w-full items-center'>
             <h1 className='text-3xl font-bold'>My GitHub Repositories</h1>
-            <div className='grid grid-cols-1 xl:grid-cols-2 gap-8 place-items-center mt-8'>
+            <div
+                className={`grid grid-cols-1 xl:grid-cols-2 gap-8 mt-8 auto-rows-[minmax(${githubCardProps.height},auto)]`}
+            >
                 {data?.pages.map((page) => {
                     const { repos } = page as IGitHubReposApi;
                     return repos.map(
@@ -62,9 +67,9 @@ const GitHubRepos = () => {
                             },
                             idx
                         ) => (
-                            <Link key={id} href={html_url}>
+                            <Link key={id} href={html_url} className={``}>
                                 <AnimatedCard
-                                    classNames='bg-card-3 rounded-3xl'
+                                    classNames='bg-card-3 rounded-3xl h-full opacity-90 shadow-xl'
                                     icon={
                                         language ? (
                                             getLanguageIcon(language)
@@ -79,12 +84,11 @@ const GitHubRepos = () => {
                         )
                     );
                 })}
-            </div>
-            <div className='flex items-center w-full' ref={ref}>
-                {isFetchingNextPage && (
+                {/* {isFetchingNextPage && (
                     <GitHubReposSkeleton repeatPattern={2} />
-                )}
+                )} */}
             </div>
+            <div className='flex items-center w-full' ref={ref}></div>
         </div>
     );
 };
@@ -99,10 +103,10 @@ const GitHubReposSkeleton = ({ repeatPattern }: { repeatPattern: number }) => {
     return (
         <section
             id='github-skeleton'
-            className={`sm:px-12 flex items-start justify-center mx-auto content-container w-full h-screen ]`}
+            className={`sm:px-12 flex items-start justify-center content-container min-w-full h-full`}
         >
             <div
-                className={`flex flex-col gap-6 md:gap-10 lg:gap-12 skeleton-container-light dark:skeleton-container-dark items-center justify-center text-center bg-skeleton rounded-3xl w-[${githubCardProps.width}] h-[${githubCardProps.height} p-4 md:p-8 lg:p-12 xl:p-24`}
+                className={`flex flex-col flex-grow gap-6 md:gap-10 lg:gap-8 skeleton-container-light dark:skeleton-container-dark justify-center bg-skeleton rounded-3xl w-[${githubCardProps.width}] !h-[${githubCardProps.height}] p-4 md:p-8 lg:p-12 xl:p-24`}
             >
                 {fillerArray.map((item, idx) => (
                     <Fragment key={idx}>{item}</Fragment>
