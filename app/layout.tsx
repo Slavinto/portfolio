@@ -2,42 +2,13 @@ import type { Metadata } from "next";
 import { ThemeProvider } from "next-themes";
 import "./globals.css";
 import ThemeToggleButton from "@/components/theme-toggle-button";
-import localFont from "next/font/local";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import QueryProvider from "@/features/reactQuery/queryProvider";
-const poppins = localFont({
-    src: [
-        {
-            path: "../public/fonts/Poppins-Light.ttf",
-            weight: "300",
-            style: "normal",
-        },
-        {
-            path: "../public/fonts/Poppins-Regular.ttf",
-            weight: "400",
-            style: "normal",
-        },
-        {
-            path: "../public/fonts/Poppins-Medium.ttf",
-            weight: "500",
-            style: "normal",
-        },
-        {
-            path: "../public/fonts/Poppins-Semibold.ttf",
-            weight: "600",
-            style: "normal",
-        },
-        {
-            path: "../public/fonts/Poppins-Bold.ttf",
-            weight: "700",
-            style: "normal",
-        },
-        {
-            path: "../public/fonts/Poppins-ExtraBold.ttf",
-            weight: "800",
-            style: "normal",
-        },
-    ],
+import { Poppins } from "next/font/google";
+
+const poppins = Poppins({
+    weight: ["300", "400", "500", "600", "700", "800"],
+    subsets: ["latin"],
     variable: "--font-poppins",
 });
 
