@@ -15,3 +15,16 @@ export const createArrayOf = <T>(element: T, length: number): T[] => {
     }
     return arr;
 };
+
+export const extractTotalPages = (linkHeader: string | null) => {
+    if (!linkHeader) {
+        return 1;
+    }
+    try {
+        const lastPageMatch = linkHeader.match(/&page=(\d+)>; rel="last"/);
+        return lastPageMatch ? Number(lastPageMatch[1]) : 1;
+    } catch (error) {
+        console.error("Error extracting total pages: ", error);
+        return 1;
+    }
+};

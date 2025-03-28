@@ -20,14 +20,16 @@ const GitHubRepos = () => {
         error,
     } = useInfiniteRepos();
 
+    const isBusy = isLoading || isFetchingNextPage;
     const { ref, inView } = useInView();
+
     useEffect(() => {
         if (inView && hasNextPage) {
             fetchNextPage();
         }
     }, [inView, hasNextPage, fetchNextPage]);
 
-    // if ((!isLoading && !isFetchingNextPage && !data) || error) {
+    // if ((!isBusy && !data) || error) {
     //     return (
     //         <div className='w-full dark:h-screen flex justify-center'>
     //             <AnimatedCard

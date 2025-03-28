@@ -25,13 +25,7 @@ export const menuItems = [
         url: "https://github.com/Slavinto?tab=repositories",
         icon: <VscGithubAlt />,
     },
-    {
-        id: 4,
-        title: "Blog",
-        sectionId: "blog",
-        url: "/blog",
-        icon: <SlNotebook />,
-    },
+
     // {
     //     id: 5,
     //     title: "Test",
