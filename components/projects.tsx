@@ -1,14 +1,16 @@
 import React from "react";
 import { motion } from "framer-motion";
+import { tabsDataWildOasisProject } from "@/types/constants";
+import { Headings } from "@/types/enums";
+import { Heading } from "./ui";
 import { CustomTabs } from "./ui/tabs/CustomTabs";
 
 const Projects = () => {
     return (
-        // <section id='my-projects' className='pt-[12.5rem] h-screen'>
-        <section id='temp' className='pt-[12.5rem] h-screen'>
+        <section id='my-projects' className='py-[12.5rem] h-screen'>
             <motion.div initial='hidden' whileInView='visible'>
-                <h2 className='text-5xl'>Recent Projects</h2>
-                <CustomTabs />
+                <Heading as={Headings.H3}>Recent Projects</Heading>
+                <CustomTabs tabsData={tabsDataWildOasisProject} />
             </motion.div>
         </section>
     );

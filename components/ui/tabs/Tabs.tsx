@@ -69,7 +69,7 @@ export const Tabs = ({
                                     duration: 0.6,
                                 }}
                                 className={cn(
-                                    "absolute inset-0 bg-gray-200 dark:bg-zinc-800 rounded-full ",
+                                    "absolute inset-0 header-gradient-light dark:header-gradient-dark rounded-full ",
                                     activeTabClassName
                                 )}
                             />
@@ -86,7 +86,7 @@ export const Tabs = ({
                 active={active}
                 key={active.value}
                 hovering={hovering}
-                className={cn("mt-32", contentClassName)}
+                className={cn("mt-12", contentClassName)}
             />
         </>
     );
