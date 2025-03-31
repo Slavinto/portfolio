@@ -5,7 +5,6 @@ export async function getRepos({
     pageParam: number;
     perPage: number;
 }) {
-    console.log("TEST");
     const res = await fetch(
         `/api/github/repos?page=${pageParam}&per_page=${perPage}`
     );

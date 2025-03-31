@@ -40,7 +40,7 @@ export async function GET(req: Request) {
         return NextResponse.json({
             repos,
             totalPages,
-            nextPage: page < totalPages ? page + 1 : null,
+            nextPage: page < totalPages ? page + 1 : undefined,
         });
     } catch (error) {
         const newError = handleError(error);

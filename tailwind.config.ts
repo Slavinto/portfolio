@@ -1,4 +1,5 @@
 import { DEFAULT_CIPHERS } from "tls";
+import { gridItems } from "./data";
 
 const {
     default: flattenColorPalette,

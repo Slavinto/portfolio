@@ -27,7 +27,7 @@ export default function AnimatedCard({
         <div
             onClick={handleClickCard}
             className={cn(
-                ` cursor-pointer overflow-hidden relative card w-[${githubCardProps.width}] h-[${githubCardProps.height}] rounded-3xl shadow-xl max-w-lg mx-auto flex flex-col justify-center p-8 items-center",
+                ` cursor-pointer overflow-hidden relative card rounded-3xl shadow-xl max-w-lg mx-auto flex flex-col justify-center p-8 itemws-center",
                     "dark:bg-card-1 bg-card-2 bg-cover ${classNames}`
             )}
         >

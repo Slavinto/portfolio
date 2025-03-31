@@ -47,14 +47,12 @@ const GitHubRepos = () => {
     // return <GitHubReposSkeleton repeatPattern={3} />;
     console.log({ data });
 
-    return (isLoading || isFetchingNextPage) && (!data || !data?.pages) ? (
+    return isBusy && (!data || !data?.pages) ? (
         <GitHubReposSkeleton repeatPattern={3} />
     ) : (
         <div className='flex flex-col gap-4 w-full items-center'>
             <h1 className='text-3xl font-bold'>My GitHub Repositories</h1>
-            <div
-                className={`grid grid-cols-1 xl:grid-cols-2 gap-8 mt-8 auto-rows-[minmax(${githubCardProps.height},auto)]`}
-            >
+            <div className={`grid grid-cols-1 xl:grid-cols-2 gap-8 mt-8]`}>
                 {data?.pages.map((page) => {
                     const { repos } = page as IGitHubReposApi;
                     return repos.map(
@@ -71,7 +69,7 @@ const GitHubRepos = () => {
                         ) => (
                             <Link key={id} href={html_url} className={``}>
                                 <AnimatedCard
-                                    classNames='bg-card-3 rounded-3xl h-full opacity-90 shadow-xl'
+                                    classNames='bg-card-3 rounded-3xl h-full opacity-90 shadow-xl h-[20rem]'
                                     icon={
                                         language ? (
                                             getLanguageIcon(language)
@@ -86,9 +84,7 @@ const GitHubRepos = () => {
                         )
                     );
                 })}
-                {/* {isFetchingNextPage && (
-                    <GitHubReposSkeleton repeatPattern={2} />
-                )} */}
+                {isBusy && <GitHubReposSkeleton repeatPattern={2} />}
             </div>
             <div className='flex items-center w-full' ref={ref}></div>
         </div>

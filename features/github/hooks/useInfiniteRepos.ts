@@ -10,9 +10,9 @@ export const useInfiniteRepos = () => {
 
     return useInfiniteQuery<IGitHubReposApi, Error>({
         queryKey: ["githubRepos"],
-        queryFn: ({ pageParam = 1 }: { pageParam: number }) =>
-            getRepos({ pageParam, perPage: 8 }),
-        getNextPageParam: (lastPage) => lastPage.nextPage ?? false,
+        queryFn: ({ pageParam = 1 }) =>
+            getRepos({ pageParam: Number(pageParam), perPage: 8 }),
+        getNextPageParam: (lastPage) => lastPage?.nextPage ?? undefined,
         initialPageParam: 1,
     });
 };

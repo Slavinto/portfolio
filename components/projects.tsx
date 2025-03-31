@@ -1,5 +1,6 @@
 import React from "react";
 import { motion } from "framer-motion";
+import { CustomTabs } from "./ui/tabs/CustomTabs";
 
 const Projects = () => {
     return (
@@ -7,6 +8,7 @@ const Projects = () => {
         <section id='temp' className='pt-[12.5rem] h-screen'>
             <motion.div initial='hidden' whileInView='visible'>
                 <h2 className='text-5xl'>Recent Projects</h2>
+                <CustomTabs />
             </motion.div>
         </section>
     );

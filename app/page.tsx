@@ -4,7 +4,6 @@ import Projects from "@/components/projects";
 import { HeroSkeleton } from "@/components/hero";
 import dynamic from "next/dynamic";
 import { GridSkeleton } from "@/components/grid";
-import GitHubRepos from "@/features/github/GitHubRepos";
 
 export default function Home() {
     const Hero = dynamic(() => import("@/components/hero"), {
@@ -19,7 +18,7 @@ export default function Home() {
         <>
             <Hero />
             <Grid />
-            {/* <Projects /> */}
+            <Projects />
             <Footer />
         </>
     );
