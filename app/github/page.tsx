@@ -1,3 +1,4 @@
+"use client";
 import GitHubRepos from "@/features/github/GitHubRepos";
 import React, { Suspense } from "react";
 

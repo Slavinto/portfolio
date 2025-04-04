@@ -5,16 +5,17 @@ import { Tabs } from "./Tabs";
 import { useTabsTheme } from "./useTabsTheme";
 import { ReactNode } from "react";
 import { ProjectTabsConstants } from "@/types/interfaces";
-import { tabsDataWildOasisProject } from "@/types/constants";
+import Heading from "../Heading";
+import { Headings } from "@/types/enums";
 
 function Tab({ title, children }: { title: string; children: ReactNode }) {
     const { tabsTheme } = useTabsTheme();
 
     return (
         <div
-            className={`w-full overflow-hidden relative h-full rounded-2xl p-10 text-xl md:text-4xl font-bold text-white  header-gradient-${tabsTheme}`}
+            className={`w-full overflow-hidden relative h-full rounded-2xl p-10 text-xl md:text-4xl font-bold text-white header-gradient-${tabsTheme}`}
         >
-            <p>{title}</p>
+            <Heading as={Headings.H4}>{title}</Heading>
             {children}
         </div>
     );

@@ -1,11 +1,18 @@
 import { cn } from "@/utils/cn";
 import { motion } from "framer-motion";
-import { BentoGrid, BentoGridItem } from "@/components/ui";
+import { BentoGrid, BentoGridItem, Heading } from "@/components/ui";
 import { gridItems } from "@/data";
+import { Headings } from "@/types/enums";
 
 const Grid = () => {
     return (
         <section className='content-container mx-auto'>
+            <Heading
+                as={Headings.H2}
+                classNames='text-center pt-[9.5rem] uppercase'
+            >
+                About me
+            </Heading>
             <motion.div id='about' initial='hidden' whileInView='visible'>
                 <BentoGrid className='auto-cols-auto auto-rows-[9rem] md:auto-rows-[11rem] lg:auto-rows-[12rem] xl:auto-rows-[15rem] sm:px-12 pt-[13rem]'>
                     {gridItems.map(

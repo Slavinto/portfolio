@@ -101,7 +101,7 @@ const GitHubReposSkeleton = ({ repeatPattern }: { repeatPattern: number }) => {
     return (
         <section
             id='github-skeleton'
-            className={`sm:px-12 flex items-start justify-center content-container min-w-full h-full`}
+            className={`sm:px-2 flex items-start justify-center content-container col-span-full min-w-full h-full`}
         >
             <div
                 className={`flex flex-col flex-grow gap-6 md:gap-10 lg:gap-8 skeleton-container-light dark:skeleton-container-dark justify-center bg-skeleton rounded-3xl w-[${githubCardProps.width}] !h-[${githubCardProps.height}] p-4 md:p-8 lg:p-12 xl:p-24`}

@@ -19,6 +19,7 @@ module.exports = {
         // Or if using `src` directory:
         "./src/**/*.{js,ts,jsx,tsx,mdx}",
     ],
+    safelist: ["header-gradient-dark", "header-gradient-light"],
     darkMode: "class",
     theme: {
         extend: {

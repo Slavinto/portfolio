@@ -9,7 +9,9 @@ const Projects = () => {
     return (
         <section id='my-projects' className='py-[12.5rem] h-screen'>
             <motion.div initial='hidden' whileInView='visible'>
-                <Heading as={Headings.H3}>Recent Projects</Heading>
+                <Heading as={Headings.H2} classNames='uppercase text-center'>
+                    Recent Projects
+                </Heading>
                 <CustomTabs tabsData={tabsDataWildOasisProject} />
             </motion.div>
         </section>
