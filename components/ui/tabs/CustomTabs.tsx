@@ -21,12 +21,24 @@ function Tab({ title, children }: { title: string; children: ReactNode }) {
     );
 }
 
-const BackgroundImage = ({ imageName }: { imageName: string }) => {
+const BackgroundImage = ({
+    imageName,
+    hasTheme,
+}: {
+    imageName: string;
+    hasTheme: boolean;
+}) => {
     const { tabsTheme } = useTabsTheme();
+
+    if (!imageName || !tabsTheme) {
+        return null;
+    }
 
     return (
         <Image
-            src={`/images/${imageName}-${tabsTheme}.jpg`}
+            src={`/images/${
+                hasTheme ? imageName + "-" + tabsTheme : imageName
+            }.jpg`}
             alt='tab background image'
             width='1000'
             height='1000'
@@ -36,12 +48,12 @@ const BackgroundImage = ({ imageName }: { imageName: string }) => {
 };
 
 const generateTabsObjects = (tabsData: ProjectTabsConstants[]) => {
-    return tabsData.map(({ title, value, imageName }) => ({
+    return tabsData.map(({ title, value, imageName, hasTheme = false }) => ({
         title,
         value,
         content: (
             <Tab title={title.toUpperCase()}>
-                <BackgroundImage imageName={imageName} />
+                <BackgroundImage imageName={imageName} hasTheme={hasTheme} />
             </Tab>
         ),
     }));
@@ -55,8 +67,10 @@ export function CustomTabs({ tabsData }: { tabsData: ProjectTabsConstants[] }) {
     }
 
     return (
-        <div className='h-[20rem] md:h-[43rem] [perspective:1000px] relative b flex flex-col max-w-5xl mx-auto w-full  items-start justify-start my-40'>
-            <Tabs tabs={generateTabsObjects(tabsData)} />
+        <div className=''>
+            <div className='h-[20rem] md:h-[43rem] [perspective:1000px] relative flex flex-col max-w-5xl mx-auto w-full items-start justify-start my-40'>
+                <Tabs tabs={generateTabsObjects(tabsData)} />
+            </div>
         </div>
     );
 }
