@@ -51,7 +51,11 @@ export default function RootLayout({
             {/* className={`${poppins.className} h-full`} */}
             <body className={`${poppins.variable} h-screen`}>
                 <QueryProvider>
-                    <ThemeProvider attribute='class'>
+                    <ThemeProvider
+                        attribute='class'
+                        defaultTheme='system'
+                        enableSystem={true}
+                    >
                         <main className='font-poppins relative px-4 w-full flex flex-col flex-grow text-foreground bg-background'>
                             <ThemeToggleButton />
                             {menu}

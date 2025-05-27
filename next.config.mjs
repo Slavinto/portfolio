@@ -10,6 +10,7 @@ const nextConfig = {
         GITHUB_USERNAME: process.env.GITHUB_USERNAME,
         GITHUB_PERSONAL_ACCESS_TOKEN: process.env.GITHUB_PERSONAL_ACCESS_TOKEN,
     },
+    darkmode: "class",
 };
 
 export default nextConfig;
