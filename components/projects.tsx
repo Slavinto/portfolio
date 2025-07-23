@@ -12,7 +12,7 @@ const Projects = () => {
     return (
         <section
             id='my-projects'
-            className='py-[12.5rem] content-container flex flex-col'
+            className='py-[12.5rem] content-container flex flex-col mx-auto'
         >
             <motion.div initial='hidden' whileInView='visible'>
                 <Heading as={Headings.H2} classNames='uppercase text-center'>
