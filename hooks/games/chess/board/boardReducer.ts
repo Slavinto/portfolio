@@ -1,0 +1,53 @@
+import { Board } from "@/lib/games/chess/game-logic/main/board/board";
+import { BoardState, BoardAction } from "@/types/games/chess";
+
+export function boardReducer(
+    state: BoardState,
+    action: BoardAction
+): BoardState {
+    const { board } = state;
+    const newBoard = board.clone();
+
+    switch (action.type) {
+        case "START_NEW_GAME": {
+            const newBoard = new Board();
+            newBoard.reset();
+            return {
+                ...state,
+                board: newBoard,
+                selected: null,
+            };
+        }
+        case "MOVE_PIECE": {
+            const { from, to } = action.payload;
+            // making new class instance to update the reference for React to figure out the change of state
+            const moved = newBoard.movePiece(from, to);
+            if (moved) {
+                return {
+                    ...state,
+                    board: newBoard,
+                    selected: null,
+                };
+            }
+            return state;
+        }
+        case "SELECT_PIECE": {
+            return { ...state, selected: action.payload.position };
+        }
+        case "UNSELECT_PIECE": {
+            return { ...state, selected: null };
+        }
+        case "UNDO_MOVE": {
+            newBoard.undoLastMove();
+
+            return {
+                ...state,
+                board: state.board.getThisBoard(),
+                selected: null,
+            };
+        }
+
+        default:
+            return state;
+    }
+}
