@@ -4,7 +4,7 @@ import Projects from "@/components/projects";
 import { HeroSkeleton } from "@/components/hero";
 import dynamic from "next/dynamic";
 import { GridSkeleton } from "@/components/grid";
-import { ChessBoard } from "@/components/games/chess";
+import Link from "next/link";
 
 export default function Home() {
     const Hero = dynamic(() => import("@/components/hero"), {
@@ -20,9 +20,7 @@ export default function Home() {
             <Hero />
             <Grid />
             <Projects />
-            <main className='flex flex-col w-full'>
-                <ChessBoard />
-            </main>
+            <Link href='/chess'>Play some chess</Link>
             <Footer />
         </>
     );

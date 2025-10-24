@@ -9,3 +9,7 @@ export enum Headings {
     H3 = "h3",
     H4 = "h4",
 }
+
+export enum QueryKeys {
+    User = "user",
+}

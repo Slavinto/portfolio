@@ -2,14 +2,18 @@ import type { Board } from "../main/board/board";
 import { SteppingPiece } from "../main/steppingPiece";
 import { Position } from "../main/position";
 import type { Rook } from "./rook";
-import { Color, File, Rank } from "@/types/games/chess";
-import { kingSteps } from "@/data/games/chess";
+import { Color, File, PieceType, Rank } from "@/types/games/chess";
+import { kingSteps } from "@/data/games/chess/constants/board";
 
 export class King extends SteppingPiece {
     public hasMoved: boolean = false;
+    protected readonly _type: PieceType = "King";
+    public get type(): PieceType {
+        return this._type;
+    }
 
     constructor(color: Color, file: File, rank: Rank, board: Board) {
-        super(color, file, rank, "King", board, kingSteps);
+        super(color, file, rank, board, kingSteps);
     }
 
     getPossibleMoves(): Position[] {

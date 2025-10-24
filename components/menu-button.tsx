@@ -273,8 +273,7 @@ const MenuButton = () => {
                         right: "0rem",
                     }}
                     variants={menuWrapper}
-                    className='dark:hover:border-neutral-500 hover:border-neutral-200 span-wrapper absolute dark:btn-gradient btn-gradient-light border-neutral-100 border-2 dark:border-white/[0.2] w-12 h-12 rounded-lg 
-                    flex items-center justify-center cursor-pointer'
+                    className='span-wrapper absolute w-12 h-12 btn-border flex items-center justify-center cursor-pointer'
                 >
                     <motion.div
                         variants={menuVariants}

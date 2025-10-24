@@ -31,6 +31,9 @@ module.exports = {
                 DEFAULT: "2px 2px 4px rgba(0, 0, 0, 0.7)", // Default shadow
                 lg: "3px 3px 6px rgba(0, 0, 0, 0.8)", // Large shadow
             },
+            boxShadow: {
+                "inset-md": "var(--inset-shadow-md)",
+            },
             animation: {
                 move: "move 5s linear infinite",
                 first: "moveVertical 30s ease infinite",

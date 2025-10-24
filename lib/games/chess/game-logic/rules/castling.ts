@@ -1,7 +1,7 @@
 import { File, Move } from "@/types/games/chess";
 import type { Board } from "../main/board/board";
 import { Position } from "../main/position";
-import { King } from "../pieces/king";
+import { getDiff } from "@/utils/games/chess/helpers";
 
 export function isCastlingValid(
     // the king-move being attempted
@@ -10,28 +10,31 @@ export function isCastlingValid(
 ): boolean {
     const moveHistory = board.moveHistoryList;
     const king = move.piece;
-    if (!(king instanceof King)) {
+    if (!(king.type === "King")) {
         console.info("Castling failed. No king piece found in move.");
         return false;
     }
 
-    const isKingSide = move.to.file > move.from.file;
+    const { from, to } = move;
+    const { color, id: kingId } = king;
+
+    const fileDiff = getDiff(from.file, to.file);
+    const isKingSide = fileDiff > 0;
+
     const rookStartFile = isKingSide ? "H" : "A";
     const rook = board.getPieceAtPosition(
         new Position(rookStartFile, move.from.rank)
     );
 
-    if (!rook || rook.constructor.name !== "Rook") {
+    if (!rook || rook.type !== "Rook") {
         console.info("Castling failed. No rook piece found in move.");
         return false;
     }
 
-    const { color, id: kingId } = king;
     const { id: rookId } = rook;
-    const { from, to } = move;
 
     // Check if the pieces are of the correct types
-    if (king.constructor.name !== "King" || rook.constructor.name !== "Rook") {
+    if (king.type !== "King" || rook.type !== "Rook") {
         console.info("Castling failed. Invaid piece type");
         return false;
     }
@@ -56,7 +59,6 @@ export function isCastlingValid(
     }
 
     // Check if the king has moved two squares to the right or left
-    const fileDiff = to.file.charCodeAt(0) - from.file.charCodeAt(0);
     if (Math.abs(fileDiff) !== 2) {
         console.info("Castling failed. King must move two squares.");
         return false;

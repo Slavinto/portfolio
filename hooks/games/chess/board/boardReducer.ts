@@ -46,7 +46,18 @@ export function boardReducer(
                 selected: null,
             };
         }
-
+        case "HYDRATE_FROM_SERVER": {
+            const server = action.payload; // PersistedState
+            // rebuild your board from server.state_json.board if needed,
+            // or simply replace your local state if it matches shape:
+            return {
+                ...state,
+                // merge in server's authoritative data
+                board: Board.fromPersistedState(server), // if you need: rebuild from server.board JSON
+                selected: null,
+                playerColor: state.playerColor, // keep local perspective
+            };
+        }
         default:
             return state;
     }

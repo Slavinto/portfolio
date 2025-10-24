@@ -1,12 +1,17 @@
-import { Color, File, Rank } from "@/types/games/chess";
+import { Color, File, PieceType, Rank } from "@/types/games/chess";
 import type { Board } from "../main/board/board";
 import { Piece } from "../main/piece";
 import { Position } from "../main/position";
-import { files } from "@/data/games/chess";
+import { files } from "@/data/games/chess/constants/board";
 
 export class Pawn extends Piece {
+    protected readonly _type: PieceType = "Pawn";
+    public get type(): PieceType {
+        return this._type;
+    }
+
     constructor(color: Color, file: File, rank: Rank, board: Board) {
-        super(color, file, rank, "Pawn", board);
+        super(color, file, rank, board);
     }
 
     public getPossibleMoves(): Position[] {

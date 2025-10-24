@@ -1,4 +1,4 @@
-import { File } from "@/types/games/chess";
+import { File, GameStatus } from "@/types/games/chess";
 
 export const fileOffsets: Record<File, File | null> = {
     A: "B",
@@ -21,3 +21,12 @@ export const pieceDirection = {
     bottomLeft: "BottomLeft",
     bottomRight: "BottomRight",
 } as const;
+
+export const STATUS_COLORS: Record<GameStatus, string> = {
+    waiting: "bg-yellow-100 text-yellow-800",
+    check: "bg-orange-100 text-orange-800",
+    checkmate: "bg-red-100 text-red-800",
+    stalemate: "bg-gray-100 text-gray-800",
+    draw: "bg-gray-100 text-gray-800",
+    ongoing: "bg-neutral-100 text-neutral-800",
+};

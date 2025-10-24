@@ -1,16 +1,29 @@
-import { Color, GameStatus, Move, PieceType } from "@/types/games/chess";
+import {
+    Color,
+    GameStatus,
+    Move,
+    PersistedBoard,
+    PersistedMove,
+    PersistedPiece,
+    PersistedState,
+    PieceType,
+} from "@/types/games/chess";
 import { Piece } from "../piece";
-import { King } from "../../pieces/king";
-import { Pawn } from "../../pieces/pawn";
-import { Rook } from "../../pieces/rook";
 import {
     createPieceOnBoard,
     getDiff,
     isSamePiece,
+    toPersistedBoard,
+    toPersistedState,
+    PieceClassMap,
 } from "@/utils/games/chess/helpers";
 import { Position } from "../position";
 import { isCastlingValid, isEnPassant, promotion } from "../../rules";
-import { initialPieceSetup, PieceInit } from "@/data/games/chess";
+import {
+    getInitialPieceSetup,
+    PieceInit,
+} from "@/data/games/chess/constants/pieceInit";
+import { pieceClasses } from "../../pieces";
 
 export class Board {
     private _pieces: Piece[] = [];
@@ -50,11 +63,13 @@ export class Board {
         this._capturedPieces = pieces;
     }
 
-    private _promotedPawns: Pawn[] = [];
+    private _promotedPawns: Piece[] = [];
+    // private _promotedPawns: Pawn[] = [];
     public get promotedPawns() {
         return this._promotedPawns;
     }
-    public set promotedPawns(p: Pawn[]) {
+    public set promotedPawns(p: Piece[]) {
+        // public set promotedPawns(p: Pawn[]) {
         this._promotedPawns = p;
     }
 
@@ -76,7 +91,7 @@ export class Board {
             return cp;
         });
         clonedBoard.promotedPawns = this.promotedPawns.map((piece) => {
-            const cp = piece.clone() as Pawn;
+            const cp = piece.clone();
             cp.board = clonedBoard;
             return cp;
         });
@@ -87,11 +102,6 @@ export class Board {
                 ...clonedBoard.promotedPawns,
             ].map((cp) => [cp.id, cp])
         );
-        // clonedBoard.capturedPieces = this.capturedPieces.map((piece) => {
-        //     const cp = piece.clone();
-        //     cp.board = clonedBoard;
-        //     return cp;
-        // });
 
         clonedBoard.currentTurn = this.currentTurn;
 
@@ -111,8 +121,8 @@ export class Board {
                 return { ...hMove, capturedPiece: cp };
             }
             // castling
-            if (m?.isCastling && m?.rook instanceof Rook) {
-                const r = byId.get(m.rook?.id) as Rook;
+            if (m?.isCastling && m?.rook?.type === "Rook") {
+                const r = byId.get(m.rook?.id);
                 return { ...hMove, rook: r };
             }
             // promotion
@@ -130,6 +140,41 @@ export class Board {
         this.pieces.push(piece);
 
         return piece;
+    }
+
+    static fromPersistedState(state: PersistedState): Board {
+        const board = new Board();
+        const persistedBoard = state?.board;
+        if (!persistedBoard) {
+            console.info("Invalid persisted board state. Resetting board.");
+            return board;
+        }
+        // console.log({ boardInFromPersisted: board });
+        console.log({ boardInFromPersisted: state.board });
+        board.pieces =
+            persistedBoard.pieces?.map((p) =>
+                Piece.fromPersisted(p, board, PieceClassMap)
+            ) ?? [];
+
+        board.capturedPieces =
+            persistedBoard.capturedPieces?.map((p) =>
+                Piece.fromPersisted(p, board, PieceClassMap)
+            ) ?? [];
+
+        board.promotedPawns =
+            persistedBoard.promotedPawns?.map((p) =>
+                Piece.fromPersisted(p, board, PieceClassMap)
+            ) ?? [];
+
+        board.currentTurn = persistedBoard.currentTurn;
+
+        // hydrate move history (reference by ID)
+        const byId = new Map(board.pieces.map((p) => [p.id, p]));
+        board.moveHistoryList = persistedBoard.moveHistoryList.map((m) =>
+            board.hydratePersistedMove(m)
+        );
+        console.log({ hydratedBoard: board });
+        return board;
     }
 
     getGameStatus(): GameStatus {
@@ -158,7 +203,7 @@ export class Board {
 
         return possibleMoves.filter((move) => {
             const targetPiece = this.getPieceAtPosition(move);
-            if (piece instanceof Pawn) {
+            if (piece.type === "Pawn") {
                 const fileDiff = Math.abs(
                     piece.position.file.charCodeAt(0) - move.file.charCodeAt(0)
                 );
@@ -224,13 +269,53 @@ export class Board {
         return false; // No legal moves found for the given color
     }
 
+    hydratePersistedMove(move: PersistedMove): Move {
+        const { to, from, piece, moveNumber } = move;
+        return {
+            from: new Position(from.file, from.rank),
+            to: new Position(to.file, to.rank),
+            piece: Piece.fromPersisted(piece, this, pieceClasses),
+            capturedPiece: move?.capturedPiece
+                ? Piece.fromPersisted(move.capturedPiece, this, pieceClasses)
+                : undefined,
+
+            // special cases:
+            isEnPassant: move?.isEnPassant ? move.isEnPassant : undefined,
+            capturedPawnPosition: move?.capturedPawnPosition
+                ? new Position(
+                      move.capturedPawnPosition.file,
+                      move.capturedPawnPosition.rank
+                  )
+                : undefined,
+
+            isCastling: move?.isCastling ? move.isCastling : undefined,
+            rook: move?.rook
+                ? Piece.fromPersisted(move.rook, this, pieceClasses)
+                : undefined,
+            rookFrom: move?.rookFrom
+                ? new Position(move.rookFrom.file, move.rookFrom.rank)
+                : undefined,
+            rookTo: move?.rookTo
+                ? new Position(move.rookTo.file, move.rookTo.rank)
+                : undefined,
+
+            isPromotion: move?.isPromotion ? move.isPromotion : undefined,
+            promotedTo: move?.promotedTo
+                ? Piece.fromPersisted(move.promotedTo, this, pieceClasses)
+                : undefined,
+
+            moveNumber: move.moveNumber,
+            playerColor: move?.playerColor ? move.playerColor : undefined,
+        };
+    }
+
     isCheckmate(color: Color): boolean {
         return this.isInCheck(color) && !this.hasLegalMoves(color);
     }
 
     isInCheck(color: Color): boolean {
         const kingPosition = this.pieces.find((piece) => {
-            return piece.color === color && piece instanceof King;
+            return piece.color === color && piece.type === "King";
         })?.position;
 
         if (!kingPosition) {
@@ -330,28 +415,28 @@ export class Board {
             // moves with no capture
             if (!isCaptured) {
                 // castling
-                if (piece instanceof King) {
+                if (piece.type === "King") {
                     const fileDiff = getDiff(from.file, to.file);
                     if (
                         Math.abs(fileDiff) === 2 &&
                         isCastlingValid(move, this)
                     ) {
-                        const isQueenSide = fileDiff > 0;
+                        const isKingSide = fileDiff > 0;
                         const rank = piece.color === "White" ? 1 : 8;
 
                         const rookFrom = new Position(
-                            isQueenSide ? "A" : "H",
+                            isKingSide ? "H" : "A",
                             rank
                         );
 
                         const rookTo = new Position(
-                            isQueenSide ? "D" : "F",
+                            isKingSide ? "F" : "D",
                             rank
                         );
 
                         const rook = this.getPieceAtPosition(rookFrom);
 
-                        if (!rook || !(rook instanceof Rook)) {
+                        if (!rook || rook.type !== "Rook") {
                             return null;
                         }
 
@@ -375,7 +460,7 @@ export class Board {
 
             // Handle promotion
             if (
-                piece instanceof Pawn &&
+                piece.type === "Pawn" &&
                 to.rank === (piece.color === "White" ? 8 : 1)
             ) {
                 const promotedTo = promotion(
@@ -409,7 +494,7 @@ export class Board {
     removePiece(piece: Piece, isPromotion: boolean = false): void {
         this.pieces = this.pieces.filter((p) => !isSamePiece(p, piece));
         if (isPromotion) {
-            if (piece instanceof Pawn) {
+            if (piece.type === "Pawn") {
                 this.promotedPawns = [...this.promotedPawns, piece];
                 console.info(`Moved piece ${piece.id} to promoted pawns`);
             } else {
@@ -428,7 +513,7 @@ export class Board {
         this.moveHistoryList = [];
         this.capturedPieces = [];
         this.currentTurn = "White";
-        this.pieces = initialPieceSetup.map((p: PieceInit) =>
+        this.pieces = getInitialPieceSetup().map((p: PieceInit) =>
             createPieceOnBoard(
                 p.type,
                 p.color,
@@ -436,6 +521,7 @@ export class Board {
                 this
             )
         );
+        // console.log({ thisPieces: this.pieces });
     }
 
     restore(piece: Piece) {
@@ -475,6 +561,10 @@ export class Board {
         ];
 
         return clonedBoard;
+    }
+
+    toPersisted(): PersistedBoard {
+        return toPersistedBoard(this);
     }
 
     undoLastMove(): void {
@@ -537,12 +627,14 @@ export class Board {
         if (!isSpecial) {
             // plain capture undo
             if (capturedPiece) {
+                console.log("assigning captured piece to restore");
                 pieceToRestore = capturedPiece;
             }
         }
 
         if (pieceToRestore) {
             this.restore(pieceToRestore);
+            console.log({ pieceToRestore });
         }
 
         this.currentTurn = piece.color;

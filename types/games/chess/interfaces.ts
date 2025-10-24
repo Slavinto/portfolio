@@ -1,6 +1,13 @@
-import { Board, Piece, Position } from "@/lib/games/chess/game-logic/main";
-import { Color, MatchStatus } from "./types";
-import { Rook } from "@/lib/games/chess/game-logic/pieces/rook";
+import { Board } from "@/lib/games/chess/game-logic/main/board/board";
+import {
+    Color,
+    GameStatus,
+    MatchStatus,
+    PersistedMove,
+    PersistedState,
+} from "./types";
+import { Position } from "@/lib/games/chess/game-logic/main/position";
+import { Piece } from "@/lib/games/chess/game-logic/main/piece";
 
 export interface IBoardInitializer {
     initializeBoard(board: Board): void;
@@ -11,6 +18,27 @@ export interface BoardState {
     playerColor: Color;
     selected: Position | null;
 }
+
+export interface SupabaseMove {
+    created_at: string;
+    game_id: string;
+    id: number;
+    move_json: PersistedMove;
+    move_number: number;
+    player_id: string;
+}
+
+// export interface SupabaseGame {
+//     created_at: string;
+//     creator_id: string;
+//     id: string;
+//     player_black: string | null;
+//     player_white: string | null;
+//     state_json: PersistedState;
+//     status: GameStatus;
+//     turn: Color;
+//     updated_at: string;
+// }
 
 export interface Move {
     from: Position;
@@ -24,7 +52,7 @@ export interface Move {
 
     isCastling?: boolean;
     // from and to props belong to the King piece and rook from and to are optional
-    rook?: Rook;
+    rook?: Piece;
     rookFrom?: Position;
     rookTo?: Position;
 

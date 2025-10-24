@@ -4,7 +4,7 @@
 
 @layer base {
     :root {
-        --rotate: 360deg
+        --rotate: 360deg;
 
         --background: hsl(0 0% 100%);
         --foreground: hsl(233, 100%, 5%);
@@ -34,10 +34,9 @@
         --input: hsl(233 5.9% 90%);
         --ring: hsl(233 10% 3.9%);
 
-        --radius: hsl(0.5rem);
-
         --skeleton: hsl(231, 38%, 14%) 0%;
 
+        --inset-shadow-md: inset 0px 0px 2px 2px rgba(245, 245, 38, 0.779);
     }
 
     .dark {
@@ -70,9 +69,9 @@
         --ring: hsl(233 4.9% 83.9%);
         /* --ring: #b8b8c2; */
 
-        --radius: hsl(0.5rem);
-
         --skeleton: hsl(231, 38%, 14%);
+
+        --inset-shadow-md: inset 0px 0px 2px 2px rgba(245, 245, 38, 0.779);
     }
 }
 
@@ -98,11 +97,11 @@
     .grid-custom {
         @apply grid-cols-3;
     }
-    
+
     .skeleton-container-dark {
         animation: skeleton-pulse-dark 2s ease-in-out infinite;
     }
-    
+
     @keyframes skeleton-pulse-dark {
         0% {
             transform: scale(0.99);
@@ -113,7 +112,7 @@
         70% {
             transform: scale(1);
             background-color: hsl(231, 38%, 14%);
-            opacity: .6;
+            opacity: 0.6;
         }
 
         100% {
@@ -121,7 +120,6 @@
             background-color: hsl(231, 38%, 14%);
             opacity: 1;
         }
-
     }
 
     .skeleton-container-light {
@@ -132,19 +130,19 @@
         0% {
             transform: scale(0.99);
             background-color: hsl(264, 43%, 70%);
-            opacity: .6;
+            opacity: 0.6;
         }
-        
+
         70% {
             transform: scale(1);
             background-color: hsl(264, 43%, 70%);
-            opacity: .3;
+            opacity: 0.3;
         }
-        
+
         100% {
             transform: scale(0.99);
             background-color: hsl(264, 43%, 70%);
-            opacity: .6;
+            opacity: 0.6;
         }
     }
 
@@ -152,8 +150,8 @@
         -webkit-text-stroke: 1px rgb(255, 255, 255);
     }
 
-    .blog-header {
-        @apply absolute top-0 left-0 right-0 h-[40vh] 
+    .ba .blog-header {
+        @apply absolute top-0 left-0 right-0 h-[40vh];
     }
 
     .content-container {
@@ -162,6 +160,10 @@
 
     .themed-text-icons {
         @apply text-neutral-600 dark:text-neutral-200 border-neutral-600 dark:border-neutral-200;
+    }
+
+    .btn-border {
+        @apply dark:hover:border-neutral-500 hover:border-neutral-200 dark:btn-gradient btn-gradient-light border-neutral-100 border-2 dark:border-white/[0.2] rounded-lg;
     }
 
     .responsive-icons {
@@ -173,7 +175,7 @@
     }
 
     .grid-description-text {
-        @apply text-sm md:text-lg xl:text-xl tracking-wider;   
+        @apply text-sm md:text-lg xl:text-xl tracking-wider;
     }
 
     .cp-button {
@@ -205,10 +207,11 @@
 
     .radial-gradient {
         background: radial-gradient(
-            circle at 0% 0%,
-            rgba(250, 250, 250, 1) 0%,
-            transparent 100%
-        ), rgba(15, 15, 15, 1);
+                circle at 0% 0%,
+                rgba(250, 250, 250, 1) 0%,
+                transparent 100%
+            ),
+            rgba(15, 15, 15, 1);
     }
 
     .btn-gradient {
@@ -223,8 +226,7 @@
         background: linear-gradient(
             -90deg,
             rgba(235, 235, 235, 1) 0%,
-            rgb(212, 202, 232) 100%
-            /* rgba(203, 172, 249, 1) 0%, */
+            rgb(212, 202, 232) 100% /* rgba(203, 172, 249, 1) 0%, */
         );
     }
 

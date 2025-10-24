@@ -1,4 +1,4 @@
-import { Color, Directions, File, PieceType, Rank } from "@/types/games/chess";
+import { Color, Directions, File, Rank } from "@/types/games/chess";
 import type { Board } from "./board/board";
 import { Piece } from "./piece";
 import { Position } from "./position";
@@ -11,11 +11,10 @@ export abstract class SteppingPiece extends Piece {
         color: Color,
         file: File,
         rank: Rank,
-        type: PieceType,
         board: Board,
         steps: Directions
     ) {
-        super(color, file, rank, type, board);
+        super(color, file, rank, board);
         this.steps = steps;
     }
 

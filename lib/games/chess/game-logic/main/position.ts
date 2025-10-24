@@ -1,4 +1,4 @@
-import { File, Rank } from "@/types/games/chess";
+import { File, PersistedPosition, Rank } from "@/types/games/chess";
 
 export class Position {
     private readonly _file: File;
@@ -22,6 +22,10 @@ export class Position {
 
     public toKey(): string {
         return `${this._file}${this._rank}`;
+    }
+
+    public toPersisted(): PersistedPosition {
+        return { file: this.file, rank: this.rank };
     }
 
     public equals(other: Position): boolean {

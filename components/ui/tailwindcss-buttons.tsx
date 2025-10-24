@@ -20,12 +20,14 @@ const Icon = ({ icon }: { icon?: string | React.ReactNode }) => {
 export const ButtonsCard = ({
     children,
     className,
+    contentClassNames,
     onClick,
     icon,
     iconPosition = "right",
 }: {
     children?: React.ReactNode;
     className?: string;
+    contentClassNames?: string;
     onClick?: () => void;
     icon?: string | React.ReactNode;
     iconPosition?: "left" | "right";
@@ -62,7 +64,9 @@ export const ButtonsCard = ({
             )}
         >
             {icon && iconPosition === "left" && <Icon icon={icon} />}
-            <div className='relative z-40'>{children}</div>
+            <div className={cn("relative z-40", contentClassNames)}>
+                {children}
+            </div>
             {icon && iconPosition === "right" && <Icon icon={icon} />}
         </motion.div>
     );

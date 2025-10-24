@@ -1,10 +1,15 @@
-import { Color, File, Rank } from "@/types/games/chess";
+import { Color, File, PieceType, Rank } from "@/types/games/chess";
 import { SlidingPiece } from "../main/slidingPiece";
-import { bishopDirections } from "@/data/games/chess";
-import { BoardLike } from "../main/piece";
+import { Board } from "../main/board/board";
+import { bishopDirections } from "@/data/games/chess/constants/board";
 
 export class Bishop extends SlidingPiece {
-    constructor(color: Color, file: File, rank: Rank, board: BoardLike) {
-        super(color, file, rank, "Bishop", board, bishopDirections);
+    protected readonly _type: PieceType = "Bishop";
+    public get type(): PieceType {
+        return this._type;
+    }
+
+    constructor(color: Color, file: File, rank: Rank, board: Board) {
+        super(color, file, rank, board, bishopDirections);
     }
 }

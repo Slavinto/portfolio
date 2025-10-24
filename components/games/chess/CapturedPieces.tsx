@@ -10,11 +10,7 @@ const CapturedPieces = ({
     isPlayerWhite: boolean;
 }) => {
     return (
-        <div
-            className={`${
-                isPlayerWhite ? "bg-gray-400/20" : "bg-gray-800/20"
-            } w-full h-18 rounded-md p-4 flex`}
-        >
+        <div className={`bg-purple w-full h-18 rounded-md p-4 flex`}>
             {capturedPieces
                 .filter(
                     (piece) =>
@@ -23,7 +19,9 @@ const CapturedPieces = ({
                 .map((wp) => (
                     <div
                         key={wp.id}
-                        className='font-bold text-black text-4xl flex'
+                        className={`font-bold ${
+                            isPlayerWhite ? "text-black" : "text-white"
+                        } text-4xl flex`}
                     >
                         {wp.getUnicodeSymbol()}
                     </div>

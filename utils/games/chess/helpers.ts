@@ -1,7 +1,14 @@
-import { files, ranks } from "@/data/games/chess";
 import {
+    BoardState,
     Color,
     File,
+    GameStatus,
+    Move,
+    PersistedBoard,
+    PersistedMove,
+    PersistedPiece,
+    PersistedPosition,
+    PersistedState,
     PieceConstructor,
     PieceType,
     Rank,
@@ -12,7 +19,11 @@ import { Knight } from "@/lib/games/chess/game-logic/pieces/knight";
 import { Bishop } from "@/lib/games/chess/game-logic/pieces/bishop";
 import { Queen } from "@/lib/games/chess/game-logic/pieces/queen";
 import { King } from "@/lib/games/chess/game-logic/pieces/king";
-import { Board, Piece, Position } from "@/lib/games/chess/game-logic/main";
+import { files, ranks } from "@/data/games/chess/constants/board";
+import { Board } from "@/lib/games/chess/game-logic/main/board/board";
+import { Piece } from "@/lib/games/chess/game-logic/main/piece";
+import { Position } from "@/lib/games/chess/game-logic/main/position";
+import { STATUS_COLORS } from "@/data/games/chess/objects";
 
 export function isValidPosition(f: number, r: number): boolean {
     return (
@@ -23,7 +34,11 @@ export function isValidPosition(f: number, r: number): boolean {
     );
 }
 
-const PieceClassMap: Record<PieceType, PieceConstructor> = {
+export function getStatusColor(status: GameStatus) {
+    return STATUS_COLORS[status] ?? STATUS_COLORS["ongoing"];
+}
+
+export const PieceClassMap: Record<PieceType, PieceConstructor> = {
     Pawn,
     Rook,
     Knight,
@@ -61,10 +76,71 @@ export function getDiff(from: Rank, to: Rank): number;
 
 export function getDiff(from: File | Rank, to: File | Rank): number {
     if (typeof from === "string" && typeof to === "string") {
-        return from.charCodeAt(0) - to.charCodeAt(0);
+        return to.charCodeAt(0) - from.charCodeAt(0);
     }
     if (typeof from === "number" && typeof to === "number") {
-        return from - to;
+        return to - from;
     }
     throw new Error("Failed to calculate position diff. Invalid input type");
+}
+
+export function parseState<T>(state_json: unknown): T {
+    if (typeof state_json === "string") {
+        try {
+            return JSON.parse(state_json) as T;
+        } catch (error) {
+            console.error(
+                "Failed to parse state. Invalid format",
+                error as Error
+            );
+            return {} as T;
+        }
+    }
+    return state_json as T;
+}
+
+export function toPersistedBoard(board: Board): PersistedBoard {
+    return {
+        pieces: board.pieces.map((p) => p.toPersisted()),
+        capturedPieces: board.capturedPieces.map((p) => p.toPersisted()),
+        moveHistoryList: board.moveHistoryList.map((m) => toPersistedMove(m)),
+        currentTurn: board.currentTurn,
+        status: board.getGameStatus(),
+        promotedPawns: board.promotedPawns.map((p) => p.toPersisted()),
+    };
+}
+
+export function toPersistedState(boardState: BoardState): PersistedState {
+    const { board, playerColor, selected } = boardState;
+    console.log({ boardState });
+    return {
+        board: toPersistedBoard(board),
+        playerColor,
+        selected,
+    };
+}
+
+export function toPersistedMove(move: Move): PersistedMove {
+    console.log({ moveBeforePersisted: move });
+    return {
+        from: move.from.toPersisted(),
+        to: move.to.toPersisted(),
+        piece: move.piece.toPersisted(),
+        capturedPiece: move.capturedPiece?.toPersisted(),
+
+        // special cases:
+        isEnPassant: move?.isEnPassant,
+        capturedPawnPosition: move?.capturedPawnPosition?.toPersisted(),
+
+        isCastling: move?.isCastling,
+        rook: move?.rook?.toPersisted(),
+        rookFrom: move?.rookFrom?.toPersisted(),
+        rookTo: move?.rookTo?.toPersisted(),
+
+        isPromotion: move?.isPromotion,
+        promotedTo: move?.promotedTo?.toPersisted(),
+
+        moveNumber: move.moveNumber,
+        playerColor: move?.playerColor,
+    };
 }

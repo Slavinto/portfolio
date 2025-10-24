@@ -15,7 +15,7 @@ export type PieceInit = {
     rank: Rank;
 };
 
-export const initialPieceSetup: PieceInit[] = [
+export const getInitialPieceSetup: () => PieceInit[] = () => [
     { type: "Rook", color: "White", file: "A", rank: 1 },
     { type: "Knight", color: "White", file: "B", rank: 1 },
     { type: "Bishop", color: "White", file: "C", rank: 1 },
