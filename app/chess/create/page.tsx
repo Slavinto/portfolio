@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { createGame } from "@/lib/services/chess-db";
 import { BoardInstance } from "@/lib/games/chess/game-logic/main/board/board";
 import { toPersistedState } from "@/utils/games/chess/helpers";
+import { ButtonsCard } from "@/components/ui";
 
 export default function CreateGamePage() {
     const router = useRouter();
@@ -31,12 +32,12 @@ export default function CreateGamePage() {
                     Create a room and share the link with your opponent.
                 </p>
                 <div className='flex justify-center gap-4'>
-                    <button
+                    <ButtonsCard
                         onClick={handleCreate}
-                        className='px-6 py-3 rounded-2xl btn-gradient-light dark:btn-gradient text-black'
+                        className='cursor-pointer dark:btn-gradient btn-gradient-light px-10 py-6 gap-1'
                     >
                         Create Game
-                    </button>
+                    </ButtonsCard>
                 </div>
             </div>
         </section>

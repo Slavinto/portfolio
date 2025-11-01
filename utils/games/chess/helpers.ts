@@ -34,6 +34,15 @@ export function isValidPosition(f: number, r: number): boolean {
     );
 }
 
+export function getPositionForCell(row: number, col: number, yourColor: Color) {
+    // For white: files A..H left→right, ranks 8..1 top→bottom
+    // For black: files H..A left→right, ranks 1..8 top→bottom (reversed)
+    const fileIndex = yourColor === "Black" ? 7 - col : col; // 0..7
+    const rank = (yourColor === "Black" ? row + 1 : 8 - row) as Rank;
+    const file = String.fromCharCode(97 + fileIndex).toUpperCase() as File;
+    return new Position(file, rank);
+}
+
 export function getStatusColor(status: GameStatus) {
     return STATUS_COLORS[status] ?? STATUS_COLORS["ongoing"];
 }

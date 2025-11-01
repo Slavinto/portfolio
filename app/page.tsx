@@ -4,7 +4,8 @@ import Projects from "@/components/projects";
 import { HeroSkeleton } from "@/components/hero";
 import dynamic from "next/dynamic";
 import { GridSkeleton } from "@/components/grid";
-import Link from "next/link";
+import { ButtonsCard } from "@/components/ui";
+import { useRouter } from "next/navigation";
 
 export default function Home() {
     const Hero = dynamic(() => import("@/components/hero"), {
@@ -15,12 +16,18 @@ export default function Home() {
         ssr: false,
         loading: () => <GridSkeleton />,
     });
+    const router = useRouter();
     return (
         <>
             <Hero />
             <Grid />
             <Projects />
-            <Link href='/chess'>Play some chess</Link>
+            <ButtonsCard
+                onClick={() => router.push("/chess")}
+                className='self-center cursor-pointer dark:btn-gradient btn-gradient-light lg:w-[25rem] lg:h-[8rem] md:w-[20rem] md:h-[6rem] h-[4rem] w-[15rem] gap-1 mt-[2rem] md:mt-[4rem]'
+            >
+                Play some chess
+            </ButtonsCard>
             <Footer />
         </>
     );

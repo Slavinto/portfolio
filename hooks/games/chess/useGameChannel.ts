@@ -1,14 +1,21 @@
 import { supabase } from "@/lib/supabase/client";
-import { SupabaseMove } from "@/types/games/chess";
-import { useEffect } from "react";
+import { GameRow, SupabaseMove } from "@/types/games/chess";
+import { Dispatch, SetStateAction, useEffect, useRef } from "react";
 
 export function useGameChannel(
     gameId: string,
     onGameUpdate: (row: any) => void,
-    onMove?: (row: any) => void
+    onMove?: (row: any) => void,
+    initialRow?: GameRow
 ) {
+    const hydratedRef = useRef(false);
+
     useEffect(() => {
         if (!gameId) return;
+        if (initialRow && !hydratedRef.current) {
+            onGameUpdate(initialRow);
+            hydratedRef.current = true;
+        }
         const channel = supabase
             .channel(`games:${gameId}`)
             .on(
@@ -45,5 +52,5 @@ export function useGameChannel(
                 }
             )
             .subscribe((status) => console.log({ channelStatus: status }));
-    }, [gameId, onGameUpdate, onMove]);
+    }, [gameId, onGameUpdate, onMove, initialRow]);
 }

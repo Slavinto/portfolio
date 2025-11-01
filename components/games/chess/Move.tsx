@@ -1,22 +1,18 @@
 import { Board } from "@/lib/games/chess/game-logic/main/board/board";
 import { Piece } from "@/lib/games/chess/game-logic/main/piece";
 import { pieceClasses } from "@/lib/games/chess/game-logic/pieces";
-import { SupabaseMove } from "@/types/games/chess";
+import { Move } from "@/types/games/chess";
 import React from "react";
 
-const Move = ({ move }: { move: SupabaseMove }) => {
-    const {
-        id,
-        move_number,
-        move_json: { piece, from, to },
-    } = move;
+const PieceMove = ({ move }: { move: Move }) => {
+    const { moveNumber, piece, from, to } = move;
     return (
         <div className=''>
             <li
-                key={id}
+                key={moveNumber}
                 className='flex justify-between py-1 border-b border-border/50 max-w-32'
             >
-                №{move_number}{" "}
+                №{moveNumber}{" "}
                 <span
                     className={
                         piece.color === "White"
@@ -41,4 +37,4 @@ const Move = ({ move }: { move: SupabaseMove }) => {
     );
 };
 
-export default Move;
+export default PieceMove;

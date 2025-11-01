@@ -7,6 +7,7 @@ export type Json =
     | Json[];
 
 export type GameTableData = Tables<"games">;
+export type MoveTableData = Tables<"moves">;
 
 export type Database = {
     // Allows to automatically instantiate createClient with right options

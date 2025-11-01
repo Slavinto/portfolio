@@ -50,6 +50,8 @@ const GameCard = ({
                             ? "Stalemate"
                             : game.status === "draw"
                             ? "Draw"
+                            : game.status === "layed-off"
+                            ? "Layed off"
                             : "In progress"}
                     </p>
                 </div>

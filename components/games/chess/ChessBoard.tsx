@@ -1,9 +1,22 @@
 "use client";
 
+import ChessGameSkeleton from "@/components/ui/patterns/ChessGameSkeleton";
+import { useJoinedGame } from "@/hooks/games/chess/useJoinedGame";
+import { useYourColor } from "@/hooks/games/chess/useYourColor";
 import { Board } from "@/lib/games/chess/game-logic/main/board/board";
 import { Position } from "@/lib/games/chess/game-logic/main/position";
-import { BoardAction, BoardState, File, Move, Rank } from "@/types/games/chess";
-import { isLegalToMoveToPosition } from "@/utils/games/chess/helpers";
+import {
+    BoardAction,
+    BoardState,
+    Color,
+    File,
+    Move,
+    Rank,
+} from "@/types/games/chess";
+import {
+    getPositionForCell,
+    isLegalToMoveToPosition,
+} from "@/utils/games/chess/helpers";
 
 interface ChessBoardProps {
     gameId: string;
@@ -19,13 +32,31 @@ export default function ChessBoard({
     onCommittedMove,
 }: ChessBoardProps) {
     const { board, selected } = state;
+    const {
+        data: game,
+        isPending: isLoadingGame,
+        error,
+    } = useJoinedGame(gameId);
+    const { yourColor, isLoading: isLoadingColor } = useYourColor();
+
+    const waitingForOpponent =
+        (game && !game?.player_white) || !game?.player_black;
+
+    const isBusy = isLoadingGame || isLoadingColor;
+
+    if (isBusy) return <ChessGameSkeleton repeatPattern={1} />;
 
     console.log({ state });
+
     // Sync from server if provided
 
     function handleSquareClick(position: Position) {
         const piece = board.getPieceAtPosition(position);
         console.log({ piece });
+        if (piece && piece.color !== yourColor) {
+            console.info("Can not select opponent's piece");
+            return;
+        }
         if (selected) {
             const selectedPiece = board.getPieceAtPosition(selected);
             if (!selectedPiece) return;
@@ -49,9 +80,10 @@ export default function ChessBoard({
         <div className='grid grid-cols-8 w-[32rem] h-[32rem] rounded-xl overflow-hidden border-2 border-white-300 cursor-pointer'>
             {Array.from({ length: 8 }).map((_, row) =>
                 Array.from({ length: 8 }).map((_, col) => {
-                    const pos: Position = new Position(
-                        String.fromCharCode(97 + col).toUpperCase() as File,
-                        (8 - row) as Rank
+                    const pos: Position = getPositionForCell(
+                        row,
+                        col,
+                        yourColor
                     );
                     const piece = board.getPieceAtPosition(pos);
                     const isSelected =
@@ -66,11 +98,19 @@ export default function ChessBoard({
                                     ? "bg-purple"
                                     : "icon-bg-dark"
                             } ${isSelected ? "!shadow-inset-md" : ""}`}
-                            onClick={() => handleSquareClick(pos)}
+                            onClick={
+                                waitingForOpponent
+                                    ? () => {
+                                          console.info(
+                                              "Waiting for opponent. Failed to make a move."
+                                          );
+                                      }
+                                    : () => handleSquareClick(pos)
+                            }
                         >
                             {piece ? (
                                 <span
-                                    className={`text-5xl${
+                                    className={`relative text-5xl${
                                         piece.color === "White"
                                             ? " text-white"
                                             : " text-black"

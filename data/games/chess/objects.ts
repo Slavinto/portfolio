@@ -29,4 +29,5 @@ export const STATUS_COLORS: Record<GameStatus, string> = {
     stalemate: "bg-gray-100 text-gray-800",
     draw: "bg-gray-100 text-gray-800",
     ongoing: "bg-neutral-100 text-neutral-800",
+    "layed-off": "bg-stone-100 text-stone-800",
 };

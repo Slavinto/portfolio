@@ -22,12 +22,13 @@ export type PieceConstructor = new (
 ) => Piece;
 
 export type GameStatus =
-    | "waiting"
     | "check"
     | "checkmate"
-    | "stalemate"
     | "draw"
-    | "ongoing";
+    | "layed-off"
+    | "ongoing"
+    | "stalemate"
+    | "waiting";
 
 export type MatchStatus = "waiting_for_opponent" | "ongoing" | "finished";
 
