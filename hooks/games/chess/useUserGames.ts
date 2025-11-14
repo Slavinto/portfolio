@@ -1,13 +1,14 @@
 // src/hooks/useUserGames.ts
 "use client";
 
-import { supabase } from "@/lib/supabase/client";
+import { createClient } from "@/lib/supabase/client";
 import { useQuery } from "@tanstack/react-query";
 import { useUser } from "../../auth/useUser";
 import { GameTableData } from "@/types/supabase/database.types";
 
 export function useUserGames() {
     const { data: user, isLoading: userLoading } = useUser();
+    const supabase = createClient();
 
     return useQuery({
         queryKey: ["userGames", user?.id],

@@ -1,12 +1,11 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
-import { supabase } from "@/lib/supabase/client";
+import { createClient } from "@/lib/supabase/client";
 import { joinGame } from "@/lib/services/chess-db";
-import { BoardState, GameRow } from "@/types/games/chess";
-import { initialBoardState } from "@/data/games/chess/constants/initialBoardState";
 
 export function useJoinedGame(gameId: string) {
+    const supabase = createClient();
     return useQuery({
         queryKey: ["game", gameId],
         queryFn: async () => {

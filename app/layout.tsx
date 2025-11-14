@@ -5,6 +5,7 @@ import ThemeToggleButton from "@/components/theme-toggle-button";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import QueryProvider from "@/features/reactQuery/queryProvider";
 import { Poppins } from "next/font/google";
+import { ChessPageContextProvider } from "./context/ChessGamePageContext";
 
 const poppins = Poppins({
     weight: ["300", "400", "500", "600", "700", "800"],
@@ -46,7 +47,7 @@ export default function RootLayout({
                     sizes='16x16'
                     href='/icons/favicon-16x16.png'
                 />
-                <link rel='manifest' href='/site.webmanifest' />
+                {/* <link rel='manifest' href='/site.webmanifest' /> */}
             </head>
             {/* className={`${poppins.className} h-full`} */}
             <body className={`${poppins.variable} h-screen`}>

@@ -1,6 +1,6 @@
 "use client";
 
-import { supabase } from "@/lib/supabase/client";
+import { createClient } from "@/lib/supabase/client";
 import { useState } from "react";
 import Heading from "./Heading";
 import { Headings } from "@/types/enums";
@@ -11,6 +11,7 @@ export default function AuthForm() {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [isSignUp, setIsSignUp] = useState(false);
+    const supabase = createClient();
 
     async function handleAuth(e: React.FormEvent) {
         e.preventDefault();

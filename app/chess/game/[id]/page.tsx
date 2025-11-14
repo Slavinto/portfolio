@@ -1,136 +1,194 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useRef, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { pushMove } from "@/lib/services/chess-db";
-import ChessBoard from "@/components/games/chess/ChessBoard";
-import { boardReducer } from "@/hooks/games/chess/board/boardReducer";
-import { initialBoardState } from "@/data/games/chess/constants/initialBoardState";
-import { useReducer } from "react";
 import { useGameChannel } from "@/hooks/games/chess/useGameChannel";
-import { toPersistedMove, toPersistedState } from "@/utils/games/chess/helpers";
-import { Board } from "@/lib/games/chess/game-logic/main/board/board";
-import { Color, Move, SupabaseMove } from "@/types/games/chess";
+import { useJoinedGame } from "@/hooks/games/chess/useJoinedGame";
+import { useYourColor } from "@/hooks/games/chess/useYourColor";
+import ChessBoard from "@/components/games/chess/ChessBoard";
 import ChessHeader from "@/components/games/chess/ChessHeader";
 import PlayerColor from "@/components/games/chess/PlayerColor";
 import Room from "@/components/games/chess/Room";
 import Moves from "@/components/games/chess/Moves";
-import { useJoinedGame } from "@/hooks/games/chess/useJoinedGame";
 import ChessGameSkeleton from "@/components/ui/patterns/ChessGameSkeleton";
 import { ButtonsCard } from "@/components/ui";
+import { onCommittedMove } from "@/utils/games/chess/helpers";
+import { Color, Move, OfferRow } from "@/types/games/chess";
+import { useChessGamePageContext } from "@/app/context/ChessGamePageContext";
+import { FaChevronDown, FaChevronUp } from "react-icons/fa";
+import { toast } from "react-toastify";
+import CustomToastContainer from "@/components/ui/CustomToastContainer";
+import { GameTableData } from "@/types/supabase/database.types";
 import { useUser } from "@/hooks/auth/useUser";
-import { useYourColor } from "@/hooks/games/chess/useYourColor";
+import { useOffersChannel } from "@/hooks/games/chess/useOffersChannel";
+import ResignButton from "@/components/games/chess/action-buttons/ResignButton";
+import OfferButton from "@/components/games/chess/action-buttons/OfferButton";
 
 export default function GamePage() {
-    const {
-        data: user,
-        error: userError,
-        isLoading: isLoadingUser,
-    } = useUser();
+    const { id: gameId } = useParams<{ id: string }>();
     const router = useRouter();
-    const { id } = useParams<{ id: string }>();
-    const [moves, setMoves] = useState<SupabaseMove[]>([]);
-    const { data: game, isPending: isLoadingGame, error } = useJoinedGame(id);
-    const [state, dispatch] = useReducer(boardReducer, initialBoardState);
+    const { data: user } = useUser();
+    const {
+        data: game,
+        isPending: isLoadingGame,
+        error,
+    } = useJoinedGame(gameId);
     const { yourColor, isLoading: isLoadingColor } = useYourColor();
+    const prevOfferRef = useRef<string | null>(null);
+    const { state, dispatch } = useChessGamePageContext();
 
-    const isBusy = isLoadingGame || isLoadingUser || isLoadingColor;
-    // Realtime subscriptions
+    // const [moves, setMoves] = useState<SupabaseMove[]>([]);
+    const [asideOpen, setAsideOpen] = useState(true);
+
+    const isBusy = isLoadingGame || isLoadingColor;
+
+    // async function handleAcceptDraw(gameId: string) {
+    //     await acceptDraw(gameId);
+    //     router.push("/games");
+    // }
+
+    // async function handleDeclineDraw(gameId: string) {
+    //     await declineDraw(gameId);
+    //     toast.info("You declined the draw offer.");
+    // }
+
+    // Realtime game offers
+    useOffersChannel(gameId, (offerRow: OfferRow) => {});
+
+    // Realtime sync
     useGameChannel(
-        id,
-        (row) => {
+        gameId,
+        (row: GameTableData) => {
+            if (row?.status === "resigned") {
+                toast.info("Game over. Your opponent resigned");
+                router.push("/chess");
+            }
             if (row?.state_json) {
                 dispatch({
                     type: "HYDRATE_FROM_SERVER",
                     payload: row.state_json,
                 });
             }
+
+            // if (!row.draw_offered_by && prevOfferRef.current === user?.id) {
+            //     // Draw offered by you - opponent declined
+            //     if (state.board.getGameStatus() !== "draw") {
+            //         toast.info("Your opponent declined your draw offer");
+            //     } else {
+            //         toast.info("Game over. Draw offer accepted");
+            //         router.push("/games");
+            //     }
+            // }
+            // if (row.draw_offered_by && row.draw_offered_by !== user?.id) {
+            //     // Draw offered by your opponent
+            //     ToastModal(() => handleAcceptDraw(row.id), {
+            //         message: "Your opponent offered a draw. Do you accept?",
+            //         onDecline: () => handleDeclineDraw(row.id),
+            //     });
+            // }
+            // // Updating Draw offer ref
+            // prevOfferRef.current = row.draw_offered_by;
         },
-        (newMove) => {
-            console.log("SETTING MOVES");
-            console.log({ newMove });
-            setMoves((prev) => {
-                if (prev.some((m) => m.id === newMove.id)) {
-                    return prev;
-                }
-                return [...prev, newMove];
-            });
+        (newMove: Move) => {
+            const { from, to } = newMove;
+            if (from && to) {
+                dispatch({ type: "MOVE_PIECE", payload: { from, to } });
+            }
         },
         game
     );
 
-    // Handler that your ChessBoard can call when a local legal move occurs
-    async function onCommittedMove(move: Move, board: Board) {
-        const { from, to, moveNumber } = move;
-
-        console.log({ board });
-        // Convert to persistable state
-        const nextState = toPersistedState({
-            board,
-            selected: from,
-            playerColor: board.currentTurn,
-        });
-        const persistedMove = toPersistedMove(move);
-        console.log({ persistedMove });
-
-        await pushMove(id, nextState, persistedMove);
-    }
-
-    // determine if game is ready
     if (isBusy) return <ChessGameSkeleton repeatPattern={3} />;
-    if (!user && !isBusy) {
-        router.push("/app/auth/login");
-    }
-
     if (!game && !isBusy) return <p>Game not found</p>;
-    const waitingForOpponent =
-        (game && !game?.player_white) || !game?.player_black;
-
     if (error) return <p>Error loading game: {error.message}</p>;
-    console.log({ gameFromGamePage: game });
-    console.log({ stateFromGamePage: state });
+
+    // game status handling
+    const playerAbsent = game && (!game?.player_white || !game?.player_black);
+    const waitingForOpponent = playerAbsent || game?.status === "waiting";
+    const gameOver =
+        game &&
+        game.status !== "ongoing" &&
+        game.status !== "check" &&
+        game.status !== "waiting";
+    // game status handling
+
     return (
-        game && (
-            <section className='content-container mx-auto py-16'>
-                <div className='mx-auto max-w-5xl rounded-2xl shadow-lg p-6 header-gradient-light dark:header-gradient-dark'>
-                    <div className='flex w-full justify-center gap-16'>
-                        <div className='flex flex-col max-w-sm gap-4 items-center'>
-                            <PlayerColor
-                                color={yourColor as Color}
-                                turn={game?.turn}
-                            />
-                            <ChessHeader
-                                id={id}
-                                gameStatus={game?.status}
-                                gameTurn={game?.turn}
-                            />
-                            <Room game={game} />
-                            <Moves board={state.board} />
-                        </div>
-                        <div
-                            className={
-                                waitingForOpponent
-                                    ? "relative opacity-50 pointer-events-none"
-                                    : ""
-                            }
-                        >
-                            <ChessBoard
-                                gameId={id}
-                                state={state}
-                                dispatch={dispatch}
-                                onCommittedMove={onCommittedMove}
-                            />
-                            {waitingForOpponent && (
-                                <ButtonsCard className='absolute w-[20rem] h-16 top-1/2 left-1/2 !-translate-x-1/2 !-translate-y-1/2'>
-                                    <p className='text-center px-4 py-2'>
-                                        Waiting for opponent to join…
-                                    </p>
-                                </ButtonsCard>
-                            )}
-                        </div>
+        <section className='flex lg:mt-24 lg:flex-row items-center justify-around flex-col w-full'>
+            <CustomToastContainer />
+            <PlayerColor color={yourColor as Color} turn={game?.turn} />
+
+            {/* Board */}
+            <div
+                className={`xl:ml-auto transition-opacity duration-300 flex ${
+                    waitingForOpponent ? "opacity-50 pointer-events-none" : ""
+                }`}
+            >
+                <ChessBoard gameId={gameId} onCommittedMove={onCommittedMove}>
+                    {(waitingForOpponent || gameOver) && (
+                        <ButtonsCard className='absolute z-10 w-[20rem] h-16 top-1/2 left-1/2 !-translate-x-1/2 !-translate-y-1/2'>
+                            <p className='text-center px-4 py-2'>
+                                {waitingForOpponent
+                                    ? "Waiting for opponent to join…"
+                                    : gameOver
+                                    ? `Game over. ${game.status}`
+                                    : "Waiting..."}
+                            </p>
+                        </ButtonsCard>
+                    )}
+                </ChessBoard>
+            </div>
+            <div className='mx-auto max-w-6xl rounded-2xl shadow-lg p-6 header-gradient-light dark:header-gradient-dark'>
+                {/* Collapsible sidebar */}
+                <ChessHeader id={gameId}>
+                    <div className='mt-4 flex gap-2 justify-evenly'>
+                        {game?.player_black && game?.player_white && (
+                            <>
+                                <OfferButton
+                                    type={"draw"}
+                                    toPlayer={
+                                        yourColor === "Black"
+                                            ? game?.player_white
+                                            : game?.player_black
+                                    }
+                                />
+                                <OfferButton
+                                    type={"layoff"}
+                                    toPlayer={
+                                        yourColor === "Black"
+                                            ? game?.player_white
+                                            : game?.player_black
+                                    }
+                                />
+                            </>
+                        )}
+                        <ResignButton />
                     </div>
-                </div>
-            </section>
-        )
+                    {/* Toggle Button */}
+                    <ButtonsCard
+                        onClick={() => setAsideOpen((prev) => !prev)}
+                        className='mt-4 w-full h-12 flex items-center justify-start cursor-pointer p-2 rounded-lg bg-card transition'
+                        contentClassNames='mx-auto'
+                    >
+                        {asideOpen ? (
+                            <FaChevronUp className='w-full h-5' />
+                        ) : (
+                            <FaChevronDown className='w-5 h-5' />
+                        )}
+                    </ButtonsCard>
+                </ChessHeader>
+                <aside
+                    className={`mt-2 flex flex-col w-full gap-2 items-center transition-all duration-400 overflow-hidden ${
+                        asideOpen ? "h-full opacity-100" : "h-0 opacity-0"
+                    }`}
+                >
+                    {asideOpen && (
+                        <>
+                            {game ? <Room game={game} /> : null}
+                            <Moves />
+                        </>
+                    )}
+                </aside>
+            </div>
+        </section>
     );
 }

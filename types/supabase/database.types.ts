@@ -1,3 +1,5 @@
+import { PersistedMove, PersistedState } from "../games/chess";
+
 export type Json =
     | string
     | number
@@ -15,41 +17,72 @@ export type Database = {
     __InternalSupabase: {
         PostgrestVersion: "13.0.4";
     };
+    graphql_public: {
+        Tables: {
+            [_ in never]: never;
+        };
+        Views: {
+            [_ in never]: never;
+        };
+        Functions: {
+            graphql: {
+                Args: {
+                    extensions?: Json;
+                    operationName?: string;
+                    query?: string;
+                    variables?: Json;
+                };
+                Returns: Json;
+            };
+        };
+        Enums: {
+            [_ in never]: never;
+        };
+        CompositeTypes: {
+            [_ in never]: never;
+        };
+    };
     public: {
         Tables: {
             games: {
                 Row: {
                     created_at: string;
                     creator_id: string | null;
+                    draw_offered_by: string | null;
                     id: string;
                     player_black: string | null;
                     player_white: string | null;
-                    state_json: Json;
+                    state_json: PersistedState;
                     status: string;
                     turn: string;
                     updated_at: string;
+                    winner: string | null;
                 };
                 Insert: {
                     created_at?: string;
                     creator_id?: string | null;
+                    draw_offered_by?: string | null;
                     id?: string;
                     player_black?: string | null;
                     player_white?: string | null;
-                    state_json: Json;
+                    state_json: PersistedState;
                     status?: string;
                     turn?: string;
                     updated_at?: string;
+                    winner?: string | null;
                 };
                 Update: {
                     created_at?: string;
                     creator_id?: string | null;
+                    draw_offered_by?: string | null;
                     id?: string;
                     player_black?: string | null;
                     player_white?: string | null;
-                    state_json?: Json;
+                    state_json?: PersistedState;
                     status?: string;
                     turn?: string;
                     updated_at?: string;
+                    winner?: string | null;
                 };
                 Relationships: [];
             };
@@ -58,7 +91,7 @@ export type Database = {
                     created_at: string;
                     game_id: string;
                     id: number;
-                    move_json: Json;
+                    move_json: PersistedMove;
                     move_number: number;
                     player_id: string;
                 };
@@ -66,7 +99,7 @@ export type Database = {
                     created_at?: string;
                     game_id: string;
                     id?: number;
-                    move_json: Json;
+                    move_json: PersistedMove;
                     move_number: number;
                     player_id: string;
                 };
@@ -74,7 +107,7 @@ export type Database = {
                     created_at?: string;
                     game_id?: string;
                     id?: number;
-                    move_json?: Json;
+                    move_json?: PersistedMove;
                     move_number?: number;
                     player_id?: string;
                 };
@@ -225,6 +258,9 @@ export type CompositeTypes<
     : never;
 
 export const Constants = {
+    graphql_public: {
+        Enums: {},
+    },
     public: {
         Enums: {},
     },

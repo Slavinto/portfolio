@@ -1,9 +1,10 @@
-import { supabase } from "@/lib/supabase/client";
+import { createClient } from "@/lib/supabase/client";
 import { useQueryClient } from "@tanstack/react-query";
 import { useEffect } from "react";
 
 export function useGameSubscription(gameId: string) {
     const queryClient = useQueryClient();
+    const supabase = createClient();
     useEffect(() => {
         const channel = supabase
             .channel(`game-${gameId}`)

@@ -1,8 +1,9 @@
+// lib/supabase/server.ts
 import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
 
-const server = async () => {
-    const cookieStore = await cookies();
+export async function createSupabaseServerClient() {
+    const cookieStore = await cookies(); // ✅ cookies() is async in Next.js 15
 
     return createServerClient(
         process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -18,14 +19,10 @@ const server = async () => {
                             cookieStore.set(name, value, options)
                         );
                     } catch {
-                        // The `setAll` method was called from a Server Component.
-                        // This can be ignored if you have middleware refreshing
-                        // user sessions.
+                        // setAll may fail in RSCs or middleware; safe to ignore
                     }
                 },
             },
         }
     );
-};
-
-export const supabase = await server();
+}

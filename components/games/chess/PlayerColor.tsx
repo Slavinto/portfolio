@@ -1,20 +1,14 @@
 import { Color } from "@/types/games/chess";
 import React from "react";
 
-const PlayerColor = ({
-    color,
-    turn,
-}: {
-    color: Color | null;
-    turn: Color | null;
-}) => {
+const PlayerColor = ({ color, turn }: { color?: Color; turn?: Color }) => {
     return (
         <div
-            className={`flex flex-col items-center px-12 py-4 rounded-full bg-secondary text-secondary-foreground text-xl mb-6${
+            className={`lg:absolute lg:top-8 lg:left-1/2 max-w-sm flex flex-col self-center items-center px-12 py-4 rounded-full bg-secondary text-secondary-foreground text-xl mb-6${
                 turn === color ? " text-shadow-lg shadow-white-300" : ""
             }`}
         >
-            <p>{color ? `You: ${color}` : "Spectating"}</p>
+            <p className='text-3xl'>08:30</p>
             <hr className='w-full' />
             <p>{turn === color ? "Your turn" : "Opponent's turn"}</p>
         </div>

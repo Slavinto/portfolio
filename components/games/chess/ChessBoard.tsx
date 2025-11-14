@@ -1,36 +1,30 @@
 "use client";
 
+import { useChessGamePageContext } from "@/app/context/ChessGamePageContext";
 import ChessGameSkeleton from "@/components/ui/patterns/ChessGameSkeleton";
 import { useJoinedGame } from "@/hooks/games/chess/useJoinedGame";
 import { useYourColor } from "@/hooks/games/chess/useYourColor";
 import { Board } from "@/lib/games/chess/game-logic/main/board/board";
 import { Position } from "@/lib/games/chess/game-logic/main/position";
-import {
-    BoardAction,
-    BoardState,
-    Color,
-    File,
-    Move,
-    Rank,
-} from "@/types/games/chess";
+import { Move } from "@/types/games/chess";
 import {
     getPositionForCell,
     isLegalToMoveToPosition,
 } from "@/utils/games/chess/helpers";
+import { ReactNode } from "react";
 
 interface ChessBoardProps {
     gameId: string;
-    state: BoardState;
-    dispatch: React.Dispatch<BoardAction>;
-    onCommittedMove: (move: Move, board: Board) => void;
+    onCommittedMove: (id: string, move: Move, board: Board) => void;
+    children: ReactNode;
 }
 
 export default function ChessBoard({
     gameId,
-    state,
-    dispatch,
     onCommittedMove,
+    children,
 }: ChessBoardProps) {
+    const { state, dispatch } = useChessGamePageContext();
     const { board, selected } = state;
     const {
         data: game,
@@ -53,7 +47,7 @@ export default function ChessBoard({
     function handleSquareClick(position: Position) {
         const piece = board.getPieceAtPosition(position);
         console.log({ piece });
-        if (piece && piece.color !== yourColor) {
+        if (piece && !state.selected && piece.color !== yourColor) {
             console.info("Can not select opponent's piece");
             return;
         }
@@ -69,7 +63,7 @@ export default function ChessBoard({
                     throw new Error("Failed to make a move.");
                 }
                 // Tell parent -> push to Supabase
-                onCommittedMove(move, board);
+                onCommittedMove(gameId, move, board);
             }
         } else if (piece && piece.color === board.currentTurn) {
             dispatch({ type: "SELECT_PIECE", payload: { position } });
@@ -77,7 +71,8 @@ export default function ChessBoard({
     }
 
     return (
-        <div className='grid grid-cols-8 w-[32rem] h-[32rem] rounded-xl overflow-hidden border-2 border-white-300 cursor-pointer'>
+        <div className='relative grid grid-cols-8 w-[32rem] h-[32rem] rounded-xl overflow-hidden border-2 border-white-300 cursor-pointer'>
+            {children}
             {Array.from({ length: 8 }).map((_, row) =>
                 Array.from({ length: 8 }).map((_, col) => {
                     const pos: Position = getPositionForCell(

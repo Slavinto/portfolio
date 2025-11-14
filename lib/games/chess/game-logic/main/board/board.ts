@@ -254,6 +254,10 @@ export class Board {
         return this;
     }
 
+    getWinnerOnResign(resignedPlayer: Color): string {
+        return resignedPlayer === "White" ? "Black" : "White";
+    }
+
     hasLegalMoves(color: Color): boolean {
         const myPieces = this.getAllPieces().filter((p) => p.color === color);
         for (const piece of myPieces) {

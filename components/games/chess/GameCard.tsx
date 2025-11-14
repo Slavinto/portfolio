@@ -44,15 +44,25 @@ const GameCard = ({
                             game.status as GameStatus
                         )}`}
                     >
-                        {game.status === "checkmate" && winner !== "Unknown"
-                            ? `Winner: ${youWin ? "You" : "Your opponent"}`
-                            : game.status === "stalemate"
-                            ? "Stalemate"
-                            : game.status === "draw"
-                            ? "Draw"
-                            : game.status === "layed-off"
-                            ? "Layed off"
-                            : "In progress"}
+                        {game.status === "checkmate" && winner !== "Unknown" ? (
+                            `Winner: ${
+                                youWin ? (
+                                    <span>You</span>
+                                ) : (
+                                    <span>Your&nbsp;opponent</span>
+                                )
+                            }`
+                        ) : game.status === "stalemate" ? (
+                            "Stalemate"
+                        ) : game.status === "draw" ? (
+                            "Draw"
+                        ) : game.status === "layed-off" ? (
+                            <span>Layed&nbsp;off</span>
+                        ) : (
+                            <span className='text-skeleton'>
+                                In&nbsp;progress
+                            </span>
+                        )}
                     </p>
                 </div>
             </div>

@@ -1,7 +1,8 @@
-import { supabase } from "@/lib/supabase/client";
+import { createClient } from "@/lib/supabase/client";
 import { useQuery } from "@tanstack/react-query";
 
 export function useGame(gameId: string) {
+    const supabase = createClient();
     return useQuery({
         queryKey: ["game", gameId],
         queryFn: async () => {

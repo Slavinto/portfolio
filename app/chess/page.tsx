@@ -1,6 +1,6 @@
 "use client";
 
-import { FaRegChessBishop } from "react-icons/fa6";
+import { FaRegChessKnight } from "react-icons/fa6";
 import AuthForm from "@/components/ui/AuthForm";
 import { ButtonsCard, Heading } from "@/components/ui";
 import { Headings } from "@/types/enums";
@@ -61,13 +61,13 @@ export default function ChessHomePage() {
     }
 
     return (
-        <section className='flex flex-col gap-6 py-10 px-4 w-full max-w-5xl mx-auto'>
+        <section className='flex flex-col gap-6 py-16 px-4 w-full max-w-5xl mx-auto'>
             <CustomToastContainer />
             <header className='flex justify-between items-center border-b border-border pb-4'>
                 <Heading as={Headings.H3}>Your Games</Heading>
                 <ButtonsCard
                     className='cursor-pointer dark:btn-gradient btn-gradient-light px-10 py-6 gap-1 mt-[2rem] md:mt-[4rem]'
-                    icon={<FaRegChessBishop className='text-xl' />}
+                    icon={<FaRegChessKnight className='text-xl' />}
                     iconPosition='left'
                     onClick={() => router.push("/chess/create")}
                 >

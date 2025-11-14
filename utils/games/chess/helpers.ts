@@ -24,6 +24,7 @@ import { Board } from "@/lib/games/chess/game-logic/main/board/board";
 import { Piece } from "@/lib/games/chess/game-logic/main/piece";
 import { Position } from "@/lib/games/chess/game-logic/main/position";
 import { STATUS_COLORS } from "@/data/games/chess/objects";
+import { pushMove } from "@/lib/services/chess-db";
 
 export function isValidPosition(f: number, r: number): boolean {
     return (
@@ -91,6 +92,22 @@ export function getDiff(from: File | Rank, to: File | Rank): number {
         return to - from;
     }
     throw new Error("Failed to calculate position diff. Invalid input type");
+}
+
+export async function onCommittedMove(id: string, move: Move, board: Board) {
+    const { from, to, moveNumber } = move;
+
+    console.log({ board });
+    // Convert to persistable state
+    const nextState = toPersistedState({
+        board,
+        selected: from,
+        playerColor: board.currentTurn,
+    });
+    const persistedMove = toPersistedMove(move);
+    console.log({ persistedMove });
+
+    await pushMove(id, nextState, persistedMove);
 }
 
 export function parseState<T>(state_json: unknown): T {

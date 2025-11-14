@@ -21,12 +21,27 @@ export type PieceConstructor = new (
     board: Board
 ) => Piece;
 
+export type OfferType = "draw" | "rematch" | "layoff";
+export type OfferStatus = "pending" | "accepted" | "declined" | "expired";
+export type OfferRow = {
+    id: string;
+    game_id: string;
+    from_player: string;
+    to_player: string;
+    type: OfferType;
+    status: OfferStatus;
+    created_at: string;
+    expires_at: string;
+};
+
 export type GameStatus =
     | "check"
     | "checkmate"
     | "draw"
     | "layed-off"
+    | "layoff-pending"
     | "ongoing"
+    | "resigned"
     | "stalemate"
     | "waiting";
 

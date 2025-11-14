@@ -12,6 +12,9 @@ const Room = ({ game }: { game: GameRow }) => {
                 Black:{" "}
                 <span className='font-medium'>{game?.player_black ?? "—"}</span>
             </p>
+            <div className='mt-4 text-sm font-light rounded-md border border-border h-64 w-full px-4 py-2'>
+                Chat messages go here...
+            </div>
         </div>
     );
 };
