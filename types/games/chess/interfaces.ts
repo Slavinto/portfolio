@@ -1,11 +1,5 @@
 import { Board } from "@/lib/games/chess/game-logic/main/board/board";
-import {
-    Color,
-    GameStatus,
-    MatchStatus,
-    PersistedMove,
-    PersistedState,
-} from "./types";
+import { Color, MatchStatus, PersistedMove } from "./types";
 import { Position } from "@/lib/games/chess/game-logic/main/position";
 import { Piece } from "@/lib/games/chess/game-logic/main/piece";
 
@@ -16,6 +10,8 @@ export interface IBoardInitializer {
 export interface BoardState {
     board: Board;
     playerColor: Color;
+    playerId: string | null;
+    opponentId: string | null;
     selected: Position | null;
 }
 

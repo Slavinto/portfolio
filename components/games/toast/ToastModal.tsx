@@ -1,5 +1,4 @@
 import { ButtonsCard } from "@/components/ui";
-import { FC } from "react";
 import { FaQuestionCircle } from "react-icons/fa";
 import { Bounce, toast } from "react-toastify";
 

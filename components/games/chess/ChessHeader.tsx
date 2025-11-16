@@ -1,12 +1,16 @@
-import { Heading } from "@/components/ui";
+import { ButtonsCard, Heading } from "@/components/ui";
 import { Headings } from "@/types/enums";
 import React, { ReactNode } from "react";
 import { FaChessKing } from "react-icons/fa";
 import ChessGameStatus from "./ChessGameStatus";
 import { useChessGamePageContext } from "@/app/context/ChessGamePageContext";
+import { useRouter } from "next/navigation";
+import { HiArrowTurnLeftUp } from "react-icons/hi2";
 
 const ChessHeader = ({ id, children }: { id: string; children: ReactNode }) => {
+    const router = useRouter();
     const { state } = useChessGamePageContext();
+
     const gameStatus = state.board.getGameStatus();
     return (
         <div className='rounded-xl p-4 border border-border bg-card w-full text-xl'>
@@ -18,6 +22,15 @@ const ChessHeader = ({ id, children }: { id: string; children: ReactNode }) => {
             </Heading>
 
             <ChessGameStatus />
+
+            <ButtonsCard
+                icon={<HiArrowTurnLeftUp className='mb-2' />}
+                iconPosition='left'
+                className='rounded-xl p-2 cursor-pointer gap-1 mt-2'
+                onClick={() => router.push("/chess")}
+            >
+                Browse my games
+            </ButtonsCard>
 
             {(gameStatus === "check" || gameStatus === "ongoing") && children}
         </div>

@@ -4,5 +4,7 @@ import { Color } from "@/types/games/chess";
 export const initialBoardState = {
     board: BoardInstance,
     playerColor: "White" as Color,
+    playerId: null,
+    opponentId: null,
     selected: null,
 };

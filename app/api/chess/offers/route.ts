@@ -5,7 +5,6 @@ import { NextRequest, NextResponse } from "next/server";
 export async function POST(req: NextRequest) {
     const supabase = await createSupabaseServerClient();
 
-    // get logged-in user from the cookie-based session
     const {
         data: { user },
         error: userError,
@@ -17,8 +16,36 @@ export async function POST(req: NextRequest) {
         return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    // Optional: enforce cooldown or max pending offers per game
-    const { data: existing, error: offersSelectError } = await supabase
+    // ----------------------------
+    // 1. Enforce hard cap: max 3 offers per type per game
+    // ----------------------------
+    const { data: allOffers, error: countError } = await supabase
+        .from("offers")
+        .select("id")
+        .eq("game_id", gameId)
+        .eq("from_player", fromPlayer)
+        .eq("type", type);
+
+    if (countError) {
+        return NextResponse.json(
+            { error: countError.message },
+            { status: 400 }
+        );
+    }
+
+    if (allOffers.length >= 3) {
+        return NextResponse.json(
+            {
+                error: `Maximum number of ${type} offers reached for this game.`,
+            },
+            { status: 400 }
+        );
+    }
+
+    // ----------------------------
+    // 2. Check if there is a pending offer from this player
+    // ----------------------------
+    const { data: existing, error: selectError } = await supabase
         .from("offers")
         .select("*")
         .eq("game_id", gameId)
@@ -27,23 +54,51 @@ export async function POST(req: NextRequest) {
         .eq("status", "pending")
         .maybeSingle();
 
-    if (offersSelectError) {
-        console.log({ errorMessage: offersSelectError?.message });
+    if (selectError) {
         return NextResponse.json(
-            { error: offersSelectError?.message },
+            { error: selectError.message },
             { status: 400 }
         );
     }
 
-    if (existing) {
-        return NextResponse.json(
-            { error: "Offer already pending" },
-            { status: 400 }
-        );
+    const expiresAt = new Date(Date.now() + 60 * 1000);
+
+    // ----------------------------
+    // 3. Pending exists → check expiration
+    // ----------------------------
+    if (existing && existing.expires_at) {
+        const expired = Date.now() > new Date(existing.expires_at).getTime();
+
+        if (!expired) {
+            // still alive → block user
+            return NextResponse.json(
+                { error: "Offer already pending" },
+                { status: 400 }
+            );
+        }
+
+        // ----------------------------
+        // 4. Mark expired + create a new one
+        // ----------------------------
+        const { error: expireError } = await supabase
+            .from("offers")
+            .update({ status: "expired" })
+            .eq("id", existing.id);
+
+        if (expireError) {
+            return NextResponse.json(
+                { error: expireError.message },
+                { status: 400 }
+            );
+        }
+
+        // (We do NOT return here; continue to insert the new offer)
     }
 
-    const expiresAt = new Date(Date.now() + 60 * 1000); // 1 minute
-    const { data, error } = await supabase
+    // ----------------------------
+    // 5. Insert NEW offer
+    // ----------------------------
+    const { data: newOffer, error: insertError } = await supabase
         .from("offers")
         .insert([
             {
@@ -51,11 +106,19 @@ export async function POST(req: NextRequest) {
                 from_player: fromPlayer,
                 to_player: toPlayer,
                 type,
+                status: "pending",
                 expires_at: expiresAt,
             },
         ])
         .select()
         .single();
 
-    return NextResponse.json({ data, error });
+    if (insertError) {
+        return NextResponse.json(
+            { error: insertError.message },
+            { status: 400 }
+        );
+    }
+
+    return NextResponse.json({ data: newOffer });
 }

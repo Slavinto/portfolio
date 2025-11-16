@@ -42,7 +42,7 @@ export async function joinGame(gameId: string) {
                 .from("games")
                 .update({
                     player_white: user.id,
-                    status: game.player_black ? "in-progress" : "waiting",
+                    status: game.player_black ? "ongoing" : "waiting",
                 })
                 .eq("id", gameId)
                 .select()
@@ -54,7 +54,7 @@ export async function joinGame(gameId: string) {
         if (!game.player_black && game.player_white !== user.id) {
             const { data, error } = await supabase
                 .from("games")
-                .update({ player_black: user.id, status: "in-progress" })
+                .update({ player_black: user.id, status: "ongoing" })
                 .eq("id", gameId)
                 .select()
                 .single();
@@ -166,97 +166,6 @@ export async function confirmLayoff(gameId: string) {
     }
 }
 
-export async function offerDraw(gameId: string, playerId: string) {
-    try {
-        await isUserLoggedIn();
-
-        // Check current game state
-        const { data: game, error: fetchError } = await supabase
-            .from("games")
-            .select("draw_offered_by, draw_offered_at")
-            .eq("id", gameId)
-            .single();
-
-        if (fetchError) throw fetchError;
-
-        // If opponent already offered
-        if (game.draw_offered_by && game.draw_offered_by !== playerId) {
-            throw new Error("Opponent already has a pending draw offer.");
-        }
-
-        console.log({
-            drawOfferedBy: game.draw_offered_by,
-            playerId,
-            timeDiffMins: Date.now() - new Date(game.draw_offered_at).getTime(),
-        });
-        // If you already have a pending offer and it’s less than 2 minutes old
-        if (
-            // game.draw_offered_by === playerId &&
-            game.draw_offered_at &&
-            Date.now() - new Date(game.draw_offered_at).getTime() <
-                2 * 60 * 1000
-        ) {
-            throw new Error(
-                "You already offered a draw recently. Please wait."
-            );
-        }
-
-        // Otherwise, send the new offer
-        const { data, error: updateError } = await supabase
-            .from("games")
-            .update({
-                draw_offered_by: playerId,
-                draw_offered_at: new Date().toISOString(),
-            })
-            .eq("id", gameId)
-            .select()
-            .single();
-
-        if (updateError) throw updateError;
-        console.log({ dataAfterOfferDraw: data });
-        return data;
-    } catch (error) {
-        console.error(error);
-        throw error;
-    }
-}
-
-export async function acceptDraw(gameId: string) {
-    try {
-        await isUserLoggedIn();
-        const { data, error } = await supabase
-            .from("games")
-            .update({ status: "draw", draw_offered_by: null })
-            .eq("id", gameId)
-            .select()
-            .single();
-
-        if (error) throw error;
-        return data;
-    } catch (error) {
-        console.error(error);
-        throw error;
-    }
-}
-
-export async function declineDraw(gameId: string) {
-    try {
-        await isUserLoggedIn();
-        const { data, error } = await supabase
-            .from("games")
-            .update({ draw_offered_by: null })
-            .eq("id", gameId)
-            .select()
-            .single();
-
-        if (error) throw error;
-        return data;
-    } catch (error) {
-        console.error(error);
-        throw error;
-    }
-}
-
 export async function pushMove(
     gameId: string,
     nextState: PersistedState,
@@ -273,8 +182,7 @@ export async function pushMove(
             .from("games")
             .update({
                 state_json: nextState,
-                status:
-                    board.status === "ongoing" ? "in-progress" : board.status,
+                status: board.status === "ongoing" ? "ongoing" : board.status,
                 turn: board.currentTurn,
             })
             .eq("id", gameId);

@@ -4,7 +4,7 @@ import React from "react";
 const PlayerColor = ({ color, turn }: { color?: Color; turn?: Color }) => {
     return (
         <div
-            className={`lg:absolute lg:top-8 lg:left-1/2 max-w-sm flex flex-col self-center items-center px-12 py-4 rounded-full bg-secondary text-secondary-foreground text-xl mb-6${
+            className={`lg:-top-36 mt-4 max-w-sm flex flex-col self-center items-center px-12 py-4 rounded-full bg-secondary text-secondary-foreground text-xl mb-6${
                 turn === color ? " text-shadow-lg shadow-white-300" : ""
             }`}
         >

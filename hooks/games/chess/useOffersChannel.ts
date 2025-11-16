@@ -1,28 +1,29 @@
-import { createClient } from "@/lib/supabase/client";
+"use client";
+
 import { useEffect, useRef } from "react";
+import { createClient } from "@/lib/supabase/client";
+import { OfferRow } from "@/types/games/chess";
+import { toast } from "react-toastify";
+import { useUser } from "@/hooks/auth/useUser";
 
 export function useOffersChannel(
     gameId: string,
-    onOfferEvent: (offerRow: any) => void
+    onOffer?: (offer: OfferRow) => void
 ) {
-    const hydratedRef = useRef(false);
     const supabase = createClient();
+    const { data: user } = useUser();
+    const lastOfferIdRef = useRef<string | null>(null);
+    const channelRef = useRef<ReturnType<
+        ReturnType<typeof createClient>["channel"]
+    > | null>(null);
 
     useEffect(() => {
-        if (!gameId) return;
+        if (!user?.id || !gameId) return;
 
-        // // Hydrate initial game state only once
-        // if (initialRow && !hydratedRef.current) {
-        //     onGameUpdate(initialRow);
-        //     hydratedRef.current = true;
-        // }
+        const channel = supabase.channel(`offers-${gameId}`);
+        channelRef.current = channel;
 
-        const channel = supabase.channel(`offers:${gameId}`);
-
-        console.log("Subscribing to channel:", `offers:${gameId}`);
-
-        supabase
-            .channel(`offers:${gameId}`)
+        channel
             .on(
                 "postgres_changes",
                 {
@@ -32,23 +33,58 @@ export function useOffersChannel(
                     filter: `game_id=eq.${gameId}`,
                 },
                 (payload) => {
-                    onOfferEvent(payload);
+                    const offer = (payload.new ?? payload.old) as OfferRow;
+                    if (!offer) return;
+                    const eventKey = offer.id + "_" + offer.status;
+
+                    // Prevent duplicate event spam
+                    if (eventKey === lastOfferIdRef.current) return;
+                    lastOfferIdRef.current = eventKey;
+
+                    const isMe = offer.from_player === user.id;
+
+                    // 🔥 BASIC LOGIC MAP
+                    switch (payload.eventType) {
+                        case "INSERT":
+                            if (!isMe) {
+                                toast.info(
+                                    `Opponent sent a ${offer.type} offer`
+                                );
+                            }
+                            break;
+
+                        case "UPDATE":
+                            if (offer.status === "accepted") {
+                                toast.success(
+                                    isMe
+                                        ? `Your ${offer.type} offer was accepted`
+                                        : `Opponent accepted your ${offer.type} offer`
+                                );
+                            } else if (offer.status === "declined") {
+                                toast.info(
+                                    isMe
+                                        ? `Opponent declined your ${offer.type} offer`
+                                        : `You declined the ${offer.type} offer`
+                                );
+                            }
+                            break;
+
+                        case "DELETE":
+                            toast.info(`Offer removed`);
+                            break;
+                    }
+
+                    onOffer?.(offer);
                 }
             )
-            .subscribe();
+            .subscribe((status) => {
+                if (status === "SUBSCRIBED") {
+                    console.log("Offers realtime subscribed");
+                }
+            });
 
-        // ✅ Handle connection errors and reconnect
-        channel.on("system", { event: "channel_error" }, () => {
-            console.warn("Realtime channel error, reconnecting...");
-            setTimeout(() => {
-                supabase.channel(`offer:${gameId}`).subscribe();
-            }, 1000);
-        });
-
-        // ✅ Clean up on unmount or game change
         return () => {
-            console.log("Unsubscribing from channel", `offer:${gameId}`);
-            channel.unsubscribe();
+            channelRef.current?.unsubscribe();
         };
-    }, [gameId, onOfferEvent]);
+    }, [gameId, user?.id, supabase, onOffer]);
 }

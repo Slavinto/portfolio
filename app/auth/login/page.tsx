@@ -13,7 +13,7 @@ export default function AuthForm() {
     const [password, setPassword] = useState("");
 
     if (user) {
-        router.back();
+        router.push("/chess");
     }
 
     const handleLogin = async (e: React.FormEvent) => {

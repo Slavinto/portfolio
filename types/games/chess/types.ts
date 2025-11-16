@@ -55,7 +55,11 @@ export type BoardAction =
     | { type: "UNDO_MOVE" }
     | { type: "SELECT_PIECE"; payload: { position: Position } }
     | { type: "UNSELECT_PIECE" }
-    | { type: "HYDRATE_FROM_SERVER"; payload: PersistedState };
+    | { type: "HYDRATE_FROM_SERVER"; payload: PersistedState }
+    | {
+          type: "SET_PLAYER_IDS";
+          payload: { playerId: string | null; opponentId: string | null };
+      };
 
 export type Directions = [number, number][];
 

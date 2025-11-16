@@ -59,9 +59,7 @@ const GameCard = ({
                         ) : game.status === "layed-off" ? (
                             <span>Layed&nbsp;off</span>
                         ) : (
-                            <span className='text-skeleton'>
-                                In&nbsp;progress
-                            </span>
+                            <span className='text-skeleton'>Ongoing</span>
                         )}
                     </p>
                 </div>

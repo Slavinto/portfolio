@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { useGameChannel } from "@/hooks/games/chess/useGameChannel";
 import { useJoinedGame } from "@/hooks/games/chess/useJoinedGame";
@@ -23,6 +23,12 @@ import { useUser } from "@/hooks/auth/useUser";
 import { useOffersChannel } from "@/hooks/games/chess/useOffersChannel";
 import ResignButton from "@/components/games/chess/action-buttons/ResignButton";
 import OfferButton from "@/components/games/chess/action-buttons/OfferButton";
+import { ToastModal } from "@/components/games/toast/ToastModal";
+import {
+    acceptDraw,
+    declineDraw,
+    offerDraw,
+} from "@/lib/services/chess-offers";
 
 export default function GamePage() {
     const { id: gameId } = useParams<{ id: string }>();
@@ -36,7 +42,6 @@ export default function GamePage() {
     const { yourColor, isLoading: isLoadingColor } = useYourColor();
     const prevOfferRef = useRef<string | null>(null);
     const { state, dispatch } = useChessGamePageContext();
-
     // const [moves, setMoves] = useState<SupabaseMove[]>([]);
     const [asideOpen, setAsideOpen] = useState(true);
 
@@ -53,7 +58,20 @@ export default function GamePage() {
     // }
 
     // Realtime game offers
-    useOffersChannel(gameId, (offerRow: OfferRow) => {});
+    useOffersChannel(gameId, (offerRow: OfferRow) => {
+        if (prevOfferRef.current === offerRow.id) {
+            return;
+        }
+        prevOfferRef.current = offerRow.id;
+        if (offerRow.from_player !== state.playerId) {
+            if (offerRow.type === "draw") {
+                ToastModal(() => acceptDraw(offerRow.id), {
+                    message: "Opponent offers a draw",
+                    onDecline: () => declineDraw(offerRow.id),
+                });
+            }
+        }
+    });
 
     // Realtime sync
     useGameChannel(
@@ -69,25 +87,6 @@ export default function GamePage() {
                     payload: row.state_json,
                 });
             }
-
-            // if (!row.draw_offered_by && prevOfferRef.current === user?.id) {
-            //     // Draw offered by you - opponent declined
-            //     if (state.board.getGameStatus() !== "draw") {
-            //         toast.info("Your opponent declined your draw offer");
-            //     } else {
-            //         toast.info("Game over. Draw offer accepted");
-            //         router.push("/games");
-            //     }
-            // }
-            // if (row.draw_offered_by && row.draw_offered_by !== user?.id) {
-            //     // Draw offered by your opponent
-            //     ToastModal(() => handleAcceptDraw(row.id), {
-            //         message: "Your opponent offered a draw. Do you accept?",
-            //         onDecline: () => handleDeclineDraw(row.id),
-            //     });
-            // }
-            // // Updating Draw offer ref
-            // prevOfferRef.current = row.draw_offered_by;
         },
         (newMove: Move) => {
             const { from, to } = newMove;
@@ -97,6 +96,14 @@ export default function GamePage() {
         },
         game
     );
+    useEffect(() => {
+        if (!state.playerId && user && user.id) {
+            dispatch({
+                type: "SET_PLAYER_IDS",
+                payload: { playerId: user.id, opponentId: null },
+            });
+        }
+    }, [user, dispatch, state.playerId]);
 
     if (isBusy) return <ChessGameSkeleton repeatPattern={3} />;
     if (!game && !isBusy) return <p>Game not found</p>;
@@ -111,18 +118,18 @@ export default function GamePage() {
         game.status !== "check" &&
         game.status !== "waiting";
     // game status handling
-
+    console.log({ status: game?.status });
     return (
-        <section className='flex lg:mt-24 lg:flex-row items-center justify-around flex-col w-full'>
+        <section className='flex lg:mt-8 lg:flex-row items-center justify-around flex-col w-full'>
             <CustomToastContainer />
-            <PlayerColor color={yourColor as Color} turn={game?.turn} />
 
             {/* Board */}
             <div
-                className={`xl:ml-auto transition-opacity duration-300 flex ${
+                className={`lg:self-start flex-col items-center relative lg:ml-auto transition-opacity duration-300 flex ${
                     waitingForOpponent ? "opacity-50 pointer-events-none" : ""
                 }`}
             >
+                <PlayerColor color={yourColor as Color} turn={game?.turn} />
                 <ChessBoard gameId={gameId} onCommittedMove={onCommittedMove}>
                     {(waitingForOpponent || gameOver) && (
                         <ButtonsCard className='absolute z-10 w-[20rem] h-16 top-1/2 left-1/2 !-translate-x-1/2 !-translate-y-1/2'>

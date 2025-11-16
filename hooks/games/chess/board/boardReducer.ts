@@ -58,6 +58,13 @@ export function boardReducer(
                 playerColor: state.playerColor, // keep local perspective
             };
         }
+        case "SET_PLAYER_IDS": {
+            return {
+                ...state,
+                playerId: action.payload.playerId ?? state.playerId,
+                opponentId: action.payload.opponentId ?? state.opponentId,
+            };
+        }
         default:
             return state;
     }
