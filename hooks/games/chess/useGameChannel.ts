@@ -77,14 +77,14 @@ export function useGameChannel(
                     !opponentOnlineRef.current
                 ) {
                     opponentOnlineRef.current = true;
-                    toast.info("Opponent has joined the game");
+                    // toast.info("Opponent has joined the game");
                 }
                 if (
                     !playersOnline.includes(opponentId) &&
                     opponentOnlineRef.current
                 ) {
                     opponentOnlineRef.current = false;
-                    toast.info("Opponent has left the game");
+                    // toast.info("Opponent has left the game");
                 }
 
                 if (!localState.opponentId || !localState.playerId) {

@@ -13,7 +13,13 @@ import Moves from "@/components/games/chess/Moves";
 import ChessGameSkeleton from "@/components/ui/patterns/ChessGameSkeleton";
 import { ButtonsCard } from "@/components/ui";
 import { onCommittedMove } from "@/utils/games/chess/helpers";
-import { Color, Move, OfferRow } from "@/types/games/chess";
+import {
+    ChessMessage,
+    Color,
+    GameStatus,
+    Move,
+    OfferRow,
+} from "@/types/games/chess";
 import { useChessGamePageContext } from "@/app/context/ChessGamePageContext";
 import { FaChevronDown, FaChevronUp } from "react-icons/fa";
 import { toast } from "react-toastify";
@@ -24,11 +30,9 @@ import { useOffersChannel } from "@/hooks/games/chess/useOffersChannel";
 import ResignButton from "@/components/games/chess/action-buttons/ResignButton";
 import OfferButton from "@/components/games/chess/action-buttons/OfferButton";
 import { ToastModal } from "@/components/games/toast/ToastModal";
-import {
-    acceptDraw,
-    declineDraw,
-    offerDraw,
-} from "@/lib/services/chess-offers";
+import { acceptOffer, declineOffer } from "@/lib/services/chess-offers";
+import { useChessMessages } from "@/hooks/useChessMessages";
+import { useChatChannel } from "@/hooks/games/chess/useChatChannel";
 
 export default function GamePage() {
     const { id: gameId } = useParams<{ id: string }>();
@@ -39,37 +43,29 @@ export default function GamePage() {
         isPending: isLoadingGame,
         error,
     } = useJoinedGame(gameId);
-    const { yourColor, isLoading: isLoadingColor } = useYourColor();
-    const prevOfferRef = useRef<string | null>(null);
+
+    const prevOfferRef = useRef<OfferRow | null>(null);
+    const { chessMessages, isLoadingMessages } = useChessMessages();
     const { state, dispatch } = useChessGamePageContext();
-    // const [moves, setMoves] = useState<SupabaseMove[]>([]);
+    const { gameStatus } = state;
     const [asideOpen, setAsideOpen] = useState(true);
 
-    const isBusy = isLoadingGame || isLoadingColor;
+    const isBusy = isLoadingGame;
 
-    // async function handleAcceptDraw(gameId: string) {
-    //     await acceptDraw(gameId);
-    //     router.push("/games");
-    // }
-
-    // async function handleDeclineDraw(gameId: string) {
-    //     await declineDraw(gameId);
-    //     toast.info("You declined the draw offer.");
-    // }
+    // Realtime chat
+    useChatChannel();
 
     // Realtime game offers
     useOffersChannel(gameId, (offerRow: OfferRow) => {
-        if (prevOfferRef.current === offerRow.id) {
+        if (prevOfferRef.current?.id === offerRow.id) {
             return;
         }
-        prevOfferRef.current = offerRow.id;
+        prevOfferRef.current = offerRow;
         if (offerRow.from_player !== state.playerId) {
-            if (offerRow.type === "draw") {
-                ToastModal(() => acceptDraw(offerRow.id), {
-                    message: "Opponent offers a draw",
-                    onDecline: () => declineDraw(offerRow.id),
-                });
-            }
+            ToastModal(() => acceptOffer(offerRow.id), {
+                message: `Opponent offers a ${offerRow.type}`,
+                onDecline: () => declineOffer(offerRow.id),
+            });
         }
     });
 
@@ -81,12 +77,35 @@ export default function GamePage() {
                 toast.info("Game over. Your opponent resigned");
                 router.push("/chess");
             }
+            if (row?.status === "layed-off") {
+                if (prevOfferRef.current?.type === "layoff") {
+                    toast.info("The game was layed off");
+                    router.push("/chess");
+                }
+            }
+            if (
+                row?.status === "ongoing" &&
+                prevOfferRef.current?.type === "resume"
+            ) {
+                toast.info("The game is resumed");
+            }
+
             if (row?.state_json) {
                 dispatch({
                     type: "HYDRATE_FROM_SERVER",
                     payload: row.state_json,
                 });
             }
+            // syncing gameStatus on games table changes
+            if (game?.status !== row?.status) {
+                dispatch({
+                    type: "SET_GAME_STATUS",
+                    payload: { gameStatus: row?.status as GameStatus },
+                });
+            }
+            // if (state.board.currentTurn !== row?.turn) {
+            //     setCurrentTurn(row?.turn);
+            // }
         },
         (newMove: Move) => {
             const { from, to } = newMove;
@@ -96,6 +115,16 @@ export default function GamePage() {
         },
         game
     );
+    console.log({ chessMessages });
+    useEffect(() => {
+        if (!isLoadingMessages && state.chatMessages.length === 0) {
+            dispatch({
+                type: "INIT_CHAT_MESSAGES",
+                payload: { chatMessages: chessMessages },
+            });
+        }
+    }, [chessMessages, dispatch, isLoadingMessages, state.chatMessages]);
+
     useEffect(() => {
         if (!state.playerId && user && user.id) {
             dispatch({
@@ -104,6 +133,23 @@ export default function GamePage() {
             });
         }
     }, [user, dispatch, state.playerId]);
+
+    // syncing gameStatus on game?.status local state change
+    useEffect(() => {
+        if (game?.status) {
+            dispatch({
+                type: "SET_GAME_STATUS",
+                payload: { gameStatus: game.status },
+            });
+        }
+    }, [game?.status, dispatch]);
+
+    // sync game id
+    useEffect(() => {
+        if (gameId !== state.gameId) {
+            dispatch({ type: "SET_GAME_ID", payload: { gameId } });
+        }
+    }, [gameId, state.gameId, dispatch]);
 
     if (isBusy) return <ChessGameSkeleton repeatPattern={3} />;
     if (!game && !isBusy) return <p>Game not found</p>;
@@ -114,11 +160,11 @@ export default function GamePage() {
     const waitingForOpponent = playerAbsent || game?.status === "waiting";
     const gameOver =
         game &&
-        game.status !== "ongoing" &&
-        game.status !== "check" &&
-        game.status !== "waiting";
+        gameStatus !== "ongoing" &&
+        gameStatus !== "check" &&
+        gameStatus !== "waiting";
     // game status handling
-    console.log({ status: game?.status });
+
     return (
         <section className='flex lg:mt-8 lg:flex-row items-center justify-around flex-col w-full'>
             <CustomToastContainer />
@@ -129,15 +175,17 @@ export default function GamePage() {
                     waitingForOpponent ? "opacity-50 pointer-events-none" : ""
                 }`}
             >
-                <PlayerColor color={yourColor as Color} turn={game?.turn} />
+                <PlayerColor />
                 <ChessBoard gameId={gameId} onCommittedMove={onCommittedMove}>
                     {(waitingForOpponent || gameOver) && (
                         <ButtonsCard className='absolute z-10 w-[20rem] h-16 top-1/2 left-1/2 !-translate-x-1/2 !-translate-y-1/2'>
                             <p className='text-center px-4 py-2'>
                                 {waitingForOpponent
                                     ? "Waiting for opponent to join…"
+                                    : gameStatus === "layed-off"
+                                    ? "Game was layed off. Please send the resume offer"
                                     : gameOver
-                                    ? `Game over. ${game.status}`
+                                    ? `Game over. ${""}`
                                     : "Waiting..."}
                             </p>
                         </ButtonsCard>
@@ -153,15 +201,19 @@ export default function GamePage() {
                                 <OfferButton
                                     type={"draw"}
                                     toPlayer={
-                                        yourColor === "Black"
+                                        state.playerColor === "Black"
                                             ? game?.player_white
                                             : game?.player_black
                                     }
                                 />
                                 <OfferButton
-                                    type={"layoff"}
+                                    type={
+                                        gameStatus === "layed-off"
+                                            ? "resume"
+                                            : "layoff"
+                                    }
                                     toPlayer={
-                                        yourColor === "Black"
+                                        state.playerColor === "Black"
                                             ? game?.player_white
                                             : game?.player_black
                                     }

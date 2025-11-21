@@ -1,7 +1,6 @@
-import { Board } from "@/lib/games/chess/game-logic/main/board/board";
-import { GameStatus, PersistedState } from "@/types/games/chess";
+import { GameStatus } from "@/types/games/chess";
 import { GameTableData } from "@/types/supabase/database.types";
-import { getStatusColor, parseState } from "@/utils/games/chess/helpers";
+import { getStatusColor } from "@/utils/games/chess/helpers";
 import React from "react";
 
 const GameCard = ({
@@ -11,12 +10,9 @@ const GameCard = ({
     game: GameTableData;
     userId: string;
 }) => {
-    const gameBoard = Board.fromPersistedState(
-        parseState<PersistedState>(game?.state_json)
-    );
-    const moves = gameBoard.moveHistoryList;
-    const lastMove = gameBoard.getLastMove();
-    const gameStatus = gameBoard.getGameStatus();
+    const gameStatus = game.status;
+    const moves = game.state_json.board.moveHistoryList;
+    const lastMove = moves[moves.length - 1];
     const winner =
         gameStatus !== "checkmate"
             ? "Unknown"
@@ -57,7 +53,9 @@ const GameCard = ({
                         ) : game.status === "draw" ? (
                             "Draw"
                         ) : game.status === "layed-off" ? (
-                            <span>Layed&nbsp;off</span>
+                            <span className='text-skeleton'>
+                                Layed&nbsp;off
+                            </span>
                         ) : (
                             <span className='text-skeleton'>Ongoing</span>
                         )}

@@ -1,5 +1,11 @@
 import { Board } from "@/lib/games/chess/game-logic/main/board/board";
-import { Color, MatchStatus, PersistedMove } from "./types";
+import {
+    ChessMessage,
+    Color,
+    GameStatus,
+    MatchStatus,
+    PersistedMove,
+} from "./types";
 import { Position } from "@/lib/games/chess/game-logic/main/position";
 import { Piece } from "@/lib/games/chess/game-logic/main/piece";
 
@@ -9,9 +15,18 @@ export interface IBoardInitializer {
 
 export interface BoardState {
     board: Board;
+    gameId: string | null;
+    gameStatus: GameStatus;
     playerColor: Color;
     playerId: string | null;
     opponentId: string | null;
+    selected: Position | null;
+    chatMessages: ChessMessage[];
+}
+
+export interface LocalStateToPersist {
+    board: Board;
+    playerColor: Color;
     selected: Position | null;
 }
 
@@ -56,7 +71,7 @@ export interface Move {
     promotedTo?: Piece; // new Piece instance after promotion
 
     moveNumber: number;
-    playerColor?: Color;
+    playerColor: Color;
 }
 
 export interface Match {

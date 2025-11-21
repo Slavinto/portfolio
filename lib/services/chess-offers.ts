@@ -1,5 +1,4 @@
-import { OfferRow } from "@/types/games/chess";
-import { toast } from "react-toastify";
+import { OfferRow, OfferType } from "@/types/games/chess";
 
 export type OfferServiceResponse = {
     data: OfferRow | null;
@@ -7,8 +6,9 @@ export type OfferServiceResponse = {
 };
 
 // services/offers.ts
-export async function offerDraw(
+export async function sendOffer(
     gameId: string,
+    type: OfferType,
     fromPlayer: string,
     toPlayer: string
 ): Promise<OfferServiceResponse> {
@@ -19,45 +19,39 @@ export async function offerDraw(
             gameId,
             fromPlayer,
             toPlayer,
-            type: "draw",
+            type,
         }),
     });
 
     const json = await res.json();
 
     if (!res.ok) {
-        // toast.error("Failed to send draw offer");
-        // console.error(json.error || "Failed to send draw offer");
         return { data: null, error: json.error };
     }
-    // else {
-    //     toast.info("Offer sent to an opponent");
-    // }
-    // throw new Error(json.error || "Failed to send draw offer");
 
     return { data: json.data, error: null };
 }
 
-export async function acceptDraw(offerId: string) {
+export async function acceptOffer(offerId: string) {
     const res = await fetch(`/api/chess/offers/${offerId}/accept`, {
         method: "POST",
     });
 
     const json = await res.json();
 
-    if (!res.ok) throw new Error(json.error || "Failed to accept draw");
+    if (!res.ok) throw new Error(json.error || "Failed to accept offer");
 
     return json.data;
 }
 
-export async function declineDraw(offerId: string) {
+export async function declineOffer(offerId: string) {
     const res = await fetch(`/api/chess/offers/${offerId}/decline`, {
         method: "POST",
     });
 
     const json = await res.json();
 
-    if (!res.ok) throw new Error(json.error || "Failed to decline draw");
+    if (!res.ok) throw new Error(json.error || "Failed to decline offer");
 
     return json.data;
 }

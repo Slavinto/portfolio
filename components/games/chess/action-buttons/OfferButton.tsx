@@ -5,8 +5,9 @@ import { OfferType } from "@/types/games/chess";
 import { useParams, useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import { ToastModal } from "../../toast/ToastModal";
-import { acceptDraw, offerDraw } from "@/lib/services/chess-offers";
+import { sendOffer } from "@/lib/services/chess-offers";
 import { useChessGamePageContext } from "@/app/context/ChessGamePageContext";
+import { usePresenceStore } from "@/data/games/chess/store/presence";
 
 type OfferButtonProps = {
     type: OfferType;
@@ -20,10 +21,15 @@ export default function OfferButton({ type }: OfferButtonProps) {
     } = useChessGamePageContext();
     const router = useRouter();
     const { data: user } = useUser();
+    const opponentIsOnline = usePresenceStore(
+        (s) => s.onlinePlayers[opponentId ?? ""] === true
+    );
+
     if (!playerId || !opponentId) {
-        // toast.error("Not enough data. Invalid context");
-        return null;
+        console.error("Invalid player or opponent id");
+        // return null;
     }
+
     if (!user || !user.id) {
         router.push("/auth/login");
         toast.error("Must be logged in to send offers");
@@ -31,16 +37,16 @@ export default function OfferButton({ type }: OfferButtonProps) {
     }
 
     const handleOffer = async () => {
-        if (type === "draw") {
-            const res = await offerDraw(gameId, playerId, opponentId);
-            if (res.error) toast.error(res.error);
-            // } else {
-            //     toast.info("Draw offer sent");
-            // }
+        if (!playerId || !opponentId) {
+            toast.info("Invalid player or opponent id");
+            return;
         }
-        if (type === "layoff") {
-            const res = await acceptDraw("test-string");
+        if (!opponentIsOnline) {
+            toast.info("Failed to send offer. Opponent is not online");
+            return;
         }
+        const res = await sendOffer(gameId, type, playerId, opponentId);
+        if (res.error) toast.error(res.error);
     };
 
     return (

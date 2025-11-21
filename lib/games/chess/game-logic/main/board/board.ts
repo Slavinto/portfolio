@@ -309,7 +309,7 @@ export class Board {
                 : undefined,
 
             moveNumber: move.moveNumber,
-            playerColor: move?.playerColor ? move.playerColor : undefined,
+            playerColor: piece.color,
         };
     }
 
@@ -372,6 +372,7 @@ export class Board {
             from,
             to,
             piece,
+            playerColor: piece.color,
             moveNumber: this.moveHistoryList.length + 1,
         };
 
@@ -380,7 +381,6 @@ export class Board {
         );
         const lastMovedPiece = this.getLastMove()?.piece;
 
-        // refactoring..
         if (isMoveLegal) {
             // Checking for is the king in check
             const tmpBoard = this.simulateMove(piece, to);
@@ -561,6 +561,7 @@ export class Board {
                 from: piece.position,
                 to,
                 moveNumber: this.moveHistoryList.length + 1,
+                playerColor: piece.color,
             },
         ];
 

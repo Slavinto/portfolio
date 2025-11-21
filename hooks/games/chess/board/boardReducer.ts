@@ -65,6 +65,31 @@ export function boardReducer(
                 opponentId: action.payload.opponentId ?? state.opponentId,
             };
         }
+        case "SET_PLAYER_COLOR": {
+            return { ...state, playerColor: action.payload.color };
+        }
+        case "SET_GAME_STATUS": {
+            const { gameStatus } = action.payload;
+            return { ...state, gameStatus };
+        }
+        case "SET_GAME_ID": {
+            const { gameId } = action.payload;
+            return { ...state, gameId };
+        }
+        case "ADD_CHAT_MESSAGE": {
+            const { chatMessage } = action.payload;
+            return {
+                ...state,
+                chatMessages: [...state.chatMessages, chatMessage],
+            };
+        }
+        case "INIT_CHAT_MESSAGES": {
+            const { chatMessages } = action.payload;
+            console.log("initializing chat messages with ");
+            console.log({ chatMessages });
+            return { ...state, chatMessages };
+        }
+
         default:
             return state;
     }

@@ -1,24 +1,62 @@
 import { createSupabaseServerClient } from "@/lib/supabase/server";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
-export async function POST(_: Request, { params }: { params: { id: string } }) {
+export async function POST(
+    req: NextRequest,
+    { params }: { params: { id: string } }
+) {
     const supabase = await createSupabaseServerClient();
+    const { id: offerId } = await params;
 
-    const {
-        data: { user },
-    } = await supabase.auth.getUser();
-    if (!user)
-        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-
-    const { data, error } = await supabase
+    // 1. Get the offer
+    const { data: offer, error: errOffer } = await supabase
         .from("offers")
-        .update({ status: "accepted" })
-        .eq("id", params.id)
-        .select()
+        .select("*")
+        .eq("id", offerId)
         .single();
 
-    if (error)
-        return NextResponse.json({ error: error.message }, { status: 400 });
+    if (errOffer || !offer) {
+        return new NextResponse(JSON.stringify({ error: "Offer not found" }), {
+            status: 400,
+        });
+    }
 
-    return NextResponse.json({ data });
+    const { type } = offer;
+
+    // 2. Mark offer as accepted
+    const { error: errUpdateOffer } = await supabase
+        .from("offers")
+        .update({ status: "accepted" })
+        .eq("id", offerId);
+
+    if (errUpdateOffer) {
+        return new NextResponse(
+            JSON.stringify({ error: "Failed to update offer" }),
+            { status: 500 }
+        );
+    }
+
+    // 3. Update game status
+    const { error: errGame } = await supabase
+        .from("games")
+        .update({
+            status:
+                type === "draw"
+                    ? "draw"
+                    : type === "layoff"
+                    ? "layed-off"
+                    : type === "resume"
+                    ? "ongoing"
+                    : "unknown",
+        })
+        .eq("id", offer.game_id);
+
+    if (errGame) {
+        return new NextResponse(
+            JSON.stringify({ error: "Failed to update game" }),
+            { status: 500 }
+        );
+    }
+
+    return new NextResponse(JSON.stringify({ success: true }));
 }

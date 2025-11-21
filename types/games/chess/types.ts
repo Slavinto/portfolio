@@ -21,7 +21,7 @@ export type PieceConstructor = new (
     board: Board
 ) => Piece;
 
-export type OfferType = "draw" | "rematch" | "layoff";
+export type OfferType = "draw" | "rematch" | "layoff" | "resume";
 export type OfferStatus = "pending" | "accepted" | "declined" | "expired";
 export type OfferRow = {
     id: string;
@@ -39,7 +39,6 @@ export type GameStatus =
     | "checkmate"
     | "draw"
     | "layed-off"
-    | "layoff-pending"
     | "ongoing"
     | "resigned"
     | "stalemate"
@@ -51,6 +50,8 @@ export type BoardAction =
     | {
           type: "START_NEW_GAME";
       }
+    | { type: "SET_GAME_ID"; payload: { gameId: string } }
+    | { type: "SET_PLAYER_COLOR"; payload: { color: Color } }
     | { type: "MOVE_PIECE"; payload: { from: Position; to: Position } }
     | { type: "UNDO_MOVE" }
     | { type: "SELECT_PIECE"; payload: { position: Position } }
@@ -59,7 +60,18 @@ export type BoardAction =
     | {
           type: "SET_PLAYER_IDS";
           payload: { playerId: string | null; opponentId: string | null };
-      };
+      }
+    | { type: "SET_GAME_STATUS"; payload: { gameStatus: GameStatus } }
+    | { type: "ADD_CHAT_MESSAGE"; payload: { chatMessage: ChessMessage } }
+    | { type: "INIT_CHAT_MESSAGES"; payload: { chatMessages: ChessMessage[] } };
+
+export type ChessMessage = {
+    id: string;
+    game_id: string;
+    sender: string;
+    message: string;
+    created_at: string;
+};
 
 export type Directions = [number, number][];
 

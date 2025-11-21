@@ -26,6 +26,8 @@ export async function POST(req: NextRequest) {
         .eq("from_player", fromPlayer)
         .eq("type", type);
 
+    console.log({ allOffers });
+
     if (countError) {
         return NextResponse.json(
             { error: countError.message },
@@ -98,18 +100,18 @@ export async function POST(req: NextRequest) {
     // ----------------------------
     // 5. Insert NEW offer
     // ----------------------------
+    const newItem = {
+        game_id: gameId,
+        from_player: fromPlayer,
+        to_player: toPlayer,
+        type,
+        status: "pending",
+        expires_at: expiresAt,
+    };
+    console.log({ newItem });
     const { data: newOffer, error: insertError } = await supabase
         .from("offers")
-        .insert([
-            {
-                game_id: gameId,
-                from_player: fromPlayer,
-                to_player: toPlayer,
-                type,
-                status: "pending",
-                expires_at: expiresAt,
-            },
-        ])
+        .insert([newItem])
         .select()
         .single();
 

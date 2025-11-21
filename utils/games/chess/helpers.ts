@@ -3,6 +3,7 @@ import {
     Color,
     File,
     GameStatus,
+    LocalStateToPersist,
     Move,
     PersistedBoard,
     PersistedMove,
@@ -95,14 +96,15 @@ export function getDiff(from: File | Rank, to: File | Rank): number {
 }
 
 export async function onCommittedMove(id: string, move: Move, board: Board) {
-    const { from, to, moveNumber } = move;
+    const { from, to, moveNumber, playerColor } = move;
 
     console.log({ board });
     // Convert to persistable state
+
     const nextState = toPersistedState({
         board,
+        playerColor,
         selected: from,
-        playerColor: board.currentTurn,
     });
     const persistedMove = toPersistedMove(move);
     console.log({ persistedMove });
@@ -136,7 +138,9 @@ export function toPersistedBoard(board: Board): PersistedBoard {
     };
 }
 
-export function toPersistedState(boardState: BoardState): PersistedState {
+export function toPersistedState(
+    boardState: LocalStateToPersist
+): PersistedState {
     const { board, playerColor, selected } = boardState;
     console.log({ boardState });
     return {

@@ -10,8 +10,7 @@ import { HiArrowTurnLeftUp } from "react-icons/hi2";
 const ChessHeader = ({ id, children }: { id: string; children: ReactNode }) => {
     const router = useRouter();
     const { state } = useChessGamePageContext();
-
-    const gameStatus = state.board.getGameStatus();
+    const { gameStatus } = state;
     return (
         <div className='rounded-xl p-4 border border-border bg-card w-full text-xl'>
             <Heading as={Headings.H4} classNames='text-2xl font-bold'>
@@ -21,7 +20,7 @@ const ChessHeader = ({ id, children }: { id: string; children: ReactNode }) => {
                 </span>
             </Heading>
 
-            <ChessGameStatus />
+            <ChessGameStatus gameStatus={gameStatus} />
 
             <ButtonsCard
                 icon={<HiArrowTurnLeftUp className='mb-2' />}
@@ -32,7 +31,11 @@ const ChessHeader = ({ id, children }: { id: string; children: ReactNode }) => {
                 Browse my games
             </ButtonsCard>
 
-            {(gameStatus === "check" || gameStatus === "ongoing") && children}
+            {(gameStatus === "check" ||
+                gameStatus === "ongoing" ||
+                gameStatus === "waiting" ||
+                gameStatus === "layed-off") &&
+                children}
         </div>
     );
 };

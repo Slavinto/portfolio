@@ -27,7 +27,7 @@ export function useUser() {
         });
 
         return () => subscription.subscription.unsubscribe();
-    }, [queryClient]);
+    }, [queryClient, supabase.auth]);
 
     return query;
 }

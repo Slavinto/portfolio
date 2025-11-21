@@ -1,10 +1,14 @@
 import { useChessGamePageContext } from "@/app/context/ChessGamePageContext";
 import { usePresenceStore } from "@/data/games/chess/store/presence";
+import { GameTableData } from "@/types/supabase/database.types";
 import React from "react";
 
-const ChessGameStatus = () => {
+const ChessGameStatus = ({
+    gameStatus,
+}: {
+    gameStatus: GameTableData["status"];
+}) => {
     const { state } = useChessGamePageContext();
-    console.log({ state });
     const opponentIsOnline = usePresenceStore(
         (s) => s.onlinePlayers[state.opponentId!] === true
     )
@@ -19,10 +23,8 @@ const ChessGameStatus = () => {
         <div className='flex flex-col'>
             <p className='text-neutral-500 dark:text-neutral-300'>
                 Game status:&nbsp;
-                <span className='font-medium'>
-                    {state.board.getGameStatus() ?? "…"}
-                </span>{" "}
-                · Turn:&nbsp;
+                <span className='font-medium'>{gameStatus ?? "…"}</span> ·
+                Turn:&nbsp;
                 <span className='font-medium'>
                     {state.board.currentTurn ?? "…"}
                 </span>

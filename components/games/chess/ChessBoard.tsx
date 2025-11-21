@@ -45,15 +45,41 @@ export default function ChessBoard({
     // Sync from server if provided
 
     function handleSquareClick(position: Position) {
+        if (!game || game.status !== "ongoing") {
+            return;
+        }
         const piece = board.getPieceAtPosition(position);
-        console.log({ piece });
         if (piece && !state.selected && piece.color !== yourColor) {
             console.info("Can not select opponent's piece");
             return;
         }
+
+        // selecting a piece that is already selected -> deselecting
+        if (
+            state.selected &&
+            piece?.position.equals(state.selected) &&
+            piece.color === state.playerColor
+        ) {
+            dispatch({ type: "UNSELECT_PIECE" });
+        }
+
+        // selecting own piece while another piece is selected -> select current target piece
+        if (
+            state.selected &&
+            piece?.color === state.playerColor &&
+            !piece.position.equals(state.selected)
+        ) {
+            dispatch({
+                type: "SELECT_PIECE",
+                payload: { position: piece.position },
+            });
+        }
+
         if (selected) {
             const selectedPiece = board.getPieceAtPosition(selected);
             if (!selectedPiece) return;
+
+            console.log({ selectedPiece });
 
             if (isLegalToMoveToPosition(board, selectedPiece, position)) {
                 // Reset local selection

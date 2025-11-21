@@ -1,7 +1,10 @@
 import { GameRow } from "@/types/games/chess";
 import React from "react";
+import ChatPanel from "./chat/ChatPanel";
+import { useChessGamePageContext } from "@/app/context/ChessGamePageContext";
 
 const Room = ({ game }: { game: GameRow }) => {
+    const { state } = useChessGamePageContext();
     return (
         <div className='rounded-xl p-4 border border-border bg-card w-full'>
             <h2 className='font-semibold mb-3'>Room</h2>
@@ -12,8 +15,8 @@ const Room = ({ game }: { game: GameRow }) => {
                 Black:{" "}
                 <span className='font-medium'>{game?.player_black ?? "—"}</span>
             </p>
-            <div className='mt-4 text-sm font-light rounded-md border border-border h-64 w-full px-4 py-2'>
-                Chat messages go here...
+            <div className='relative flex mt-4 text-sm font-light rounded-md border border-border min-h-96 w-full'>
+                {state.playerId && <ChatPanel />}
             </div>
         </div>
     );

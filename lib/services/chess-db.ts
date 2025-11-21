@@ -69,7 +69,9 @@ export async function joinGame(gameId: string) {
         }
 
         return game as GameRow; // already joined or full
-    } catch (error) {}
+    } catch (error) {
+        console.error(error);
+    }
 }
 
 export async function getGameById(gameId: string) {
