@@ -29,15 +29,6 @@ export const ChessPageContextProvider: FC<PropsWithChildren> = ({
     const [state, dispatch] = useReducer(boardReducer, initialBoardState);
     const { yourColor, isLoading: isLoadingColor } = useYourColor();
 
-    useEffect(() => {
-        if (yourColor && !isLoadingColor) {
-            dispatch({
-                type: "SET_PLAYER_COLOR",
-                payload: { color: yourColor },
-            });
-        }
-    }, [yourColor, isLoadingColor]);
-
     return (
         <ChessPageContext.Provider value={{ state, dispatch }}>
             {children}

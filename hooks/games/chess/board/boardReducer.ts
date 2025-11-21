@@ -6,75 +6,78 @@ export function boardReducer(
     action: BoardAction
 ): BoardState {
     const { board } = state;
-    const newBoard = board.clone();
+
+    const boardClone = board.clone();
 
     switch (action.type) {
-        case "START_NEW_GAME": {
-            const newBoard = new Board();
-            newBoard.reset();
+        case "INIT_GAME": {
+            const { gameRow } = action.payload;
             return {
                 ...state,
-                board: newBoard,
-                selected: null,
+                gameRow,
+                board: Board.fromPersistedState(gameRow.state_json),
+                isLoading: false,
+            };
+        }
+        case "INIT_PLAYER": {
+            const { player } = action.payload;
+            return {
+                ...state,
+                player,
+                isLoading: false,
             };
         }
         case "MOVE_PIECE": {
             const { from, to } = action.payload;
             // making new class instance to update the reference for React to figure out the change of state
-            const moved = newBoard.movePiece(from, to);
+            let moved = boardClone.movePiece(from, to);
+            boardClone.selectedPiecePosition = null;
+
             if (moved) {
                 return {
                     ...state,
-                    board: newBoard,
-                    selected: null,
+                    board: boardClone,
                 };
             }
+
             return state;
         }
         case "SELECT_PIECE": {
-            return { ...state, selected: action.payload.position };
+            board.selectedPiecePosition = action.payload.position;
+            return { ...state, board };
         }
         case "UNSELECT_PIECE": {
-            return { ...state, selected: null };
+            board.selectedPiecePosition = null;
+            return { ...state, board };
         }
         case "UNDO_MOVE": {
-            newBoard.undoLastMove();
-
+            boardClone.undoLastMove();
+            if (!state.board) {
+                console.info("Invalid board object in state");
+                return state;
+            }
+            board.selectedPiecePosition = null;
             return {
                 ...state,
-                board: state.board.getThisBoard(),
-                selected: null,
+                board,
             };
         }
         case "HYDRATE_FROM_SERVER": {
-            const server = action.payload; // PersistedState
-            // rebuild your board from server.state_json.board if needed,
-            // or simply replace your local state if it matches shape:
+            if (!state.player) {
+                console.info("Invalid player object in state");
+                return state;
+            }
+            const { gameRow } = action.payload; // PersistedState
+            const board = Board.fromPersistedState(gameRow.state_json);
+            board.selectedPiecePosition = null;
+            const playerColor = state.player.playerColor;
+
             return {
                 ...state,
-                // merge in server's authoritative data
-                board: Board.fromPersistedState(server), // if you need: rebuild from server.board JSON
-                selected: null,
-                playerColor: state.playerColor, // keep local perspective
+                gameRow,
+                board,
+                player: { ...state.player, playerColor },
             };
-        }
-        case "SET_PLAYER_IDS": {
-            return {
-                ...state,
-                playerId: action.payload.playerId ?? state.playerId,
-                opponentId: action.payload.opponentId ?? state.opponentId,
-            };
-        }
-        case "SET_PLAYER_COLOR": {
-            return { ...state, playerColor: action.payload.color };
-        }
-        case "SET_GAME_STATUS": {
-            const { gameStatus } = action.payload;
-            return { ...state, gameStatus };
-        }
-        case "SET_GAME_ID": {
-            const { gameId } = action.payload;
-            return { ...state, gameId };
         }
         case "ADD_CHAT_MESSAGE": {
             const { chatMessage } = action.payload;

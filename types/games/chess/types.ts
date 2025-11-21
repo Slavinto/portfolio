@@ -1,6 +1,7 @@
 import { Board } from "@/lib/games/chess/game-logic/main/board/board";
 import { Piece } from "@/lib/games/chess/game-logic/main/piece";
 import { Position } from "@/lib/games/chess/game-logic/main/position";
+import { Player } from "./interfaces";
 
 export type Color = "White" | "Black";
 export type File = "A" | "B" | "C" | "D" | "E" | "F" | "G" | "H";
@@ -47,21 +48,13 @@ export type GameStatus =
 export type MatchStatus = "waiting_for_opponent" | "ongoing" | "finished";
 
 export type BoardAction =
-    | {
-          type: "START_NEW_GAME";
-      }
-    | { type: "SET_GAME_ID"; payload: { gameId: string } }
-    | { type: "SET_PLAYER_COLOR"; payload: { color: Color } }
+    | { type: "INIT_GAME"; payload: { gameRow: GameRow } }
+    | { type: "INIT_PLAYER"; payload: { player: Player } }
     | { type: "MOVE_PIECE"; payload: { from: Position; to: Position } }
     | { type: "UNDO_MOVE" }
     | { type: "SELECT_PIECE"; payload: { position: Position } }
     | { type: "UNSELECT_PIECE" }
-    | { type: "HYDRATE_FROM_SERVER"; payload: PersistedState }
-    | {
-          type: "SET_PLAYER_IDS";
-          payload: { playerId: string | null; opponentId: string | null };
-      }
-    | { type: "SET_GAME_STATUS"; payload: { gameStatus: GameStatus } }
+    | { type: "HYDRATE_FROM_SERVER"; payload: { gameRow: GameRow } }
     | { type: "ADD_CHAT_MESSAGE"; payload: { chatMessage: ChessMessage } }
     | { type: "INIT_CHAT_MESSAGES"; payload: { chatMessages: ChessMessage[] } };
 

@@ -112,6 +112,14 @@ export async function onCommittedMove(id: string, move: Move, board: Board) {
     await pushMove(id, nextState, persistedMove);
 }
 
+export function checkChessGameState(state: BoardState): boolean {
+    if (state.player && state.gameRow && state.board) {
+        return true;
+    }
+
+    return false;
+}
+
 export function parseState<T>(state_json: unknown): T {
     if (typeof state_json === "string") {
         try {

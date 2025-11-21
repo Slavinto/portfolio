@@ -6,7 +6,6 @@ import { useGame } from "./useGame";
 import { GameTableData } from "@/types/supabase/database.types";
 import { usePresenceStore } from "@/data/games/chess/store/presence";
 import { useChessGamePageContext } from "@/app/context/ChessGamePageContext";
-import { toast } from "react-toastify";
 
 export function useGameChannel(
     gameId: string,

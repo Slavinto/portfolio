@@ -2,7 +2,7 @@ import { Board } from "@/lib/games/chess/game-logic/main/board/board";
 import {
     ChessMessage,
     Color,
-    GameStatus,
+    GameRow,
     MatchStatus,
     PersistedMove,
 } from "./types";
@@ -13,15 +13,18 @@ export interface IBoardInitializer {
     initializeBoard(board: Board): void;
 }
 
-export interface BoardState {
-    board: Board;
-    gameId: string | null;
-    gameStatus: GameStatus;
-    playerColor: Color;
+export interface Player {
     playerId: string | null;
+    playerColor: Color;
     opponentId: string | null;
-    selected: Position | null;
+}
+
+export interface BoardState {
+    gameRow: GameRow | null;
+    board: Board;
+    player: Player | null;
     chatMessages: ChessMessage[];
+    isLoading: boolean;
 }
 
 export interface LocalStateToPersist {

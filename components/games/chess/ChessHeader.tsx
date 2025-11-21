@@ -10,7 +10,14 @@ import { HiArrowTurnLeftUp } from "react-icons/hi2";
 const ChessHeader = ({ id, children }: { id: string; children: ReactNode }) => {
     const router = useRouter();
     const { state } = useChessGamePageContext();
-    const { gameStatus } = state;
+
+    if (!state.gameRow) {
+        console.info("Failed to load remote state");
+        return null;
+    }
+
+    const { status: gameStatus } = state.gameRow;
+
     return (
         <div className='rounded-xl p-4 border border-border bg-card w-full text-xl'>
             <Heading as={Headings.H4} classNames='text-2xl font-bold'>

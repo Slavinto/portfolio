@@ -5,15 +5,21 @@ import { Color } from "@/types/games/chess";
 import { ButtonsCard } from "@/components/ui";
 import { ToastModal } from "../../toast/ToastModal";
 import { toast } from "react-toastify";
+import { useChessGamePageContext } from "@/app/context/ChessGamePageContext";
 
 function ResignButton() {
-    const { id } = useParams<{ id: string }>();
-    const { yourColor } = useYourColor();
+    const { state } = useChessGamePageContext();
     const router = useRouter();
-
+    const { gameRow, player } = state;
+    if (!gameRow || !player) {
+        console.log("Invalid gameRow or player data");
+        return null;
+    }
+    const { playerColor } = player;
+    const { id } = gameRow;
     async function handleResign() {
         try {
-            await resignGame(id, yourColor as Color);
+            await resignGame(id, playerColor as Color);
             router.push("/games"); // go back to games list
         } catch (err) {
             console.error("Failed to resign game:", err);

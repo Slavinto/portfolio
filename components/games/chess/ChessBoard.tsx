@@ -25,22 +25,16 @@ export default function ChessBoard({
     children,
 }: ChessBoardProps) {
     const { state, dispatch } = useChessGamePageContext();
-    const { board, selected } = state;
-    const {
-        data: game,
-        isPending: isLoadingGame,
-        error,
-    } = useJoinedGame(gameId);
-    const { yourColor, isLoading: isLoadingColor } = useYourColor();
+    const { board, gameRow: game, player } = state;
+    const { selectedPiecePosition: selected } = board;
 
-    const waitingForOpponent =
-        (game && !game?.player_white) || !game?.player_black;
+    if (!game || !board || !player) {
+        console.log("Failed to load state data");
+        return null;
+    }
 
-    const isBusy = isLoadingGame || isLoadingColor;
-
-    if (isBusy) return <ChessGameSkeleton repeatPattern={1} />;
-
-    console.log({ state });
+    const waitingForOpponent = !game.player_white || !game.player_black;
+    const { playerColor } = player;
 
     // Sync from server if provided
 
@@ -49,25 +43,25 @@ export default function ChessBoard({
             return;
         }
         const piece = board.getPieceAtPosition(position);
-        if (piece && !state.selected && piece.color !== yourColor) {
+        if (piece && !selected && piece.color !== player?.playerColor) {
             console.info("Can not select opponent's piece");
             return;
         }
 
         // selecting a piece that is already selected -> deselecting
         if (
-            state.selected &&
-            piece?.position.equals(state.selected) &&
-            piece.color === state.playerColor
+            selected &&
+            piece?.position.equals(selected) &&
+            piece.color === playerColor
         ) {
             dispatch({ type: "UNSELECT_PIECE" });
         }
 
         // selecting own piece while another piece is selected -> select current target piece
         if (
-            state.selected &&
-            piece?.color === state.playerColor &&
-            !piece.position.equals(state.selected)
+            selected &&
+            piece?.color === playerColor &&
+            !piece.position.equals(selected)
         ) {
             dispatch({
                 type: "SELECT_PIECE",
@@ -104,7 +98,7 @@ export default function ChessBoard({
                     const pos: Position = getPositionForCell(
                         row,
                         col,
-                        yourColor
+                        playerColor
                     );
                     const piece = board.getPieceAtPosition(pos);
                     const isSelected =

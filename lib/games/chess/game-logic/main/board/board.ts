@@ -54,6 +54,14 @@ export class Board {
         }
     }
 
+    private _selectedPiecePosition: Position | null = null;
+    public get selectedPiecePosition(): Position | null {
+        return this._selectedPiecePosition;
+    }
+    public set selectedPiecePosition(piecePos: Position | null) {
+        this._selectedPiecePosition = piecePos;
+    }
+
     private _capturedPieces: Piece[] = [];
     public get capturedPieces(): Piece[] {
         return this._capturedPieces;

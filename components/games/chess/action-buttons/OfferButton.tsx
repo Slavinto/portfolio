@@ -2,7 +2,7 @@
 import { ButtonsCard } from "@/components/ui";
 import { useUser } from "@/hooks/auth/useUser";
 import { OfferType } from "@/types/games/chess";
-import { useParams, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import { ToastModal } from "../../toast/ToastModal";
 import { sendOffer } from "@/lib/services/chess-offers";
@@ -11,29 +11,41 @@ import { usePresenceStore } from "@/data/games/chess/store/presence";
 
 type OfferButtonProps = {
     type: OfferType;
-    toPlayer: string;
 };
 
 export default function OfferButton({ type }: OfferButtonProps) {
-    const { id: gameId } = useParams<{ id: string }>();
     const {
-        state: { playerId, opponentId },
+        state: { player, gameRow },
     } = useChessGamePageContext();
     const router = useRouter();
     const { data: user } = useUser();
-    const opponentIsOnline = usePresenceStore(
-        (s) => s.onlinePlayers[opponentId ?? ""] === true
-    );
 
-    if (!playerId || !opponentId) {
-        console.error("Invalid player or opponent id");
-        // return null;
-    }
+    const opponentIsOnline = usePresenceStore((s) => {
+        if (!player || !gameRow) {
+            console.info("Invalid player or gameRow data: ", {
+                player,
+                gameRow,
+            });
+            return false;
+        }
+        const { opponentId } = player;
+        return s.onlinePlayers[opponentId ?? ""] === true;
+    });
 
     if (!user || !user.id) {
         router.push("/auth/login");
         toast.error("Must be logged in to send offers");
         return null;
+    }
+
+    if (!player || !gameRow) {
+        console.log("Invalid player or game data: ", { player, gameRow });
+        return null;
+    }
+    const { playerId, opponentId } = player;
+
+    if (!playerId || !opponentId) {
+        console.info("Invalid player or opponent id");
     }
 
     const handleOffer = async () => {
@@ -45,7 +57,7 @@ export default function OfferButton({ type }: OfferButtonProps) {
             toast.info("Failed to send offer. Opponent is not online");
             return;
         }
-        const res = await sendOffer(gameId, type, playerId, opponentId);
+        const res = await sendOffer(gameRow.id, type, playerId, opponentId);
         if (res.error) toast.error(res.error);
     };
 

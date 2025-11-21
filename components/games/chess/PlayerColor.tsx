@@ -5,10 +5,7 @@ const PlayerColor = () => {
     const [showDivider, setShowDivider] = useState<boolean>(true);
     const [curDate, setCurDate] = useState(new Date());
     const {
-        state: {
-            playerColor: color,
-            board: { currentTurn: turn },
-        },
+        state: { player, gameRow },
     } = useChessGamePageContext();
     const hours = curDate.getHours();
     const minutes = curDate.getMinutes();
@@ -20,6 +17,13 @@ const PlayerColor = () => {
         }, 1000);
         return () => clearInterval(id);
     }, []);
+
+    if (!player || !gameRow) {
+        return null;
+    }
+
+    const { playerColor: color } = player;
+    const { turn } = gameRow;
 
     return (
         <div
