@@ -6,20 +6,19 @@ import { ChessMessage } from "@/types/games/chess";
 import { useChessGamePageContext } from "@/app/context/ChessGamePageContext";
 
 export function useChatChannel() {
-    // const messagesChannelRef = useRef<ReturnType<
-    //     ReturnType<typeof createClient>["channel"]
-    // > | null>();
-    const { state, dispatch } = useChessGamePageContext();
-    const { gameId } = state;
+    const {
+        state: { gameRow },
+        dispatch,
+    } = useChessGamePageContext();
 
     useEffect(() => {
-        if (!gameId) {
+        if (!gameRow) {
             return;
         }
-        const supabase = createClient();
 
+        const { id: gameId } = gameRow;
+        const supabase = createClient();
         const channel = supabase.channel(`chat:${gameId}`);
-        // messagesChannelRef.current = channel;
 
         channel
             .on(
@@ -41,7 +40,6 @@ export function useChatChannel() {
 
         return () => {
             supabase.removeChannel(channel);
-            // messagesChannelRef.current?.unsubscribe();
         };
-    }, [gameId, dispatch]);
+    }, [gameRow, dispatch]);
 }

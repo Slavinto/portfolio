@@ -41,3 +41,12 @@ export const rookDirections: Directions = [
     [-1, 0], // left
     [+1, 0], // right
 ];
+
+export const GAME_STATUSES = [
+    "finished",
+    "ongoing",
+    "waiting",
+    "draw",
+    "resigned",
+    "layed-off",
+] as const;

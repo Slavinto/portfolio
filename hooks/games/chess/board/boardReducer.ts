@@ -1,3 +1,4 @@
+import { initialBoardState } from "@/data/games/chess/constants/initialBoardState";
 import { Board } from "@/lib/games/chess/game-logic/main/board/board";
 import { BoardState, BoardAction } from "@/types/games/chess";
 
@@ -11,6 +12,9 @@ export function boardReducer(
 
     switch (action.type) {
         case "INIT_GAME": {
+            if (state.gameRow) {
+                return state;
+            }
             const { gameRow } = action.payload;
             return {
                 ...state,
@@ -27,6 +31,10 @@ export function boardReducer(
                 isLoading: false,
             };
         }
+        case "INIT_CHAT_MESSAGES": {
+            const { chatMessages } = action.payload;
+            return { ...state, chatMessages };
+        }
         case "MOVE_PIECE": {
             const { from, to } = action.payload;
             // making new class instance to update the reference for React to figure out the change of state
@@ -42,9 +50,15 @@ export function boardReducer(
 
             return state;
         }
+        case "RESET_GAME_STATE": {
+            return initialBoardState;
+        }
         case "SELECT_PIECE": {
             board.selectedPiecePosition = action.payload.position;
             return { ...state, board };
+        }
+        case "SET_IS_LOADING": {
+            return { ...state, isLoading: action.payload.isLoading };
         }
         case "UNSELECT_PIECE": {
             board.selectedPiecePosition = null;
@@ -59,7 +73,7 @@ export function boardReducer(
             board.selectedPiecePosition = null;
             return {
                 ...state,
-                board,
+                board: boardClone,
             };
         }
         case "HYDRATE_FROM_SERVER": {
@@ -85,12 +99,6 @@ export function boardReducer(
                 ...state,
                 chatMessages: [...state.chatMessages, chatMessage],
             };
-        }
-        case "INIT_CHAT_MESSAGES": {
-            const { chatMessages } = action.payload;
-            console.log("initializing chat messages with ");
-            console.log({ chatMessages });
-            return { ...state, chatMessages };
         }
 
         default:

@@ -1,40 +1,36 @@
 import { useChessGamePageContext } from "@/app/context/ChessGamePageContext";
-import { usePresenceStore } from "@/data/games/chess/store/presence";
-import { GameTableData } from "@/types/supabase/database.types";
+import { usePlayersOnline } from "@/hooks/usePlayersOnline";
 import React from "react";
 
-const ChessGameStatus = ({
-    gameStatus,
-}: {
-    gameStatus: GameTableData["status"];
-}) => {
-    const { state } = useChessGamePageContext();
-    const opponentIsOnline = usePresenceStore(
-        (s) => s.onlinePlayers[state.opponentId!] === true
-    )
-        ? "🟢"
-        : "🔴";
-    const playerIsOnline = usePresenceStore(
-        (s) => s.onlinePlayers[state.playerId!] === true
-    )
-        ? "🟢"
-        : "🔴";
+const ChessGameStatus = () => {
+    const {
+        state: { gameRow, isLoading },
+    } = useChessGamePageContext();
+    const { playerOnline, opponentOnline } = usePlayersOnline();
+
+    if (isLoading) {
+        return "Loading...";
+    }
+    if (!gameRow) {
+        console.info("Failed to load game state data");
+        return null;
+    }
+    const { turn, status } = gameRow;
+
     return (
         <div className='flex flex-col'>
             <p className='text-neutral-500 dark:text-neutral-300'>
                 Game status:&nbsp;
-                <span className='font-medium'>{gameStatus ?? "…"}</span> ·
+                <span className='font-medium'>{status ?? "…"}</span> ·
                 Turn:&nbsp;
-                <span className='font-medium'>
-                    {state.board.currentTurn ?? "…"}
-                </span>
+                <span className='font-medium'>{turn ?? "…"}</span>
             </p>
             <div className='flex gap-2 '>
                 <p className='text-neutral-500 dark:text-neutral-300'>
-                    Player online: <span>{playerIsOnline} |</span>
+                    Player online: <span>{playerOnline ? "🟢" : "🔴"} |</span>
                 </p>
                 <p className='text-neutral-500 dark:text-neutral-300'>
-                    Opponent online: <span>{opponentIsOnline}</span>
+                    Opponent online: <span>{opponentOnline ? "🟢" : "🔴"}</span>
                 </p>
             </div>
         </div>

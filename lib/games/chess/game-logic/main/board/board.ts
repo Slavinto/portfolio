@@ -1,10 +1,9 @@
 import {
+    BoardStatus,
     Color,
-    GameStatus,
     Move,
     PersistedBoard,
     PersistedMove,
-    PersistedPiece,
     PersistedState,
     PieceType,
 } from "@/types/games/chess";
@@ -14,7 +13,6 @@ import {
     getDiff,
     isSamePiece,
     toPersistedBoard,
-    toPersistedState,
     PieceClassMap,
 } from "@/utils/games/chess/helpers";
 import { Position } from "../position";
@@ -185,7 +183,7 @@ export class Board {
         return board;
     }
 
-    getGameStatus(): GameStatus {
+    getBoardStatus(): BoardStatus {
         if (this.isCheckmate(this.currentTurn)) {
             return "checkmate";
         }
@@ -195,7 +193,7 @@ export class Board {
         if (this.isInCheck(this.currentTurn)) {
             return "check";
         }
-        return "ongoing";
+        return "in-progress";
     }
 
     getLastMove(): Move | null {

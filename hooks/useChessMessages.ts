@@ -11,14 +11,14 @@ export function useChessMessages() {
         error,
         data: messages,
     } = useQuery({
-        queryKey: ["chess-messages", state.gameId], // 👈 include gameId
+        queryKey: ["chess-messages", state.gameRow?.id], // 👈 include gameId
         queryFn: async () => {
             const supabase = createClient();
 
             const { data, error } = await supabase
                 .from("chess_messages")
                 .select("*")
-                .eq("game_id", state.gameId)
+                .eq("game_id", state.gameRow?.id)
                 .order("created_at", { ascending: true });
 
             if (error) {
@@ -28,7 +28,7 @@ export function useChessMessages() {
 
             return (data ?? []) as ChessMessage[]; // 👈 always return array
         },
-        enabled: !!state.gameId, // 👈 wait until gameId is defined
+        enabled: !!state.gameRow?.id, // 👈 wait until gameId is defined
     });
 
     return {

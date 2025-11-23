@@ -1,3 +1,4 @@
+import { finishGame } from "@/lib/services/chess-db";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -36,18 +37,26 @@ export async function POST(
         );
     }
 
+    const status =
+        type === "draw"
+            ? "draw"
+            : type === "layoff"
+            ? "layed-off"
+            : type === "resume"
+            ? "ongoing"
+            : "waiting";
+
+    if (status === "draw") {
+        finishGame(offer.game_id, status, null);
+        return new NextResponse(JSON.stringify({ success: true }), {
+            status: 200,
+        });
+    }
     // 3. Update game status
     const { error: errGame } = await supabase
         .from("games")
         .update({
-            status:
-                type === "draw"
-                    ? "draw"
-                    : type === "layoff"
-                    ? "layed-off"
-                    : type === "resume"
-                    ? "ongoing"
-                    : "unknown",
+            status,
         })
         .eq("id", offer.game_id);
 

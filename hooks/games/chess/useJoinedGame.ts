@@ -1,11 +1,10 @@
 import { useQuery } from "@tanstack/react-query";
 import { createClient } from "@/lib/supabase/client";
 import { joinGame } from "@/lib/services/chess-db";
-import { useChessGamePageContext } from "@/app/context/ChessGamePageContext";
+import { Color } from "@/types/games/chess";
 
 export function useJoinedGame(gameId: string) {
     const supabase = createClient();
-    const { dispatch } = useChessGamePageContext();
     return useQuery({
         queryKey: ["game", gameId],
         queryFn: async () => {
@@ -24,13 +23,33 @@ export function useJoinedGame(gameId: string) {
 
             if (error || !existingGame)
                 throw error ?? new Error("Game not found");
-            dispatch({
-                type: "SET_GAME_ID",
-                payload: { gameId: existingGame.id },
-            });
+
+            const gameFull =
+                existingGame.player_white && existingGame.player_black;
+            const alreadyJoinedGame =
+                user.id === existingGame.player_white ||
+                user.id === existingGame.player_black;
+
+            if (gameFull || alreadyJoinedGame) {
+                return existingGame;
+            }
+
+            const playerId = user.id;
+            const playerColor = existingGame.player_white
+                ? ("Black" as Color)
+                : ("White" as Color);
+            const joinAs = { playerColor, playerId };
+            const opponentId =
+                playerColor === "Black"
+                    ? existingGame.player_white
+                    : existingGame.player_black;
+
             // join game if needed
-            const joined = await joinGame(gameId);
+            const joined = await joinGame(gameId, joinAs);
             return joined;
         },
+        staleTime: 0,
+        gcTime: 0,
+        refetchOnMount: "always",
     });
 }

@@ -20,7 +20,11 @@ import { Knight } from "@/lib/games/chess/game-logic/pieces/knight";
 import { Bishop } from "@/lib/games/chess/game-logic/pieces/bishop";
 import { Queen } from "@/lib/games/chess/game-logic/pieces/queen";
 import { King } from "@/lib/games/chess/game-logic/pieces/king";
-import { files, ranks } from "@/data/games/chess/constants/board";
+import {
+    files,
+    GAME_STATUSES,
+    ranks,
+} from "@/data/games/chess/constants/board";
 import { Board } from "@/lib/games/chess/game-logic/main/board/board";
 import { Piece } from "@/lib/games/chess/game-logic/main/piece";
 import { Position } from "@/lib/games/chess/game-logic/main/position";
@@ -69,6 +73,10 @@ export function createPieceOnBoard(
     return newPiece;
 }
 
+export function isGameStatus(value: any): value is GameStatus {
+    return GAME_STATUSES.includes(value as GameStatus);
+}
+
 export function isSamePiece(piece1: Piece, piece2: Piece): boolean {
     return piece1.id === piece2.id;
 }
@@ -95,21 +103,17 @@ export function getDiff(from: File | Rank, to: File | Rank): number {
     throw new Error("Failed to calculate position diff. Invalid input type");
 }
 
-export async function onCommittedMove(id: string, move: Move, board: Board) {
-    const { from, to, moveNumber, playerColor } = move;
-
-    console.log({ board });
+export async function onCommittedMove(
+    id: string,
+    gameStatus: GameStatus,
+    move: Move,
+    board: Board
+) {
     // Convert to persistable state
-
-    const nextState = toPersistedState({
-        board,
-        playerColor,
-        selected: from,
-    });
+    const nextState = toPersistedState(board);
     const persistedMove = toPersistedMove(move);
-    console.log({ persistedMove });
 
-    await pushMove(id, nextState, persistedMove);
+    await pushMove(id, gameStatus, nextState, persistedMove);
 }
 
 export function checkChessGameState(state: BoardState): boolean {
@@ -141,20 +145,14 @@ export function toPersistedBoard(board: Board): PersistedBoard {
         capturedPieces: board.capturedPieces.map((p) => p.toPersisted()),
         moveHistoryList: board.moveHistoryList.map((m) => toPersistedMove(m)),
         currentTurn: board.currentTurn,
-        status: board.getGameStatus(),
+        status: board.getBoardStatus(),
         promotedPawns: board.promotedPawns.map((p) => p.toPersisted()),
     };
 }
 
-export function toPersistedState(
-    boardState: LocalStateToPersist
-): PersistedState {
-    const { board, playerColor, selected } = boardState;
-    console.log({ boardState });
+export function toPersistedState(board: Board): PersistedState {
     return {
         board: toPersistedBoard(board),
-        playerColor,
-        selected,
     };
 }
 

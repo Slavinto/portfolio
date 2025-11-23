@@ -1,27 +1,31 @@
 import {
     Color,
     GameRow,
+    GameStatus,
     PersistedMove,
     PersistedState,
 } from "@/types/games/chess";
 import { createClient } from "../supabase/client";
-import { MoveTableData } from "@/types/supabase/database.types";
+import { GameTableData, MoveTableData } from "@/types/supabase/database.types";
 
 const supabase = createClient();
 
-export async function createGame(initialState: PersistedState) {
+export async function createGame(initialState: PersistedState, playAs: Color) {
     try {
         const user = await isUserLoggedIn();
 
+        const gameData = {
+            creator_id: user.id,
+            player_white: playAs === "White" ? user.id : null,
+            player_black: playAs === "Black" ? user.id : null,
+            status: "waiting",
+            turn: "White",
+            state_json: initialState,
+        };
+
         const { data, error } = await supabase
             .from("games")
-            .insert({
-                creator_id: user.id,
-                player_white: user.id,
-                status: "waiting",
-                turn: "White",
-                state_json: initialState,
-            })
+            .insert(gameData)
             .select()
             .single();
 
@@ -32,43 +36,38 @@ export async function createGame(initialState: PersistedState) {
     }
 }
 
-export async function joinGame(gameId: string) {
+export async function joinGame(
+    gameId: string,
+    joinAs: { playerColor: Color; playerId: string }
+) {
     try {
         const user = await isUserLoggedIn();
-        const game = await getGameById(gameId);
-
-        if (!game.player_white) {
-            const { data, error } = await supabase
-                .from("games")
-                .update({
-                    player_white: user.id,
-                    status: game.player_black ? "ongoing" : "waiting",
-                })
-                .eq("id", gameId)
-                .select()
-                .single();
-            if (error) throw error;
-            return data as GameRow;
+        if (!user) {
+            return;
         }
+        // const game = await getGameById(gameId);
+        // const gameNotFull = !game.player_white || !game.player_black;
 
-        if (!game.player_black && game.player_white !== user.id) {
-            const { data, error } = await supabase
-                .from("games")
-                .update({ player_black: user.id, status: "ongoing" })
-                .eq("id", gameId)
-                .select()
-                .single();
-            console.log("joining as black", {
-                gameId,
-                userId: user.id,
-                game: data,
-            });
+        let updateData: any = { status: "ongoing" };
 
-            if (error) throw error;
-            return data as GameRow;
+        if (joinAs.playerColor === "Black") {
+            updateData = { ...updateData, player_black: joinAs.playerId };
         }
-
-        return game as GameRow; // already joined or full
+        if (joinAs.playerColor === "White") {
+            updateData = { ...updateData, player_white: joinAs.playerId };
+        }
+        console.log(
+            "*****************************JOINING AS ",
+            joinAs.playerColor
+        );
+        const { data, error } = await supabase
+            .from("games")
+            .update(updateData)
+            .eq("id", gameId)
+            .select()
+            .single();
+        if (error) throw error;
+        return data as GameRow;
     } catch (error) {
         console.error(error);
     }
@@ -83,15 +82,10 @@ export async function getGameById(gameId: string) {
             .select("*")
             .eq("id", gameId)
             .single();
-
         if (gErr || !game) {
             throw gErr ?? new Error("Game not found");
         }
-        if (game.player_black !== user.id && game.player_white !== user.id) {
-            throw new Error(
-                "Failed to perform a request. No permission to access this game"
-            );
-        }
+
         return game;
     } catch (error) {
         console.error(error);
@@ -136,40 +130,9 @@ export async function getGameMoves(gameId: string) {
     }
 }
 
-export async function requestLayoff(gameId: string) {
-    try {
-        await isUserLoggedIn();
-
-        const { error } = await supabase
-            .from("games")
-            .update({ status: "layoff-pending" })
-            .eq("id", gameId);
-
-        if (error) throw error;
-    } catch (error) {
-        console.error(error);
-        throw error;
-    }
-}
-
-export async function confirmLayoff(gameId: string) {
-    try {
-        await isUserLoggedIn();
-
-        const { error } = await supabase
-            .from("games")
-            .update({ status: "layed-off" })
-            .eq("id", gameId);
-
-        if (error) throw error;
-    } catch (error) {
-        console.error(error);
-        throw error;
-    }
-}
-
 export async function pushMove(
     gameId: string,
+    gameStatus: GameStatus,
     nextState: PersistedState,
     move: PersistedMove
 ) {
@@ -184,19 +147,23 @@ export async function pushMove(
             .from("games")
             .update({
                 state_json: nextState,
-                status: board.status === "ongoing" ? "ongoing" : board.status,
+                status: gameStatus,
                 turn: board.currentTurn,
             })
             .eq("id", gameId);
         if (upErr) throw upErr;
 
         // 2) insert move
-        const { error: mvErr } = await supabase.from("moves").insert({
+        const moveToPush = {
             game_id: gameId,
             move_number: move.moveNumber,
             player_id: user.id,
             move_json: move,
-        });
+        };
+        console.log({ moveToPush });
+        const { error: mvErr } = await supabase
+            .from("moves")
+            .insert(moveToPush);
         if (mvErr) throw mvErr;
     } catch (error) {
         console.error(error);
@@ -204,7 +171,11 @@ export async function pushMove(
     }
 }
 
-export async function resignGame(gameId: string, resignedPlayer: Color) {
+export async function finishGame(
+    gameId: string,
+    status: GameStatus,
+    winnerId: string | null
+) {
     try {
         const user = await isUserLoggedIn();
 
@@ -216,13 +187,10 @@ export async function resignGame(gameId: string, resignedPlayer: Color) {
 
         if (fetchError || !game) throw fetchError;
 
-        const winnerId =
-            resignedPlayer === "White" ? game.player_black : game.player_white;
-
         const { error } = await supabase
             .from("games")
             .update({
-                status: "resigned",
+                status,
                 winner: winnerId,
                 state_json: null, // optionally freeze game state
             })
@@ -234,3 +202,34 @@ export async function resignGame(gameId: string, resignedPlayer: Color) {
         throw error;
     }
 }
+
+// export async function resignGame(gameId: string, resignedPlayer: Color) {
+//     try {
+//         const user = await isUserLoggedIn();
+
+//         const { data: game, error: fetchError } = await supabase
+//             .from("games")
+//             .select("id, player_white, player_black, status")
+//             .eq("id", gameId)
+//             .single();
+
+//         if (fetchError || !game) throw fetchError;
+
+//         const winnerId =
+//             resignedPlayer === "White" ? game.player_black : game.player_white;
+
+//         const { error } = await supabase
+//             .from("games")
+//             .update({
+//                 status: "resigned",
+//                 winner: winnerId,
+//                 state_json: null, // optionally freeze game state
+//             })
+//             .eq("id", gameId);
+
+//         if (error) throw error;
+//     } catch (error) {
+//         console.error(error);
+//         throw error;
+//     }
+// }

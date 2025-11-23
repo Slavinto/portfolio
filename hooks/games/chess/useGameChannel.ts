@@ -1,108 +1,83 @@
-import { useUser } from "@/hooks/auth/useUser";
 import { createClient } from "@/lib/supabase/client";
-import { GameRow, SupabaseMove } from "@/types/games/chess";
+import { SupabaseMove } from "@/types/games/chess";
 import { useEffect, useRef } from "react";
-import { useGame } from "./useGame";
-import { GameTableData } from "@/types/supabase/database.types";
 import { usePresenceStore } from "@/data/games/chess/store/presence";
 import { useChessGamePageContext } from "@/app/context/ChessGamePageContext";
 
 export function useGameChannel(
-    gameId: string,
+    id: string,
     onGameUpdate: (row: any) => void,
-    onMove?: (row: any) => void,
-    initialRow?: GameRow
+    onMove?: (row: any) => void
 ) {
-    const hydratedRef = useRef(false);
     const channelRef = useRef<ReturnType<
         ReturnType<typeof createClient>["channel"]
     > | null>(null);
     const opponentOnlineRef = useRef<boolean>(false);
     const supabase = createClient();
-    const { data: user } = useUser();
-    const gameRow = useGame(gameId) as { data: GameTableData };
-    const { state: localState, dispatch } = useChessGamePageContext();
+    const {
+        state: { player, gameRow },
+    } = useChessGamePageContext();
 
     const setOnline = usePresenceStore((s) => s.setOnline);
     const setOffline = usePresenceStore((s) => s.setOffline);
     const reset = usePresenceStore((s) => s.reset);
-    const { data: game } = gameRow;
+
     useEffect(() => {
-        if (!gameId || !user?.id) return;
+        // require only id and player identity to subscribe
+        if (!id || !player || !player.playerId) return;
 
-        // Hydrate initial game state only once
-        if (initialRow && !hydratedRef.current) {
-            onGameUpdate(initialRow);
-            hydratedRef.current = true;
-        }
+        const playerId = player.playerId;
+        const opponentId = player.opponentId; // may be undefined initially
 
-        const channel = supabase.channel(`game-${gameId}`, {
+        const channel = supabase.channel(`game-${id}`, {
             config: {
-                presence: {
-                    key: user.id,
-                },
+                presence: { key: playerId },
             },
         });
         channelRef.current = channel;
-        console.log("Subscribing to channel:", `game-${gameId}`);
+        console.log("Subscribing to channel:", `game-${id}`);
 
         channel
             .on("presence", { event: "sync" }, () => {
-                const state = channel.presenceState();
+                const presenceState = channel.presenceState();
+                const playersOnline = Object.keys(presenceState); // array of user ids
 
-                const playersOnline = Object.keys(state); // array of user ids
+                // update presence store
                 playersOnline.forEach((id) => setOnline(id));
 
-                console.info("Players currently online:", playersOnline);
-
-                if (!game?.player_white || !game?.player_black) {
-                    console.info(
-                        "Game not fully loaded yet, skipping presence check."
-                    );
+                // if opponentId not yet known, skip per-player offline checks
+                if (!opponentId) {
+                    // still update creator/owner online state
+                    if (!playersOnline.includes(playerId)) setOffline(playerId);
                     return;
                 }
 
-                user.id && playersOnline.includes(user.id)
-                    ? setOnline(user.id)
-                    : setOffline(user.id);
-
-                const opponentId =
-                    user.id === game.player_white
-                        ? game.player_black
-                        : game.player_white;
-
+                // detect opponent online/offline toggles (optional ref-based)
                 if (
                     playersOnline.includes(opponentId) &&
                     !opponentOnlineRef.current
                 ) {
                     opponentOnlineRef.current = true;
-                    // toast.info("Opponent has joined the game");
                 }
                 if (
                     !playersOnline.includes(opponentId) &&
                     opponentOnlineRef.current
                 ) {
                     opponentOnlineRef.current = false;
-                    // toast.info("Opponent has left the game");
                 }
 
-                if (!localState.opponentId || !localState.playerId) {
-                    dispatch({
-                        type: "SET_PLAYER_IDS",
-                        payload: {
-                            playerId: user.id ?? null,
-                            opponentId: opponentId ?? null,
-                        },
-                    });
+                // ensure each known player is set offline if missing
+                if (
+                    gameRow?.player_white &&
+                    !playersOnline.includes(gameRow.player_white)
+                ) {
+                    setOffline(gameRow.player_white);
                 }
-
-                if (game?.player_white) {
-                    if (!playersOnline.includes(game.player_white))
-                        setOffline(game.player_white);
-                }
-                if (game?.player_black) {
-                    if (!playersOnline.includes(game.player_black))
-                        setOffline(game.player_black);
+                if (
+                    gameRow?.player_black &&
+                    !playersOnline.includes(gameRow.player_black)
+                ) {
+                    setOffline(gameRow.player_black);
                 }
             })
             .on(
@@ -111,10 +86,10 @@ export function useGameChannel(
                     event: "UPDATE",
                     schema: "public",
                     table: "games",
-                    filter: `id=eq.${gameId}`,
+                    filter: `id=eq.${id}`,
                 },
                 (payload) => {
-                    console.log("Game updated:", payload.new);
+                    console.log("Game updated (realtime):", payload.new);
                     onGameUpdate(payload.new);
                 }
             )
@@ -124,42 +99,41 @@ export function useGameChannel(
                     event: "INSERT",
                     schema: "public",
                     table: "moves",
-                    filter: `game_id=eq.${gameId}`,
+                    filter: `game_id=eq.${id}`,
                 },
                 (payload) => {
-                    console.log("New move:", payload.new);
+                    console.log("New move (realtime):", payload.new);
                     const newMove = payload.new as SupabaseMove;
-                    // Don’t re-hydrate board here — pass the move up
                     onMove?.(newMove.move_json);
                 }
             )
             .subscribe((status) => {
+                console.log("Subscription status:", status);
                 if (status === "SUBSCRIBED") {
-                    channel.track({ online_at: Date.now() });
-                    console.log("Realtime channel status:", status);
+                    // track presence for this client
+                    channel.track({ online_at: Date.now() }).catch((e) => {
+                        console.warn("Presence track failed:", e);
+                    });
                 }
             });
 
-        // ✅ Clean up on unmount or game change
         return () => {
-            console.log("Unsubscribing from channel", `game-${gameId}`);
-            channelRef.current?.unsubscribe();
+            try {
+                channelRef.current?.unsubscribe();
+            } catch (e) {
+                console.warn("Error unsubscribing channel:", e);
+            }
             reset();
         };
     }, [
-        gameId,
-        onGameUpdate,
-        onMove,
-        initialRow,
-        game?.player_black,
-        game?.player_white,
-        supabase,
-        user?.id,
-        dispatch,
-        game,
-        localState,
+        id,
+        player?.playerId,
+        player?.opponentId,
         setOnline,
         setOffline,
         reset,
+        supabase,
+        gameRow?.player_white,
+        gameRow?.player_black,
     ]);
 }

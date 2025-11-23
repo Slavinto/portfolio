@@ -6,17 +6,21 @@ import { useState } from "react";
 const ChatInput = () => {
     const [text, setText] = useState("");
     const {
-        state: { gameId, playerId },
+        state: { player, gameRow },
     } = useChessGamePageContext();
 
-    if (!gameId || !playerId) {
+    if (!gameRow || !player || !player.playerId) {
         return null;
     }
+
+    const { id: gameId } = gameRow;
+    const { playerId } = player;
     return (
         <form
             onSubmit={async (e) => {
                 e.preventDefault();
                 if (text.trim().length === 0) return;
+                console.log({ gameId, playerId, text });
                 await sendMessage(gameId, playerId, text);
                 setText("");
             }}

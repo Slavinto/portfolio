@@ -6,7 +6,7 @@ import { useJoinedGame } from "@/hooks/games/chess/useJoinedGame";
 import { useYourColor } from "@/hooks/games/chess/useYourColor";
 import { Board } from "@/lib/games/chess/game-logic/main/board/board";
 import { Position } from "@/lib/games/chess/game-logic/main/position";
-import { Move } from "@/types/games/chess";
+import { GameStatus, Move } from "@/types/games/chess";
 import {
     getPositionForCell,
     isLegalToMoveToPosition,
@@ -15,7 +15,12 @@ import { ReactNode } from "react";
 
 interface ChessBoardProps {
     gameId: string;
-    onCommittedMove: (id: string, move: Move, board: Board) => void;
+    onCommittedMove: (
+        id: string,
+        gameStatus: GameStatus,
+        move: Move,
+        board: Board
+    ) => void;
     children: ReactNode;
 }
 
@@ -25,11 +30,10 @@ export default function ChessBoard({
     children,
 }: ChessBoardProps) {
     const { state, dispatch } = useChessGamePageContext();
-    const { board, gameRow: game, player } = state;
+    const { board, gameRow: game, player, isLoading } = state;
     const { selectedPiecePosition: selected } = board;
 
-    if (!game || !board || !player) {
-        console.log("Failed to load state data");
+    if (isLoading || !game || !board || !player) {
         return null;
     }
 
@@ -56,7 +60,6 @@ export default function ChessBoard({
         ) {
             dispatch({ type: "UNSELECT_PIECE" });
         }
-
         // selecting own piece while another piece is selected -> select current target piece
         if (
             selected &&
@@ -83,7 +86,7 @@ export default function ChessBoard({
                     throw new Error("Failed to make a move.");
                 }
                 // Tell parent -> push to Supabase
-                onCommittedMove(gameId, move, board);
+                onCommittedMove(gameId, game.status, move, board);
             }
         } else if (piece && piece.color === board.currentTurn) {
             dispatch({ type: "SELECT_PIECE", payload: { position } });

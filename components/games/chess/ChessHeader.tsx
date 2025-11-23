@@ -27,7 +27,7 @@ const ChessHeader = ({ id, children }: { id: string; children: ReactNode }) => {
                 </span>
             </Heading>
 
-            <ChessGameStatus gameStatus={gameStatus} />
+            <ChessGameStatus />
 
             <ButtonsCard
                 icon={<HiArrowTurnLeftUp className='mb-2' />}
@@ -38,8 +38,7 @@ const ChessHeader = ({ id, children }: { id: string; children: ReactNode }) => {
                 Browse my games
             </ButtonsCard>
 
-            {(gameStatus === "check" ||
-                gameStatus === "ongoing" ||
+            {(gameStatus === "ongoing" ||
                 gameStatus === "waiting" ||
                 gameStatus === "layed-off") &&
                 children}
