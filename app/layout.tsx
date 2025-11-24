@@ -5,7 +5,6 @@ import ThemeToggleButton from "@/components/ui/buttons/theme-toggle-button";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import QueryProvider from "@/features/reactQuery/queryProvider";
 import { Poppins } from "next/font/google";
-import { ChessPageContextProvider } from "./context/ChessGamePageContext";
 
 const poppins = Poppins({
     weight: ["300", "400", "500", "600", "700", "800"],
