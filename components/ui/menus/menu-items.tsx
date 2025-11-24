@@ -3,7 +3,7 @@
 import { motion } from "framer-motion";
 import { menuItems } from "@/data";
 import { useRouter } from "next/navigation";
-import { useModal } from "./animated-modal";
+import { useModal } from "../animated-modal";
 
 const MenuItems = () => {
     const router = useRouter();

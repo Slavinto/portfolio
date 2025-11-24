@@ -2,12 +2,9 @@ import { finishGame } from "@/lib/services/chess-db";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { NextRequest, NextResponse } from "next/server";
 
-export async function POST(
-    req: NextRequest,
-    { params }: { params: { id: string } }
-) {
+export async function POST(req: NextRequest, ctx: any) {
     const supabase = await createSupabaseServerClient();
-    const { id: offerId } = await params;
+    const { id: offerId } = ctx.params;
 
     // 1. Get the offer
     const { data: offer, error: errOffer } = await supabase

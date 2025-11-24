@@ -1,22 +1,26 @@
-import { offerDraw } from "@/lib/services/chess-db";
 import { useParams, useRouter } from "next/navigation";
 import { ButtonsCard } from "@/components/ui";
 import { toast } from "react-toastify";
 import { useUser } from "@/hooks/auth/useUser";
+import { sendOffer } from "@/lib/services/chess-offers";
+import { useChessGamePageContext } from "@/app/context/ChessGamePageContext";
 
 function OfferDrawButton() {
     const { id } = useParams<{ id: string }>();
-    const { data: user } = useUser();
     const router = useRouter();
 
-    if (!user) {
-        toast.error("Must be logged in to perform this action");
+    const {
+        state: { player },
+    } = useChessGamePageContext();
+
+    if (!player || !player.playerId || !player?.opponentId) {
+        toast.error("Invalid player data");
         router.push("/auth/login/");
     }
 
     async function handleOfferDraw() {
         try {
-            await offerDraw(id, user?.id!);
+            await sendOffer(id, "draw", player?.playerId!, player?.opponentId!);
             toast.info("Draw offer sent to opponent.");
         } catch (err) {
             console.error("Error offering draw:", err);

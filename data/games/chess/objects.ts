@@ -23,11 +23,10 @@ export const pieceDirection = {
 } as const;
 
 export const STATUS_COLORS: Record<GameStatus, string> = {
-    waiting: "bg-yellow-100 text-yellow-800",
-    check: "bg-orange-100 text-orange-800",
-    checkmate: "bg-red-100 text-red-800",
-    stalemate: "bg-gray-100 text-gray-800",
-    draw: "bg-gray-100 text-gray-800",
+    finished: "bg-red-100 text-red-800",
     ongoing: "bg-neutral-100 text-neutral-800",
+    waiting: "bg-yellow-100 text-yellow-800",
+    draw: "bg-gray-100 text-gray-800",
+    resigned: "bg-orange-100 text-orange-800",
     "layed-off": "bg-stone-100 text-stone-800",
 };

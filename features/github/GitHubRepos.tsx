@@ -45,7 +45,6 @@ const GitHubRepos = () => {
     // }
 
     // return <GitHubReposSkeleton repeatPattern={3} />;
-    console.log({ data });
 
     return isBusy && (!data || !data?.pages) ? (
         <GitHubReposSkeleton repeatPattern={3} />
