@@ -1,26 +1,18 @@
+import { useUser } from "@/hooks/auth/useUser";
 import { GameStatus } from "@/types/games/chess";
 import { GameTableData } from "@/types/supabase/database.types";
 import { getStatusColor } from "@/utils/games/chess/helpers";
 import React from "react";
 
-const GameCard = ({
-    game,
-    userId,
-}: {
-    game: GameTableData;
-    userId: string;
-}) => {
-    const gameStatus = game.status;
-    const moves = game.state_json.board.moveHistoryList;
-    const lastMove = moves[moves.length - 1];
-    const winner =
-        gameStatus !== "checkmate"
-            ? "Unknown"
-            : lastMove?.piece.color === "White"
-            ? "White"
-            : "Black";
-    const yourColor = game.player_white === userId ? "White" : "Black";
-    const youWin = winner === yourColor;
+const GameCard = ({ game }: { game: GameTableData }) => {
+    const { data: user } = useUser();
+
+    if (!user) {
+        return null;
+    }
+    const moves = game.state_json?.board?.moveHistoryList;
+
+    const youWin = user.id === game.winner;
 
     return (
         <li className='w-full p-4 rounded-lg bg-card hover:shadow-md transition-shadow'>
@@ -40,7 +32,7 @@ const GameCard = ({
                             game.status as GameStatus
                         )}`}
                     >
-                        {game.status === "checkmate" && winner !== "Unknown" ? (
+                        {!!game.winner ? (
                             `Winner: ${
                                 youWin ? (
                                     <span>You</span>

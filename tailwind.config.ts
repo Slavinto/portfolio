@@ -97,7 +97,7 @@ module.exports = {
                     400: "#b8b8c2",
                 },
                 blue: {
-                    "100": "#E4ECFF",
+                    100: "#E4ECFF",
                 },
                 purple: "#CBACF9",
                 border: "var(--border)",

@@ -40,6 +40,10 @@ export async function joinGame(
     gameId: string,
     joinAs: { playerColor: Color; playerId: string }
 ) {
+    if (!gameId) {
+        return;
+    }
+
     try {
         const user = await isUserLoggedIn();
         if (!user) {
@@ -74,6 +78,10 @@ export async function joinGame(
 }
 
 export async function getGameById(gameId: string) {
+    if (!gameId) {
+        return;
+    }
+
     try {
         const user = await isUserLoggedIn();
 
@@ -111,6 +119,10 @@ export async function isUserLoggedIn() {
 }
 
 export async function getGameMoves(gameId: string) {
+    if (!gameId) {
+        return;
+    }
+
     try {
         await isUserLoggedIn();
         const { data, error: mErr } = await supabase
@@ -136,6 +148,10 @@ export async function pushMove(
     nextState: PersistedState,
     move: PersistedMove
 ) {
+    if (!gameId) {
+        return;
+    }
+
     const { board } = nextState;
     try {
         const user = await isUserLoggedIn();
@@ -176,23 +192,18 @@ export async function finishGame(
     status: GameStatus,
     winnerId: string | null
 ) {
+    if (!gameId) {
+        return;
+    }
     try {
-        const user = await isUserLoggedIn();
-
-        const { data: game, error: fetchError } = await supabase
-            .from("games")
-            .select("id, player_white, player_black, status")
-            .eq("id", gameId)
-            .single();
-
-        if (fetchError || !game) throw fetchError;
+        await isUserLoggedIn();
+        await getGameById(gameId);
 
         const { error } = await supabase
             .from("games")
             .update({
                 status,
                 winner: winnerId,
-                state_json: null, // optionally freeze game state
             })
             .eq("id", gameId);
 
@@ -202,34 +213,3 @@ export async function finishGame(
         throw error;
     }
 }
-
-// export async function resignGame(gameId: string, resignedPlayer: Color) {
-//     try {
-//         const user = await isUserLoggedIn();
-
-//         const { data: game, error: fetchError } = await supabase
-//             .from("games")
-//             .select("id, player_white, player_black, status")
-//             .eq("id", gameId)
-//             .single();
-
-//         if (fetchError || !game) throw fetchError;
-
-//         const winnerId =
-//             resignedPlayer === "White" ? game.player_black : game.player_white;
-
-//         const { error } = await supabase
-//             .from("games")
-//             .update({
-//                 status: "resigned",
-//                 winner: winnerId,
-//                 state_json: null, // optionally freeze game state
-//             })
-//             .eq("id", gameId);
-
-//         if (error) throw error;
-//     } catch (error) {
-//         console.error(error);
-//         throw error;
-//     }
-// }

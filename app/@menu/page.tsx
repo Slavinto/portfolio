@@ -1,7 +1,7 @@
 "use client";
 
+import ModalMenuButton from "@/components/ui/menus/modal-menu-button";
 import React from "react";
-import ModalMenuButton from "@/components/ui/modal-menu";
 
 const MenuPage = () => {
     return <ModalMenuButton />;

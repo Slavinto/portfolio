@@ -5,6 +5,7 @@ export function useGame(gameId: string) {
     const supabase = createClient();
     return useQuery({
         queryKey: ["game", gameId],
+        enabled: !!gameId,
         queryFn: async () => {
             const { data, error } = await supabase
                 .from("games")

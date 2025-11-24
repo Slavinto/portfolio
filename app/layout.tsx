@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { ThemeProvider } from "next-themes";
 import "./globals.css";
-import ThemeToggleButton from "@/components/theme-toggle-button";
+import ThemeToggleButton from "@/components/ui/buttons/theme-toggle-button";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import QueryProvider from "@/features/reactQuery/queryProvider";
 import { Poppins } from "next/font/google";

@@ -1,10 +1,9 @@
-export { BackgroundGradient } from "./background-gradient";
-export { ButtonsCard } from "./tailwindcss-buttons";
+export { BackgroundGradient } from "./background/background-gradient";
+export { ButtonsCard } from "./buttons/tailwindcss-buttons";
 export { TextGenerateEffect } from "./text-generate-effect";
-export { default as DotBackground } from "./dot-background";
+export { default as DotBackground } from "./background/dot-background";
 export { default as Scroller } from "./scroller";
 export { default as Heading } from "./Heading";
 export { BentoGrid, BentoGridItem } from "./bento-grid";
-export { BackgroundGradientAnimation } from "./background-gradient-animation";
-export { ModalMenuButton } from "./modal-menu-button";
-export { default as AnimatedCard } from "./AnimatedCard";
+export { BackgroundGradientAnimation } from "./background/background-gradient-animation";
+export { default as AnimatedCard } from "./cards/AnimatedCard";

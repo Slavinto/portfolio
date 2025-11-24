@@ -6,8 +6,8 @@ import {
     ModalContent,
     ModalTrigger,
 } from "@/components/ui/animated-modal";
-import ModalMenuButton from "./modal-menu-button";
 import MenuItems from "./menu-items";
+import ModalMenuButton from "./modal-menu-button";
 
 const ModalMenu = () => {
     return (

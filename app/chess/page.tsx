@@ -52,14 +52,6 @@ export default function ChessHomePage() {
         );
     }
 
-    if (!games || games.length === 0) {
-        return (
-            <div className='text-muted-foreground text-center mt-12'>
-                <p>No games found yet. Start a new match to begin playing!</p>
-            </div>
-        );
-    }
-
     return (
         <section className='flex flex-col gap-6 py-16 px-4 w-full max-w-5xl mx-auto'>
             <CustomToastContainer />
@@ -78,16 +70,29 @@ export default function ChessHomePage() {
             </header>
 
             <ul className='flex flex-col gap-3'>
-                {games?.map((game) => (
-                    <ButtonsCard
-                        key={game.id}
-                        className='!w-full !justify-between cursor-pointer'
-                        contentClassNames='w-full'
-                        onClick={() => router.push(`/chess/game/${game.id}`)}
-                    >
-                        <GameCard game={game} userId={user?.id} />
-                    </ButtonsCard>
-                ))}
+                {!games || games.length === 0 ? (
+                    <>
+                        <div className='text-muted-foreground text-center mt-12'>
+                            <p>
+                                No games found yet. Start a new match to begin
+                                playing!
+                            </p>
+                        </div>
+                    </>
+                ) : (
+                    games?.map((game) => (
+                        <ButtonsCard
+                            key={game.id}
+                            className='!w-full !justify-between cursor-pointer'
+                            contentClassNames='w-full'
+                            onClick={() =>
+                                router.push(`/chess/game/${game.id}`)
+                            }
+                        >
+                            <GameCard game={game} />
+                        </ButtonsCard>
+                    ))
+                )}
             </ul>
         </section>
     );

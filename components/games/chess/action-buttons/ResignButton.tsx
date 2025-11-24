@@ -13,9 +13,11 @@ function ResignButton() {
         return null;
     }
     const { id } = gameRow;
+    const { opponentId } = player;
+
     async function handleResign() {
         try {
-            await finishGame(id, "resigned", player!.playerId);
+            await finishGame(id, "resigned", opponentId);
             router.push("/games"); // go back to games list
         } catch (err) {
             console.error("Failed to resign game:", err);

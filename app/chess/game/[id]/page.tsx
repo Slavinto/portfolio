@@ -28,6 +28,7 @@ import { useChatChannel } from "@/hooks/games/chess/useChatChannel";
 import { Headings } from "@/types/enums";
 import { Board } from "@/lib/games/chess/game-logic/main/board/board";
 import { finishGame } from "@/lib/services/chess-db";
+import { InvitePlayersCard } from "@/components/ui/cards/InvitePlayersCard";
 
 export default function GamePage() {
     const { id: gameId } = useParams<{ id: string }>();
@@ -216,7 +217,7 @@ export default function GamePage() {
         gameStatus === "ongoing";
     console.log({ gameStatus, boardStatus });
     const playerAbsent = !gameRow.player_white || !gameRow.player_black;
-    const waitingForOpponent = playerAbsent || gameRow.status === "waiting";
+    const waitingForOpponent = playerAbsent && gameRow.status === "waiting";
     // const !canPlay = gameStatus !== "ongoing" && gameStatus !== "waiting";
     // game status handling
 
@@ -251,7 +252,11 @@ export default function GamePage() {
                 {/* Collapsible sidebar */}
                 <ChessHeader id={gameId}>
                     <div className='mt-4 flex gap-2 justify-evenly'>
-                        {gameRow.player_black && gameRow.player_white && (
+                        {waitingForOpponent ? (
+                            <InvitePlayersCard
+                                inviteUrl={`${process.env.NEXT_PUBLIC_APP_URL}/chess/game/${gameId}`}
+                            />
+                        ) : (
                             <>
                                 <OfferButton type={"draw"} />
                                 <OfferButton
@@ -261,9 +266,9 @@ export default function GamePage() {
                                             : "layoff"
                                     }
                                 />
+                                <ResignButton />
                             </>
                         )}
-                        <ResignButton />
                     </div>
                     {/* Toggle Button */}
                     <ButtonsCard

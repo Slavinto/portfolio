@@ -2,18 +2,19 @@ import { useQuery } from "@tanstack/react-query";
 import { createClient } from "@/lib/supabase/client";
 import { joinGame } from "@/lib/services/chess-db";
 import { Color } from "@/types/games/chess";
+import { useUser } from "@/hooks/auth/useUser";
 
 export function useJoinedGame(gameId: string) {
+    const { data: user } = useUser();
+
     const supabase = createClient();
     return useQuery({
         queryKey: ["game", gameId],
+        enabled: !!user && !!gameId,
         queryFn: async () => {
-            const {
-                data: { user },
-            } = await supabase.auth.getUser();
-
-            if (!user) throw new Error("Not signed in");
-
+            if (!user) {
+                throw new Error("Invalid user");
+            }
             // try to fetch
             const { data: existingGame, error } = await supabase
                 .from("games")

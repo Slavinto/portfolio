@@ -6,7 +6,7 @@ import { useAppTheme } from "@/hooks/useAppTheme";
 import { LuSunMedium, LuMoon } from "react-icons/lu";
 import { FaRegQuestionCircle } from "react-icons/fa";
 
-import { ButtonsCard } from "./ui";
+import { ButtonsCard } from "..";
 import { AppTheme } from "@/types/enums";
 
 const ThemeToggleButton = () => {

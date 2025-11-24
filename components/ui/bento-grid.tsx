@@ -1,5 +1,5 @@
 import { cn } from "@/utils/cn";
-import { BackgroundGradientAnimation } from "./background-gradient-animation";
+import { BackgroundGradientAnimation } from "./background/background-gradient-animation";
 import Image from "next/image";
 
 export const BentoGrid = ({

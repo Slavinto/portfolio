@@ -20,7 +20,7 @@ const ChessHeader = ({ id, children }: { id: string; children: ReactNode }) => {
 
     return (
         <div className='rounded-xl p-4 border border-border bg-card w-full text-xl'>
-            <Heading as={Headings.H4} classNames='text-2xl font-bold'>
+            <Heading as={Headings.H4} classNames='font-bold'>
                 <span className='block max-w-xs overflow-hidden text-ellipsis whitespace-nowrap'>
                     <FaChessKing className='inline -rotate-12 mr-1 mb-1' />
                     Game-{id}
