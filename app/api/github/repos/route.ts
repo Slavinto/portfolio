@@ -1,3 +1,5 @@
+export const runtime = "nodejs";
+
 import { extractTotalPages, handleError } from "@/lib/helpers";
 import { NextResponse } from "next/server";
 

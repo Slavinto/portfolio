@@ -1,3 +1,5 @@
+export const runtime = "nodejs";
+
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { NextRequest, NextResponse } from "next/server";
 
