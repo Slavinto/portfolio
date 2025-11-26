@@ -4,6 +4,8 @@ import { createClient } from "@/lib/supabase/client";
 import { useState } from "react";
 import Heading from "./Heading";
 import { Headings } from "@/types/enums";
+import CustomInput from "./CustomInput";
+import CustomButton from "./CustomButton";
 
 export default function AuthForm() {
     const [email, setEmail] = useState("");
@@ -43,56 +45,51 @@ export default function AuthForm() {
     }
 
     return (
-        <div className='w-full max-w-sm p-6 rounded-xl border border-border bg-card shadow-sm'>
+        <div className='center-absolute w-full max-w-sm p-6 rounded-xl border border-border bg-card shadow-sm'>
             <form
                 onSubmit={handleAuth}
                 className='flex flex-col gap-4 text-foreground'
             >
-                <Heading as={Headings.H4}>
-                    {isSignUp ? "Create Account" : "Sign In"}
+                <Heading as={Headings.H2} classNames='text-center'>
+                    {isSignUp ? "Create Account" : "Welcome Back"}
                 </Heading>
 
-                <input
+                <CustomInput
+                    value={email}
+                    handler={(e) => setEmail(e.target.value)}
+                    required={true}
+                    placeholder='Email'
                     type='email'
                     name='email'
-                    placeholder='Email address'
-                    className='p-2 rounded-md bg-background border border-border focus:ring-2 focus:ring-primary outline-none'
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    required
                 />
-                <input
+                <CustomInput
                     type='password'
                     name='password'
                     placeholder='Password'
-                    className='p-2 rounded-md bg-background border border-border focus:ring-2 focus:ring-primary outline-none'
                     value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    required
+                    handler={(e) => setPassword(e.target.value)}
+                    required={true}
                 />
 
                 {error && (
                     <p className='text-red-500 text-sm text-center'>{error}</p>
                 )}
 
-                <button
-                    type='submit'
-                    disabled={loading}
-                    className='p-2 rounded-md bg-primary text-primary-foreground hover:opacity-90 transition disabled:opacity-50'
-                >
+                <CustomButton type='submit' disabled={loading}>
                     {loading ? "Loading..." : isSignUp ? "Sign Up" : "Sign In"}
-                </button>
+                </CustomButton>
 
-                <p className='text-center text-sm text-muted-foreground'>
-                    {isSignUp ? "Already have an account?" : "New here?"}{" "}
-                    <button
+                <div className='flex flex-col'>
+                    <span className='text-center text-sm text-muted-foreground mb-4'>
+                        {isSignUp ? "Already have an account?" : "New here?"}{" "}
+                    </span>
+                    <CustomButton
                         type='button'
-                        className='text-primary hover:underline'
-                        onClick={() => setIsSignUp((v) => !v)}
+                        handler={() => setIsSignUp((v) => !v)}
                     >
                         {isSignUp ? "Sign in" : "Sign up"}
-                    </button>
-                </p>
+                    </CustomButton>
+                </div>
             </form>
         </div>
     );

@@ -5,6 +5,9 @@ import ThemeToggleButton from "@/components/ui/buttons/theme-toggle-button";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import QueryProvider from "@/features/reactQuery/queryProvider";
 import { Poppins } from "next/font/google";
+import GlobalModalProvider from "./modal-provider";
+import ModalMenuButton from "@/components/ui/menus/modal-menu-button";
+import ModalMenu from "@/components/ui/menus/modal-menu";
 
 const poppins = Poppins({
     weight: ["300", "400", "500", "600", "700", "800"],
@@ -21,10 +24,8 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
     children,
-    menu,
 }: Readonly<{
     children: React.ReactNode;
-    menu: React.ReactNode;
 }>) {
     return (
         <html lang='en' suppressHydrationWarning className=''>
@@ -56,11 +57,13 @@ export default function RootLayout({
                         defaultTheme='system'
                         enableSystem={true}
                     >
-                        <main className='font-poppins relative px-4 w-full flex flex-col flex-grow text-foreground bg-background'>
-                            <ThemeToggleButton />
-                            {menu}
-                            {children}
-                        </main>
+                        <GlobalModalProvider>
+                            <main className='font-poppins relative px-4 w-full flex flex-col flex-grow text-foreground bg-background'>
+                                <ThemeToggleButton />
+                                <ModalMenu />
+                                {children}
+                            </main>
+                        </GlobalModalProvider>
                     </ThemeProvider>
                     <ReactQueryDevtools initialIsOpen={false} />
                 </QueryProvider>
