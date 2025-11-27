@@ -8,8 +8,6 @@ export function boardReducer(
 ): BoardState {
     const { board } = state;
 
-    const boardClone = board.clone();
-
     switch (action.type) {
         case "INIT_GAME": {
             if (state.gameRow) {
@@ -38,6 +36,7 @@ export function boardReducer(
             return { ...state, chatMessages };
         }
         case "MOVE_PIECE": {
+            const boardClone = board.clone();
             const { from, to } = action.payload;
 
             // making new class instance to update the reference for React to figure out the change of state
@@ -57,18 +56,24 @@ export function boardReducer(
             return initialBoardState;
         }
         case "SELECT_PIECE": {
-            board.selectedPiecePosition = action.payload.position;
+            const boardClone = board.clone();
 
-            return { ...state, board };
+            boardClone.selectedPiecePosition = action.payload.position;
+
+            return { ...state, board: boardClone };
         }
         case "SET_IS_LOADING": {
             return { ...state, isLoading: action.payload.isLoading };
         }
         case "UNSELECT_PIECE": {
-            board.selectedPiecePosition = null;
-            return { ...state, board };
+            const boardClone = board.clone();
+
+            boardClone.selectedPiecePosition = null;
+            return { ...state, board: boardClone };
         }
         case "UNDO_MOVE": {
+            const boardClone = board.clone();
+
             boardClone.undoLastMove();
             if (!state.board) {
                 console.info("Invalid board object in state");
