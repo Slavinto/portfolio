@@ -15,10 +15,10 @@ type CustomInputProps = {
 
 const CustomInput = ({
     value,
-    id = "",
+    id,
     handler,
-    classNames = "",
-    name = "",
+    classNames,
+    name,
     placeholder = "Type a message…",
     required = false,
     type = "text",

@@ -156,7 +156,7 @@ export class Board {
             return board;
         }
         // console.log({ boardInFromPersisted: board });
-        console.log({ boardInFromPersisted: state.board });
+        // console.log({ boardInFromPersisted: state.board });
         board.pieces =
             persistedBoard.pieces?.map((p) =>
                 Piece.fromPersisted(p, board, PieceClassMap)

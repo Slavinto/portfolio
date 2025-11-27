@@ -7,7 +7,7 @@ export function useChessMessages() {
     const { state } = useChessGamePageContext();
 
     const {
-        isPending,
+        isLoading,
         error,
         data: messages,
     } = useQuery({
@@ -33,7 +33,7 @@ export function useChessMessages() {
 
     return {
         chessMessages: messages || [],
-        isLoadingMessages: isPending,
+        isLoadingMessages: isLoading,
         messagesError: error,
     };
 }

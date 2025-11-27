@@ -11,7 +11,7 @@ import Room from "@/components/games/chess/Room";
 import Moves from "@/components/games/chess/Moves";
 import ChessGameSkeleton from "@/components/ui/patterns/ChessGameSkeleton";
 import { ButtonsCard, Heading } from "@/components/ui";
-import { isGameStatus, onCommittedMove } from "@/utils/games/chess/helpers";
+import { onCommittedMove } from "@/utils/games/chess/helpers";
 import { Color, GameRow, Move, OfferRow } from "@/types/games/chess";
 import { useChessGamePageContext } from "@/app/context/ChessGamePageContext";
 import { FaChevronDown, FaChevronUp } from "react-icons/fa";
@@ -34,27 +34,31 @@ export default function GamePage() {
     const { id: gameId } = useParams<{ id: string }>();
     const router = useRouter();
     const { data: user } = useUser();
-    console.log({ userId: user?.id });
-    console.log({ gameId });
+    // console.log({ userId: user?.id });
+    // console.log({ gameId });
 
-    useEffect(() => {
-        dispatch({ type: "RESET_GAME_STATE" });
-    }, [gameId]);
-
-    const {
-        data: game,
-        isPending: isLoadingGame,
-        error,
-    } = useJoinedGame(gameId);
+    const { game, isLoadingGame, gameError } = useJoinedGame(gameId);
     const { chessMessages, isLoadingMessages } = useChessMessages();
     const { state, dispatch } = useChessGamePageContext();
 
+    const resetRef = useRef<boolean>(false);
     const initializedRef = useRef<boolean>(false);
     const prevOfferRef = useRef<OfferRow | null>(null);
     const [asideOpen, setAsideOpen] = useState(true);
 
-    const isBusy = isLoadingGame || isLoadingMessages;
-    console.log({ isBusy });
+    const isBusy = isLoadingGame || isLoadingMessages || state.isLoading;
+
+    const isGameLoaded = resetRef.current && initializedRef.current;
+    // console.log({ isLoadingGame, isLoadingMessages });
+    // console.log({ isBusy });
+    // console.log({ gameInGamePage: game });
+
+    useEffect(() => {
+        if (!resetRef.current) {
+            dispatch({ type: "RESET_GAME_STATE" });
+            resetRef.current = true;
+        }
+    }, [gameId]);
 
     // Realtime chat
     useChatChannel();
@@ -121,7 +125,7 @@ export default function GamePage() {
             }
         }
     );
-    console.log({ state });
+    // console.log({ state });
 
     // syncing isLoading
     useEffect(() => {
@@ -138,11 +142,11 @@ export default function GamePage() {
         if (!gameId || initializedRef.current) {
             return;
         }
-        if (!state.gameRow && game) {
+        if (!state.gameRow && game && resetRef.current) {
             dispatch({ type: "INIT_GAME", payload: { gameRow: game } });
             initializedRef.current = true;
         }
-    }, [gameId, state, game, dispatch]);
+    }, [gameId, game]);
 
     // initialyzing player
     useEffect(() => {
@@ -182,7 +186,11 @@ export default function GamePage() {
     ]);
 
     useEffect(() => {
-        if (!isLoadingMessages && state.chatMessages.length === 0) {
+        if (
+            !isLoadingMessages &&
+            state.chatMessages.length === 0 &&
+            chessMessages.length > 0
+        ) {
             dispatch({
                 type: "INIT_CHAT_MESSAGES",
                 payload: { chatMessages: chessMessages },
@@ -192,15 +200,18 @@ export default function GamePage() {
 
     const { gameRow } = state;
 
-    if (isBusy) return <ChessGameSkeleton repeatPattern={3} />;
+    const isGameReady =
+        !!gameRow && !!state?.player && isGameLoaded && !state.isLoading;
+
+    if (isBusy || !isGameReady) return <ChessGameSkeleton repeatPattern={3} />;
     if (!game || !gameRow)
         return <Heading as={Headings.H3}>Game not found</Heading>;
     if (!state.player)
         return <Heading as={Headings.H3}>Player not found</Heading>;
-    if (error)
+    if (gameError)
         return (
             <Heading as={Headings.H3}>
-                Error loading game: {error.message}
+                Error loading game: {gameError.message}
             </Heading>
         );
 
@@ -215,7 +226,7 @@ export default function GamePage() {
     const canPlay =
         (boardStatus === "check" || boardStatus === "in-progress") &&
         gameStatus === "ongoing";
-    console.log({ gameStatus, boardStatus });
+    // console.log({ gameStatus, boardStatus });
     const playerAbsent = !gameRow.player_white || !gameRow.player_black;
     const waitingForOpponent = playerAbsent && gameRow.status === "waiting";
     // const !canPlay = gameStatus !== "ongoing" && gameStatus !== "waiting";

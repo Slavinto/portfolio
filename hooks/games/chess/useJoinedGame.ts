@@ -8,7 +8,11 @@ export function useJoinedGame(gameId: string) {
     const { data: user } = useUser();
 
     const supabase = createClient();
-    return useQuery({
+    const {
+        data: game,
+        isLoading: isLoadingGame,
+        error: gameError,
+    } = useQuery({
         queryKey: ["game", gameId],
         enabled: !!user && !!gameId,
         queryFn: async () => {
@@ -53,4 +57,6 @@ export function useJoinedGame(gameId: string) {
         gcTime: 0,
         refetchOnMount: "always",
     });
+
+    return { game, isLoadingGame, gameError };
 }

@@ -1,9 +1,6 @@
 "use client";
 
 import { useChessGamePageContext } from "@/app/context/ChessGamePageContext";
-import ChessGameSkeleton from "@/components/ui/patterns/ChessGameSkeleton";
-import { useJoinedGame } from "@/hooks/games/chess/useJoinedGame";
-import { useYourColor } from "@/hooks/games/chess/useYourColor";
 import { Board } from "@/lib/games/chess/game-logic/main/board/board";
 import { Position } from "@/lib/games/chess/game-logic/main/position";
 import { GameStatus, Move } from "@/types/games/chess";

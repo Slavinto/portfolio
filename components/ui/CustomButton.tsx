@@ -11,7 +11,7 @@ type CustomButtonProps = {
 };
 const CustomButton = ({
     children,
-    classNames = "",
+    classNames,
     disabled = false,
     type = "button",
     handler,

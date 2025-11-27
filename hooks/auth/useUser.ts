@@ -14,10 +14,11 @@ export function useUser() {
         queryFn: async () => {
             const { data, error } = await supabase.auth.getUser();
             if (error) throw error;
-            return data.user;
+            return data.user ?? null;
         },
-        staleTime: Infinity, // user data rarely changes
-        gcTime: Infinity,
+        staleTime: 0,
+        gcTime: 0,
+        initialData: null,
     });
 
     // Listen for auth state changes and invalidate query if session changes

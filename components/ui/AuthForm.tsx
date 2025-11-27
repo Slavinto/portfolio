@@ -6,6 +6,8 @@ import Heading from "./Heading";
 import { Headings } from "@/types/enums";
 import CustomInput from "./CustomInput";
 import CustomButton from "./CustomButton";
+import { toast } from "react-toastify";
+import { useRouter } from "next/navigation";
 
 export default function AuthForm() {
     const [email, setEmail] = useState("");
@@ -27,7 +29,7 @@ export default function AuthForm() {
                     password,
                 });
                 if (error) throw error;
-                alert("Check your email to confirm your account.");
+                toast.info("Check your email to confirm your account.");
             } else {
                 const { error } = await supabase.auth.signInWithPassword({
                     email,
@@ -35,7 +37,6 @@ export default function AuthForm() {
                 });
                 if (error) throw error;
                 const user = await supabase.auth.getUser();
-                console.log({ user });
             }
         } catch (err: any) {
             setError(err.message);
@@ -50,8 +51,8 @@ export default function AuthForm() {
                 onSubmit={handleAuth}
                 className='flex flex-col gap-4 text-foreground'
             >
-                <Heading as={Headings.H2} classNames='text-center'>
-                    {isSignUp ? "Create Account" : "Welcome Back"}
+                <Heading as={Headings.H4}>
+                    {isSignUp ? "Create Account" : "Sign In"}
                 </Heading>
 
                 <CustomInput
@@ -85,7 +86,10 @@ export default function AuthForm() {
                     </span>
                     <CustomButton
                         type='button'
-                        handler={() => setIsSignUp((v) => !v)}
+                        handler={() => {
+                            setIsSignUp((v) => !v);
+                            // await signupWithPassword(email, password);
+                        }}
                     >
                         {isSignUp ? "Sign in" : "Sign up"}
                     </CustomButton>

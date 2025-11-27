@@ -1,14 +1,13 @@
+"use client";
+
 import { initialBoardState } from "@/data/games/chess/constants/initialBoardState";
 import { boardReducer } from "@/hooks/games/chess/board/boardReducer";
-import { useYourColor } from "@/hooks/games/chess/useYourColor";
 import { BoardAction, BoardState } from "@/types/games/chess";
 import {
     createContext,
     Dispatch,
-    FC,
-    PropsWithChildren,
+    ReactNode,
     useContext,
-    useEffect,
     useReducer,
 } from "react";
 
@@ -23,11 +22,12 @@ export const ChessPageContext = createContext<IChessPageContext>({
 
 export const useChessGamePageContext = () => useContext(ChessPageContext);
 
-export const ChessPageContextProvider: FC<PropsWithChildren> = ({
+export const ChessPageContextProvider = ({
     children,
+}: {
+    children: ReactNode;
 }) => {
     const [state, dispatch] = useReducer(boardReducer, initialBoardState);
-    const { yourColor, isLoading: isLoadingColor } = useYourColor();
 
     return (
         <ChessPageContext.Provider value={{ state, dispatch }}>
