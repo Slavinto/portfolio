@@ -141,8 +141,7 @@ export abstract class Piece {
             BlackKing: "♚",
         };
 
-        const key = this.color + this.constructor.name;
-        console.log({ MAPKEY: key });
+        const key = this.color + this.type;
 
         return map[key] || "?";
     }
