@@ -33,13 +33,7 @@ const GameCard = ({ game }: { game: GameTableData }) => {
                         )}`}
                     >
                         {!!game.winner ? (
-                            `Winner: ${
-                                youWin ? (
-                                    <span>You</span>
-                                ) : (
-                                    <span>Your&nbsp;opponent</span>
-                                )
-                            }`
+                            `Winner: ${youWin ? "Loss" : "Win"}`
                         ) : game.status === "stalemate" ? (
                             "Stalemate"
                         ) : game.status === "draw" ? (
