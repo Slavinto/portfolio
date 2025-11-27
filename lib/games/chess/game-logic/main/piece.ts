@@ -140,6 +140,10 @@ export abstract class Piece {
             WhiteKing: "♔",
             BlackKing: "♚",
         };
-        return map[this.color + this.constructor.name] || "?";
+
+        const key = this.color + this.constructor.name;
+        console.log({ MAPKEY: key });
+
+        return map[key] || "?";
     }
 }
