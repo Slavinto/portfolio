@@ -155,8 +155,6 @@ export class Board {
             console.info("Invalid persisted board state. Resetting board.");
             return board;
         }
-        // console.log({ boardInFromPersisted: board });
-        // console.log({ boardInFromPersisted: state.board });
         board.pieces =
             persistedBoard.pieces?.map((p) =>
                 Piece.fromPersisted(p, board, PieceClassMap)
@@ -179,7 +177,6 @@ export class Board {
         board.moveHistoryList = persistedBoard.moveHistoryList.map((m) =>
             board.hydratePersistedMove(m)
         );
-        console.log({ hydratedBoard: board });
         return board;
     }
 
@@ -531,7 +528,6 @@ export class Board {
                 this
             )
         );
-        // console.log({ thisPieces: this.pieces });
     }
 
     restore(piece: Piece) {
@@ -596,7 +592,6 @@ export class Board {
             console.info("No moves to undo");
             return;
         }
-        console.log({ lastMove });
         const { piece, from } = lastMove;
 
         // Handle castling
@@ -615,7 +610,6 @@ export class Board {
                 );
                 if (pawn) {
                     pieceToRestore = pawn;
-                    console.log({ pieceToRestore });
                 }
             }
         }
@@ -638,14 +632,12 @@ export class Board {
         if (!isSpecial) {
             // plain capture undo
             if (capturedPiece) {
-                console.log("assigning captured piece to restore");
                 pieceToRestore = capturedPiece;
             }
         }
 
         if (pieceToRestore) {
             this.restore(pieceToRestore);
-            console.log({ pieceToRestore });
         }
 
         this.currentTurn = piece.color;

@@ -21,7 +21,6 @@ const ChatInput = () => {
             onSubmit={async (e) => {
                 e.preventDefault();
                 if (text.trim().length === 0) return;
-                console.log({ gameId, playerId, text });
                 await sendMessage(gameId, playerId, text);
                 setText("");
             }}

@@ -60,10 +60,6 @@ export async function joinGame(
         if (joinAs.playerColor === "White") {
             updateData = { ...updateData, player_white: joinAs.playerId };
         }
-        console.log(
-            "*****************************JOINING AS ",
-            joinAs.playerColor
-        );
         const { data, error } = await supabase
             .from("games")
             .update(updateData)
@@ -156,8 +152,6 @@ export async function pushMove(
     try {
         const user = await isUserLoggedIn();
 
-        console.log({ persistedMoveBeforeThePush: move });
-
         // 1) update game state
         const { error: upErr } = await supabase
             .from("games")
@@ -176,7 +170,6 @@ export async function pushMove(
             player_id: user.id,
             move_json: move,
         };
-        console.log({ moveToPush });
         const { error: mvErr } = await supabase
             .from("moves")
             .insert(moveToPush);

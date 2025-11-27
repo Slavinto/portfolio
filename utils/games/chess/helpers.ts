@@ -157,7 +157,6 @@ export function toPersistedState(board: Board): PersistedState {
 }
 
 export function toPersistedMove(move: Move): PersistedMove {
-    console.log({ moveBeforePersisted: move });
     return {
         from: move.from.toPersisted(),
         to: move.to.toPersisted(),

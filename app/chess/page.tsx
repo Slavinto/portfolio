@@ -29,8 +29,7 @@ export default function ChessHomePage() {
     const isError = userError || gamesError;
 
     if (isError || !user || !games) {
-        toast.error("Oops something went wrong.");
-        return null;
+        return <ChessGameSkeleton repeatPattern={3} />;
     }
 
     if (isBusy) {

@@ -28,8 +28,6 @@ export async function POST(req: NextRequest) {
         .eq("from_player", fromPlayer)
         .eq("type", type);
 
-    console.log({ allOffers });
-
     if (countError) {
         return NextResponse.json(
             { error: countError.message },
@@ -110,7 +108,7 @@ export async function POST(req: NextRequest) {
         status: "pending",
         expires_at: expiresAt,
     };
-    console.log({ newItem });
+
     const { data: newOffer, error: insertError } = await supabase
         .from("offers")
         .insert([newItem])

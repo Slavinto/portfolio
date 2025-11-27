@@ -5,7 +5,6 @@ export async function sendMessage(
     sender: string,
     message: string
 ) {
-    console.log({ message });
     const supabase = createClient();
     const { error } = await supabase.from("chess_messages").insert({
         game_id: gameId,

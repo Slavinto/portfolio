@@ -16,7 +16,6 @@ export function boardReducer(
                 return state;
             }
             const { gameRow } = action.payload;
-            console.log("Initializing gameRow with: ", { gameRow });
             return {
                 ...state,
                 gameRow,
@@ -26,7 +25,6 @@ export function boardReducer(
         }
         case "INIT_PLAYER": {
             const { player } = action.payload;
-            console.log("Initializing player with: ", { player });
 
             return {
                 ...state,
@@ -36,13 +34,11 @@ export function boardReducer(
         }
         case "INIT_CHAT_MESSAGES": {
             const { chatMessages } = action.payload;
-            console.log("Initializing chat messages with: ", { chatMessages });
 
             return { ...state, chatMessages };
         }
         case "MOVE_PIECE": {
             const { from, to } = action.payload;
-            console.log("Moving piece to: ", { to });
 
             // making new class instance to update the reference for React to figure out the change of state
             let moved = boardClone.movePiece(from, to);
@@ -58,8 +54,6 @@ export function boardReducer(
             return state;
         }
         case "RESET_GAME_STATE": {
-            console.log("Resetting game state");
-
             return initialBoardState;
         }
         case "SELECT_PIECE": {
@@ -68,10 +62,6 @@ export function boardReducer(
             return { ...state, board };
         }
         case "SET_IS_LOADING": {
-            console.log("Setting is loading to: ", {
-                isLoading: action.payload.isLoading,
-            });
-
             return { ...state, isLoading: action.payload.isLoading };
         }
         case "UNSELECT_PIECE": {
@@ -91,9 +81,6 @@ export function boardReducer(
             };
         }
         case "HYDRATE_FROM_SERVER": {
-            console.log("Hydrating server state: ", {
-                gameRow: action.payload.gameRow,
-            });
             if (!state.player) {
                 console.info("Invalid player object in state");
                 return state;
@@ -112,7 +99,6 @@ export function boardReducer(
         }
         case "ADD_CHAT_MESSAGE": {
             const { chatMessage } = action.payload;
-            console.log("Adding chat message: ", { chatMessage });
             return {
                 ...state,
                 chatMessages: [...state.chatMessages, chatMessage],

@@ -16,7 +16,6 @@ const MenuItems = () => {
     const { setOpen } = useModal();
     const supabase = createClient();
     const queryClient = useQueryClient();
-    console.log({ userId: user?.id });
 
     return (
         <motion.div className='flex flex-col gap-4 lg:gap-8 justify-center'>

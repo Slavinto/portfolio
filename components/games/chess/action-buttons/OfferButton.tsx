@@ -39,7 +39,7 @@ export default function OfferButton({ type }: OfferButtonProps) {
     }
 
     if (!player || !gameRow) {
-        console.log("Invalid player or game data: ", { player, gameRow });
+        console.info("Invalid player or game data: ", { player, gameRow });
         return null;
     }
     const { playerId, opponentId } = player;

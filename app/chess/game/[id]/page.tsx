@@ -34,8 +34,6 @@ export default function GamePage() {
     const { id: gameId } = useParams<{ id: string }>();
     const router = useRouter();
     const { data: user } = useUser();
-    // console.log({ userId: user?.id });
-    // console.log({ gameId });
 
     const { game, isLoadingGame, gameError } = useJoinedGame(gameId);
     const { chessMessages, isLoadingMessages } = useChessMessages();
@@ -49,9 +47,6 @@ export default function GamePage() {
     const isBusy = isLoadingGame || isLoadingMessages || state.isLoading;
 
     const isGameLoaded = resetRef.current && initializedRef.current;
-    // console.log({ isLoadingGame, isLoadingMessages });
-    // console.log({ isBusy });
-    // console.log({ gameInGamePage: game });
 
     useEffect(() => {
         if (!resetRef.current) {
@@ -125,7 +120,6 @@ export default function GamePage() {
             }
         }
     );
-    // console.log({ state });
 
     // syncing isLoading
     useEffect(() => {
@@ -226,10 +220,8 @@ export default function GamePage() {
     const canPlay =
         (boardStatus === "check" || boardStatus === "in-progress") &&
         gameStatus === "ongoing";
-    // console.log({ gameStatus, boardStatus });
     const playerAbsent = !gameRow.player_white || !gameRow.player_black;
     const waitingForOpponent = playerAbsent && gameRow.status === "waiting";
-    // const !canPlay = gameStatus !== "ongoing" && gameStatus !== "waiting";
     // game status handling
 
     return (

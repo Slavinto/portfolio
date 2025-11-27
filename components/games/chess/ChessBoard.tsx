@@ -73,8 +73,6 @@ export default function ChessBoard({
             const selectedPiece = board.getPieceAtPosition(selected);
             if (!selectedPiece) return;
 
-            console.log({ selectedPiece });
-
             if (isLegalToMoveToPosition(board, selectedPiece, position)) {
                 // Reset local selection
                 dispatch({ type: "UNSELECT_PIECE" });

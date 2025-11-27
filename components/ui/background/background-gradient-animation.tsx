@@ -54,7 +54,6 @@ export const BackgroundGradientAnimation = ({
                 theme === "light" ? "rgb(203, 172, 249)" : "rgb(5, 28, 82)";
             const gradientBackgroundEnd =
                 theme === "light" ? "rgb(235, 235, 235)" : "rgb(72, 46, 158)";
-            console.log(prev);
             if (
                 prev &&
                 prev.gradientBackgroundStart !== gradientBackgroundStart
@@ -66,7 +65,6 @@ export const BackgroundGradientAnimation = ({
             }
         });
 
-    // console.log(gradientBackgroundStart);
     useEffect(() => {
         document.body.style.setProperty(
             "--gradient-background-start",

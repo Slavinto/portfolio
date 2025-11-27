@@ -35,7 +35,6 @@ export function useGameChannel(
             },
         });
         channelRef.current = channel;
-        console.log("Subscribing to channel:", `game-${id}`);
 
         channel
             .on("presence", { event: "sync" }, () => {
@@ -89,7 +88,6 @@ export function useGameChannel(
                     filter: `id=eq.${id}`,
                 },
                 (payload) => {
-                    console.log("Game updated (realtime):", payload.new);
                     onGameUpdate(payload.new);
                 }
             )
@@ -102,13 +100,11 @@ export function useGameChannel(
                     filter: `game_id=eq.${id}`,
                 },
                 (payload) => {
-                    console.log("New move (realtime):", payload.new);
                     const newMove = payload.new as SupabaseMove;
                     onMove?.(newMove.move_json);
                 }
             )
             .subscribe((status) => {
-                console.log("Subscription status:", status);
                 if (status === "SUBSCRIBED") {
                     // track presence for this client
                     channel.track({ online_at: Date.now() }).catch((e) => {

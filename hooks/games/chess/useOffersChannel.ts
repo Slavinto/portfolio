@@ -79,7 +79,6 @@ export function useOffersChannel(
             )
             .subscribe((status) => {
                 if (status === "SUBSCRIBED") {
-                    console.log("Offers realtime subscribed");
                 }
             });
 
