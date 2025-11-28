@@ -225,8 +225,8 @@
     .btn-gradient-light {
         background: linear-gradient(
             -90deg,
-            rgba(235, 235, 235, 1) 0%,
-            rgb(212, 202, 232) 100% /* rgba(203, 172, 249, 1) 0%, */
+            rgb(255, 254, 254) 0%,
+            rgb(205, 189, 238) 100% /* rgba(203, 172, 249, 1) 0%, */
         );
     }
 

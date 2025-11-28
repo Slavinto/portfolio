@@ -1,6 +1,6 @@
 import { useRouter } from "next/navigation";
 import { ButtonsCard } from "@/components/ui";
-import { ToastModal } from "../../toast/ToastModal";
+import { ToastModal } from "../../../ui/toast/ToastModal";
 import { toast } from "react-toastify";
 import { useChessGamePageContext } from "@/app/context/ChessGamePageContext";
 import { finishGame } from "@/lib/services/chess-db";

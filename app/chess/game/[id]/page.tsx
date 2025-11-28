@@ -21,7 +21,7 @@ import { useUser } from "@/hooks/auth/useUser";
 import { useOffersChannel } from "@/hooks/games/chess/useOffersChannel";
 import ResignButton from "@/components/games/chess/action-buttons/ResignButton";
 import OfferButton from "@/components/games/chess/action-buttons/OfferButton";
-import { ToastModal } from "@/components/games/toast/ToastModal";
+import { ToastModal } from "@/components/ui/toast/ToastModal";
 import { acceptOffer, declineOffer } from "@/lib/services/chess-offers";
 import { useChessMessages } from "@/hooks/useChessMessages";
 import { useChatChannel } from "@/hooks/games/chess/useChatChannel";

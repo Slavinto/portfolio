@@ -4,7 +4,7 @@ import { useUser } from "@/hooks/auth/useUser";
 import { OfferType } from "@/types/games/chess";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
-import { ToastModal } from "../../toast/ToastModal";
+import { ToastModal } from "../../../ui/toast/ToastModal";
 import { sendOffer } from "@/lib/services/chess-offers";
 import { useChessGamePageContext } from "@/app/context/ChessGamePageContext";
 import { usePresenceStore } from "@/data/games/chess/store/presence";
