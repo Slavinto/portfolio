@@ -28,12 +28,20 @@ const GameCard = ({ game }: { game: GameTableData }) => {
                 </div>
                 <div className='text-right'>
                     <p
-                        className={`font-semibold px-4 py-1 rounded-xl ${getStatusColor(
-                            game.status as GameStatus
-                        )}`}
+                        className={`font-semibold px-4 py-1 rounded-xl ${
+                            youWin
+                                ? "bg-green-100 text-green-800"
+                                : !!game.winner && !youWin
+                                ? "bg-red-100 text-red-800"
+                                : getStatusColor(game.status as GameStatus)
+                        }`}
                     >
                         {!!game.winner ? (
-                            `Winner: ${youWin ? "Loss" : "Win"}`
+                            youWin ? (
+                                "Win"
+                            ) : (
+                                "Loss"
+                            )
                         ) : game.status === "stalemate" ? (
                             "Stalemate"
                         ) : game.status === "draw" ? (
