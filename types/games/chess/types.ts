@@ -46,7 +46,7 @@ export type MatchStatus = "waiting_for_opponent" | "ongoing" | "finished";
 
 export type BoardAction =
     | { type: "INIT_GAME"; payload: { gameRow: GameRow } }
-    | { type: "INIT_PLAYER"; payload: { player: Player } }
+    | { type: "INIT_PLAYERS"; payload: { player: Player; opponent: Player } }
     | { type: "INIT_CHAT_MESSAGES"; payload: { chatMessages: ChessMessage[] } }
     | { type: "MOVE_PIECE"; payload: { from: Position; to: Position } }
     | { type: "UNDO_MOVE" }

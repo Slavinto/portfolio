@@ -21,12 +21,13 @@ export function boardReducer(
                 isLoading: false,
             };
         }
-        case "INIT_PLAYER": {
-            const { player } = action.payload;
+        case "INIT_PLAYERS": {
+            const { player, opponent } = action.payload;
 
             return {
                 ...state,
                 player,
+                opponent,
                 isLoading: false,
             };
         }
@@ -93,13 +94,13 @@ export function boardReducer(
             const { gameRow } = action.payload; // PersistedState
             const board = Board.fromPersistedState(gameRow.state_json);
             board.selectedPiecePosition = null;
-            const playerColor = state.player.playerColor;
+            const color = state.player.color;
 
             return {
                 ...state,
                 gameRow,
                 board,
-                player: { ...state.player, playerColor },
+                player: { ...state.player, color },
             };
         }
         case "ADD_CHAT_MESSAGE": {

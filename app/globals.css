@@ -166,6 +166,11 @@
         @apply dark:hover:border-neutral-500 hover:border-neutral-200 dark:btn-gradient btn-gradient-light border-neutral-100 border-2 dark:border-white/[0.2] rounded-lg;
     }
 
+    .border-common {
+        @apply border border-neutral-100 dark:bg-black dark:border-white/[0.2] 
+                hover:border-neutral-200 dark:hover:border-neutral-500;
+    }
+
     .responsive-icons {
         @apply w-6 h-6 md:w-8 md:h-8 lg:w-10 lg:h-10 xl:w-12 xl:h-12;
     }

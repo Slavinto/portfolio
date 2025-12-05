@@ -34,9 +34,7 @@ const ChatInput = () => {
                     }
                 }}
             />
-            <ButtonsCard className='px-4 py-1 rounded-lg bg-primary text-primary-foreground'>
-                Send
-            </ButtonsCard>
+            <ButtonsCard className='px-4 py-1'>Send</ButtonsCard>
         </form>
     );
 };

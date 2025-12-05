@@ -21,26 +21,21 @@ import { Headings } from "@/types/enums";
 import Link from "next/link";
 
 const Hero = () => {
-    // const router = useRouter();
-    // const handleClickCta = () => {
-    //     // document.getElementById("my-projects")?.scrollIntoView();
-    //     router.push("/github");
-    // };
-
     return (
-        <section id='hero' className='w-full py-[16rem] h-fit'>
+        <section
+            id='hero'
+            className='w-full h-screen pt-[4.5rem] flex items-center'
+        >
             <DotBackground className={"w-full"}>
                 <div className='flex flex-col items-center text-center gap-3'>
                     <Scroller />
-                    {/* <h3 className='uppercase font-normal text-base md:text-lg lg:text-xl xl:text-3xl'> */}
                     <Heading as={Headings.H3}>{heroSubheading}</Heading>
-                    {/* </h3> */}
                     <TextGenerateEffect
                         words={heroMainHeading}
                         className='relative z-10 w-full md:max-w-[45rem] lg:max-w-[65rem] xl:max-w-[75rem] lg:py-6 md:py-4 xl:py-8'
-                        textClassNames='font-black !text-white-100 text-6xl md:text-7xl lg:text-8xl xl:text-9xl lg:!leading-[7rem] xl:!leading-[9rem]'
+                        textClassNames='font-black !text-white-100 text-6xl md:text-7xl lg:text-8xl xl:text-9xl !leading[3rem] md:!leading[5rem] lg:!leading-[7rem] xl:!leading-[9rem]'
                     />
-                    <p className='font-normal text-base md:text-lg lg:text-xl xl:text-3xl'>
+                    <p className='mt-16 mb-8 font-normal text-base md:text-lg lg:text-xl xl:text-3xl'>
                         {heroIntroductionText}
                     </p>
                     <Link href={"/github"} prefetch={true}>

@@ -18,16 +18,15 @@ const ChessGameStatus = () => {
     const { turn, status } = gameRow;
 
     return (
-        <div className='flex flex-col'>
-            <p className='text-neutral-500 dark:text-neutral-300'>
+        <div className='flex flex-col gap-2'>
+            <p className='text-sm text-neutral-500 dark:text-neutral-300'>
                 Game status:&nbsp;
-                <span className='font-medium'>{status ?? "…"}</span> ·
-                Turn:&nbsp;
-                <span className='font-medium'>{turn ?? "…"}</span>
+                <span className='font-bold'>{status ?? "…"}</span> · Turn:&nbsp;
+                <span className='font-bold'>{turn ?? "…"}</span>
             </p>
-            <div className='flex gap-2 '>
+            <div className='flex flex-col text-sm'>
                 <p className='text-neutral-500 dark:text-neutral-300'>
-                    Player online: <span>{playerOnline ? "🟢" : "🔴"} |</span>
+                    Player online: <span>{playerOnline ? "🟢" : "🔴"}</span>
                 </p>
                 <p className='text-neutral-500 dark:text-neutral-300'>
                     Opponent online: <span>{opponentOnline ? "🟢" : "🔴"}</span>

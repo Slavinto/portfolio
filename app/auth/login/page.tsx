@@ -1,6 +1,6 @@
 "use client";
 
-import AuthForm from "@/components/ui/AuthForm";
+import AuthForm from "@/components/ui/forms/AuthForm";
 import { useUser } from "@/hooks/auth/useUser";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";

@@ -89,16 +89,14 @@ export default function ChessBoard({
     }
 
     return (
-        <div className='relative grid grid-cols-8 w-[32rem] h-[32rem] rounded-xl overflow-hidden border-2 border-white-300 cursor-pointer'>
+        <div className='relative w-full max-w-[95vw] sm:max-w-[28rem] md:max-w-[32rem] lg:max-w-[36rem] xl:max-w-[40rem] aspect-square rounded-xl overflow-hidden border-2 border-white/30 cursor-pointer grid grid-cols-8'>
             {children}
+
             {Array.from({ length: 8 }).map((_, row) =>
                 Array.from({ length: 8 }).map((_, col) => {
-                    const pos: Position = getPositionForCell(
-                        row,
-                        col,
-                        playerColor
-                    );
+                    const pos = getPositionForCell(row, col, playerColor);
                     const piece = board.getPieceAtPosition(pos);
+
                     const isSelected =
                         selected?.file === pos.file &&
                         selected?.rank === pos.rank;
@@ -106,34 +104,33 @@ export default function ChessBoard({
                     return (
                         <div
                             key={`${pos.file}${pos.rank}`}
-                            className={`flex items-center justify-center border w-16 h-16 ${
+                            onClick={
+                                waitingForOpponent
+                                    ? () =>
+                                          console.info(
+                                              "Waiting for opponent. Failed to make a move."
+                                          )
+                                    : () => handleSquareClick(pos)
+                            }
+                            className={`flex items-center justify-center aspect-square select-none ${
+                                isSelected ? "shadow-inner shadow-black/40" : ""
+                            } ${
                                 (row + col) % 2 === 0
                                     ? "bg-purple"
                                     : "icon-bg-dark"
-                            } ${isSelected ? "!shadow-inset-md" : ""}`}
-                            onClick={
-                                waitingForOpponent
-                                    ? () => {
-                                          console.info(
-                                              "Waiting for opponent. Failed to make a move."
-                                          );
-                                      }
-                                    : () => handleSquareClick(pos)
-                            }
+                            }`}
                         >
                             {piece ? (
                                 <span
-                                    className={`relative text-5xl${
+                                    className={`text-center select-nones ${
                                         piece.color === "White"
-                                            ? " text-white"
-                                            : " text-black"
-                                    }`}
+                                            ? "text-white"
+                                            : "text-black"
+                                    } text-5xl md:text-6xl `}
                                 >
                                     {piece.getUnicodeSymbol()}
                                 </span>
-                            ) : (
-                                ""
-                            )}
+                            ) : null}
                         </div>
                     );
                 })

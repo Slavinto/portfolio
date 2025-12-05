@@ -15,7 +15,10 @@ const Projects = () => {
             className='py-[12.5rem] content-container flex flex-col mx-auto'
         >
             <motion.div initial='hidden' whileInView='visible'>
-                <Heading as={Headings.H2} classNames='uppercase text-center'>
+                <Heading
+                    as={Headings.H2}
+                    classNames='uppercase font-black text-center !text-white-100 !text-3xl md:!text-4xl lg:!text-5xl xl:!text-6xl !leading[3rem] md:!leading[5rem] lg:!leading-[7rem] xl:!leading-[9rem]'
+                >
                     Recent Projects
                 </Heading>
                 <CustomTabs tabsData={tabsDataWildOasisProject} />

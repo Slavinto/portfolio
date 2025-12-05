@@ -37,18 +37,18 @@ export default function ChessHomePage() {
     }
 
     return (
-        <section className='flex flex-col gap-6 py-16 px-4 w-full max-w-5xl mx-auto'>
+        <section className='flex flex-col gap-6 py-16 px-4 w-full max-w-3xl mx-auto'>
             <CustomToastContainer />
-            <header className='flex justify-between items-center border-b border-border pb-4'>
-                <Heading as={Headings.H3}>Your Games</Heading>
+            <header className='flex flex-col-reverse gap-8 sm:flex-row sm:justify-between items-center border-b border-border pb-4'>
+                <Heading as={Headings.H2}>Your Games</Heading>
                 <ButtonsCard
-                    className='cursor-pointer dark:btn-gradient btn-gradient-light px-10 py-6 gap-1 mt-[2rem] md:mt-[4rem]'
+                    className='cursor-pointer dark:btn-gradient btn-gradient-light py-2 px-4 md:px-10 md:py-6 gap-1'
                     icon={<FaRegChessKnight className='text-xl' />}
                     iconPosition='left'
                     onClick={() => router.push("/chess/create")}
                 >
                     <p className='font-normal text-base md:text-md lg:text-lg xl:text-xl'>
-                        Start new Game
+                        Start&nbsp;new&nbsp;Game
                     </p>
                 </ButtonsCard>
             </header>

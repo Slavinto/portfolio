@@ -8,21 +8,25 @@ import {
 } from "./types";
 import { Position } from "@/lib/games/chess/game-logic/main/position";
 import { Piece } from "@/lib/games/chess/game-logic/main/piece";
+import { ReactNode } from "react";
 
 export interface IBoardInitializer {
     initializeBoard(board: Board): void;
 }
 
 export interface Player {
-    playerId: string | null;
-    playerColor: Color;
-    opponentId: string | null;
+    id: string | null;
+    color: Color | null;
+    avatar: string | ReactNode;
+    username: string | null;
+    bio: string | null;
 }
 
 export interface BoardState {
     gameRow: GameRow | null;
     board: Board;
     player: Player | null;
+    opponent: Player | null;
     chatMessages: ChessMessage[];
     isLoading: boolean;
 }

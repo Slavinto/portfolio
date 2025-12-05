@@ -6,7 +6,7 @@ import QRCode from "react-qr-code";
 import { toast } from "react-toastify";
 import { FaCopy, FaQrcode, FaShare } from "react-icons/fa";
 import { ButtonsCard } from "../buttons/tailwindcss-buttons";
-import Heading from "../Heading";
+import Heading from "../text/Heading";
 import { Headings } from "@/types/enums";
 
 export function InvitePlayersCard({ inviteUrl }: { inviteUrl: string }) {
@@ -67,7 +67,7 @@ export function InvitePlayersCard({ inviteUrl }: { inviteUrl: string }) {
         >
             <Heading
                 as={Headings.H4}
-                classNames='text-center font-semibold mb-4'
+                classNames='!text-xl uppercase text-center font-semibold mb-4'
             >
                 Invite Opponent
             </Heading>

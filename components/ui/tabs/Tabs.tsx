@@ -40,7 +40,7 @@ export const Tabs = ({
         <>
             <div
                 className={cn(
-                    "flex flex-row items-center justify-start [perspective:1000px] relative overflow-auto sm:overflow-visible no-visible-scrollbar max-w-full w-full",
+                    "flex flex-col flex-shrink-0 gap-2 lg:flex-row items-center justify-start [perspective:1000px] relative overflow-visible no-visible-scrollbar max-w-full w-full",
                     containerClassName
                 )}
             >
@@ -53,7 +53,7 @@ export const Tabs = ({
                         onMouseEnter={() => setHovering(true)}
                         onMouseLeave={() => setHovering(false)}
                         className={cn(
-                            "relative px-4 py-2 rounded-full",
+                            "relative px-4 py-2 md:px-6 md:py-3 lg:px-8 lg:py-4 rounded-xl w-full border-common",
                             tabClassName
                         )}
                         style={{
@@ -74,10 +74,11 @@ export const Tabs = ({
                                 )}
                             />
                         )}
-
-                        <span className='relative block text-black dark:text-white'>
-                            {tab.title}
-                        </span>
+                        <div className='line-clamp-1'>
+                            <p className='whitespace-nowrap relative flex justify-between text-black dark:text-white'>
+                                {tab.title}
+                            </p>
+                        </div>
                     </button>
                 ))}
             </div>
@@ -86,7 +87,7 @@ export const Tabs = ({
                 active={active}
                 key={active.value}
                 hovering={hovering}
-                className={cn("mt-12", contentClassName)}
+                className={cn("mt-[4.5rem] md:mt-12", contentClassName)}
             />
         </>
     );

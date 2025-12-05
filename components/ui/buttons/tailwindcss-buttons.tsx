@@ -64,7 +64,12 @@ export const ButtonsCard = ({
             )}
         >
             {icon && iconPosition === "left" && <Icon icon={icon} />}
-            <div className={cn("relative z-40", contentClassNames)}>
+            <div
+                className={cn(
+                    "relative z-40 text-muted-foreground",
+                    contentClassNames
+                )}
+            >
                 {children}
             </div>
             {icon && iconPosition === "right" && <Icon icon={icon} />}

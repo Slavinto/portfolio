@@ -8,6 +8,8 @@ import { Poppins } from "next/font/google";
 import GlobalModalProvider from "./modal-provider";
 import ModalMenuButton from "@/components/ui/menus/modal-menu-button";
 import ModalMenu from "@/components/ui/menus/modal-menu";
+import { createSupabaseServerClient } from "@/lib/supabase/server";
+import ProfileButton from "@/components/ui/buttons/ProfileButton";
 
 const poppins = Poppins({
     weight: ["300", "400", "500", "600", "700", "800"],
@@ -22,11 +24,17 @@ export const metadata: Metadata = {
     description: "Modern and minimalistic portfolio for a web developer",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
     children,
 }: Readonly<{
     children: React.ReactNode;
 }>) {
+    const supabase = await createSupabaseServerClient();
+
+    const {
+        data: { user },
+    } = await supabase.auth.getUser();
+
     return (
         <html lang='en' suppressHydrationWarning className=''>
             <head>
@@ -50,7 +58,7 @@ export default function RootLayout({
                 {/* <link rel='manifest' href='/site.webmanifest' /> */}
             </head>
             {/* className={`${poppins.className} h-full`} */}
-            <body className={`${poppins.variable} h-screen`}>
+            <body className={`${poppins.variable} !h-full !w-full`}>
                 <QueryProvider>
                     <ThemeProvider
                         attribute='class'
@@ -61,6 +69,7 @@ export default function RootLayout({
                             <main className='font-poppins relative px-4 w-full flex flex-col flex-grow text-foreground bg-background'>
                                 <ThemeToggleButton />
                                 <ModalMenu />
+                                <ProfileButton />
                                 {children}
                             </main>
                         </GlobalModalProvider>

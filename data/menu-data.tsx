@@ -60,7 +60,7 @@ export const menuItems = [
                 className='flex p-8 gap-4 w-full'
                 icon={<FaRegUserCircle />}
             >
-                Sign In
+                Sign&nbsp;In
             </ButtonsCard>
         ),
     },
@@ -72,10 +72,10 @@ export const menuItems = [
         icon: (
             <ButtonsCard
                 iconPosition='left'
-                className='flex p-8 gap-4 w-full'
+                className='flex p-8 gap-4 w-full overflow-ellipsis'
                 icon={<FaChess />}
             >
-                Play some chess
+                Play&nbsp;some&nbsp;chess
             </ButtonsCard>
         ),
     },

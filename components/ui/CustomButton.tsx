@@ -22,7 +22,7 @@ const CustomButton = ({
             type={type}
             onClick={handler}
             className={cn(
-                "px-4 py-2 cursor-pointer bg-white rounded-xl border border-neutral-100 dark:bg-black dark:border-white/[0.2] hover:border-neutral-200 dark:hover:border-neutral-500 group/btn overflow-hidden relative flex items-center justify-center",
+                "px-4 py-2 text-muted-foreground cursor-pointer bg-white rounded-xl border border-neutral-100 dark:bg-black dark:border-white/[0.2] hover:border-neutral-200 dark:hover:border-neutral-500 group/btn overflow-hidden relative flex items-center justify-center",
                 classNames
             )}
         >

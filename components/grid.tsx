@@ -9,12 +9,12 @@ const Grid = () => {
         <section className='content-container mx-auto'>
             <Heading
                 as={Headings.H2}
-                classNames='text-center pt-[9.5rem] uppercase'
+                classNames='uppercase font-black text-center !text-white-100 !text-3xl md:!text-4xl lg:!text-5xl xl:!text-6xl !leading[3rem] md:!leading[5rem] lg:!leading-[7rem] xl:!leading-[9rem]'
             >
                 About me
             </Heading>
             <motion.div id='about' initial='hidden' whileInView='visible'>
-                <BentoGrid className='auto-cols-auto auto-rows-[9rem] md:auto-rows-[11rem] lg:auto-rows-[12rem] xl:auto-rows-[15rem] sm:px-12 pt-[13rem]'>
+                <BentoGrid className='auto-cols-auto auto-rows-[9rem] md:auto-rows-[11rem] lg:auto-rows-[12rem] xl:auto-rows-[15rem] sm:px-12 pt-40'>
                     {gridItems.map(
                         ({
                             id,

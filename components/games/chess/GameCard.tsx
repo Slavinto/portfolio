@@ -1,3 +1,4 @@
+import TruncatedText from "@/components/ui/text/TruncatedText";
 import { useUser } from "@/hooks/auth/useUser";
 import { GameStatus } from "@/types/games/chess";
 import { GameTableData } from "@/types/supabase/database.types";
@@ -16,12 +17,19 @@ const GameCard = ({ game }: { game: GameTableData }) => {
 
     return (
         <li className='w-full p-4 rounded-lg bg-card hover:shadow-md transition-shadow'>
-            <div className='flex justify-between items-center'>
-                <div>
-                    <p className='font-medium text-lg'>Game #{game.id}</p>
-                    <p className='text-sm text-muted-foreground'>
-                        Created: {new Date(game.created_at).toLocaleString()}
-                    </p>
+            <div className='flex sm:flex-row flex-col justify-between items-center min-w-0'>
+                <div className='max-w-lg min-w-0'>
+                    <div className='line-clamp-1'>
+                        <p className='text-sm text-muted-foreground'>
+                            Game #{game.id}
+                        </p>
+                    </div>
+                    <div className='line-clamp-1'>
+                        <p className='text-sm text-muted-foreground'>
+                            Created:{" "}
+                            {new Date(game.created_at).toLocaleString()}
+                        </p>
+                    </div>
                     <p className='text-sm text-muted-foreground'>
                         Moves: {moves?.length ?? 0}
                     </p>

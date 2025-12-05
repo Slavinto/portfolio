@@ -4,6 +4,7 @@ export const initialBoardState = {
     gameRow: null,
     board: BoardInstance,
     player: null,
+    opponent: null,
     chatMessages: [],
     isLoading: false,
 };

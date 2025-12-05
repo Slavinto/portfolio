@@ -2,10 +2,10 @@
 
 import { createClient } from "@/lib/supabase/client";
 import { useState } from "react";
-import Heading from "./Heading";
+import Heading from "../text/Heading";
 import { Headings } from "@/types/enums";
-import CustomInput from "./CustomInput";
-import CustomButton from "./CustomButton";
+import CustomInput from "../CustomInput";
+import CustomButton from "../CustomButton";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 

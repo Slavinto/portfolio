@@ -32,6 +32,7 @@ const MenuItems = () => {
                             });
                             setOpen(false);
                         }}
+                        key={id}
                         iconPosition='left'
                         className='flex p-8 w-full cursor-pointer flex-grow !flex-shrink-0 gap-2 items-center uppercase text-3xl lg:text-4xl xl:text-5xl'
                         icon={<FaArrowRightToBracket />}

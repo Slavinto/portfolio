@@ -1,7 +1,7 @@
 export const ModalMenuButton = () => {
     return (
-        <div className='fixed z-50 top-[5rem] right-4'>
-            <div className='dark:bg-background bg-white dark:border-white/[0.2] flex justify-center relative rounded-lg menu-container'>
+        <div className='fixed z-50 lg:top-20 lg:right-4 top-4 right-20'>
+            <div className='dark:bg-background bg-white dark:border-white/[0.2] flex justify-center relative rounded-xl menu-container'>
                 <div
                     style={{
                         top: "0rem",
