@@ -14,7 +14,7 @@ import { ButtonsCard, Heading } from "@/components/ui";
 import { onCommittedMove } from "@/utils/games/chess/helpers";
 import { Color, GameRow, Move, OfferRow, Player } from "@/types/games/chess";
 import { useChessGamePageContext } from "@/app/context/ChessGamePageContext";
-import { FaChevronDown, FaChevronUp, FaRegUserCircle } from "react-icons/fa";
+import { FaChevronDown, FaChevronUp } from "react-icons/fa";
 import { toast } from "react-toastify";
 import CustomToastContainer from "@/components/ui/CustomToastContainer";
 import { useUser } from "@/hooks/auth/useUser";
@@ -55,7 +55,6 @@ export default function GamePage() {
     const { chessMessages, isLoadingMessages } = useChessMessages();
     const { state, dispatch } = useChessGamePageContext();
 
-    const playersLoadedRef = useRef<boolean>(false);
     const resetRef = useRef<boolean>(false);
     const initializedRef = useRef<boolean>(false);
     const prevOfferRef = useRef<OfferRow | null>(null);
@@ -172,57 +171,49 @@ export default function GamePage() {
 
     // initialyzing player
     useEffect(() => {
-        if (players?.player?.id && !playersLoadedRef.current) {
-            playersLoadedRef.current = true;
-            console.log({ loadedPlayers: players });
-        }
+        if (!players || !players.player || !players.opponent) return;
+        if (!user || !game) return;
 
-        if (!user || !game || !playersLoadedRef.current) return;
-        const { id, avatar_url, username, bio } = players?.player;
+        const { player: p1, opponent: p2 } = players;
 
-        const color = id === game.player_white ? "White" : ("Black" as Color);
+        const color: Color = p1.id === game.player_white ? "White" : "Black";
+
         const player: Player = {
-            id,
+            id: p1.id,
             color,
-            avatar: avatar_url,
-            username,
-            bio,
+            avatar: p1.avatar_url,
+            username: p1.username,
+            bio: p1.bio,
         };
 
         const opponent: Player = {
-            id: players?.opponent ?? null,
-            color: color === "Black" ? "White" : ("Black" as Color),
-            avatar: players?.opponent?.avatar_url ?? null,
-            username: players?.opponent?.username ?? null,
-            bio: players?.opponent?.bio ?? null,
+            id: p2.id,
+            color: color === "White" ? "Black" : "White",
+            avatar: p2.avatar_url,
+            username: p2.username,
+            bio: p2.bio,
         };
 
-        // If state.player doesn't exist, or opponentId has changed
-        if (
-            players &&
-            (!state.player ||
-                state.opponent?.id !== opponentId ||
-                state.player?.color !== color)
-        ) {
+        // Run only if something truly changed
+        const mustInit =
+            !state.player ||
+            state.player.id !== player.id ||
+            state.opponent?.id !== opponent.id ||
+            state.player.color !== player.color;
+
+        if (mustInit) {
             console.log("Initializing players");
             dispatch({
                 type: "INIT_PLAYERS",
-                payload: {
-                    player,
-                    opponent,
-                },
+                payload: { player, opponent },
             });
         }
     }, [
+        players, // only re-run when players change
         user?.id,
         game?.id,
-        players?.player?.id,
         opponentId,
-        state.player,
-        state.opponent,
-        dispatch,
     ]);
-
     useEffect(() => {
         if (
             !isLoadingMessages &&

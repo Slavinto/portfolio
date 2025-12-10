@@ -1,9 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import ChatPanel from "./chat/ChatPanel";
 import { useChessGamePageContext } from "@/app/context/ChessGamePageContext";
-import { FaChessKing, FaRegUserCircle } from "react-icons/fa";
-import UserAvatar from "@/app/profile/UserAvatar";
-import { getAvatarUrl } from "@/app/profile/getAvatarUrl";
+import { FaChessKing } from "react-icons/fa";
 import PlayerCard from "@/components/ui/cards/PlayerCard";
 
 const Room = () => {
@@ -14,8 +12,8 @@ const Room = () => {
     const { id: playerId } = state.player;
     const { player_white } = state.gameRow;
     const isPlayerWhite = playerId === player_white;
-    const playerColor = isPlayerWhite ? "#fff" : "#444";
-    const opponentColor = isPlayerWhite ? "#444" : "#fff";
+    const playerColor = isPlayerWhite ? "#999" : "#444";
+    const opponentColor = isPlayerWhite ? "#444" : "#999";
 
     return (
         <div className='flex flex-col rounded-xl p-4 border border-border bg-card w-full'>
