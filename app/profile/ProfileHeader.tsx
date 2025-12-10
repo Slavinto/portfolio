@@ -1,33 +1,25 @@
-import { getAvatarUrl } from "@/app/profile/getAvatarUrl";
 import { IPlayer } from "@/types/interfaces";
-import { useEffect, useState } from "react";
-import { FaRegCircleUser } from "react-icons/fa6";
+import { useState } from "react";
 import AvatarUploader from "./AvatarUploader";
+import UserAvatar from "./UserAvatar";
+import { usePlayerAvatar } from "@/hooks/usePlayerAvatar";
 
 export default function ProfileHeader({ player }: { player: IPlayer }) {
-    const [avatar, setAvatar] = useState<string | null>(null);
-
-    useEffect(() => {
-        const setUserAvatar = async () => {
-            if (!avatar) {
-                const avatar = await getAvatarUrl(player.avatar_url);
-                setAvatar(avatar);
-            }
-        };
-        setUserAvatar();
-    }, [player.avatar_url]);
+    const [avatarPath, setAvatarPath] = useState<string | null>(
+        player.avatar_url
+    );
+    const { data, isLoading, error } = usePlayerAvatar(avatarPath);
+    if (isLoading || error) {
+        return null;
+    }
 
     return (
         <div className='flex flex-col items-center gap-12 max-w-64'>
-            {avatar ? (
-                <img
-                    src={avatar}
-                    className='w-20 h-20 rounded-full object-cover border-common'
-                />
-            ) : (
-                <FaRegCircleUser className='w-20 h-20 object-cover' />
-            )}
-            <AvatarUploader setAvatar={setAvatar} />
+            <UserAvatar url={data?.playerAvatar ?? null} />
+            <AvatarUploader
+                prevPath={avatarPath}
+                setAvatarPath={setAvatarPath}
+            />
         </div>
     );
 }

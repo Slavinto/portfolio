@@ -15,30 +15,10 @@ const ChatMessages = () => {
 
     // Auto-scroll when messages change IF user is near the bottom
     useEffect(() => {
-        // const el = scrollRef.current;
-        // if (!el) return;
-
-        // const distanceFromBottom =
-        //     el.scrollHeight - el.scrollTop - el.clientHeight;
-
-        // const isNearBottom = distanceFromBottom < 120;
-
-        // if (isNearBottom) {
-        //     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
-        // }
         requestAnimationFrame(() => {
             bottomRef.current?.scrollIntoView({ behavior: "auto" });
         });
     }, [chatMessages]);
-
-    // useLayoutEffect(() => {
-    //     // scrolling to last message on first component load
-    //     if (!chatLoadedRef.current) {
-    //         chatLoadedRef.current = true;
-    //         bottomRef.current?.scrollIntoView({ behavior: "smooth" });
-    //     }
-    // });
-
     // Show / hide scroll-down button
     const handleScroll = () => {
         const el = scrollRef.current;
@@ -54,7 +34,7 @@ const ChatMessages = () => {
         bottomRef.current?.scrollIntoView({ behavior: "smooth" });
     };
     if (!player) return null;
-    const { playerId } = player;
+    const { id: playerId } = player;
 
     return (
         <div className='relative'>

@@ -10,17 +10,17 @@ function OfferDrawButton() {
     const router = useRouter();
 
     const {
-        state: { player },
+        state: { player, opponent },
     } = useChessGamePageContext();
 
-    if (!player || !player.playerId || !player?.opponentId) {
+    if (!player || !player?.id || !opponent || !opponent?.id) {
         toast.error("Invalid player data");
         router.push("/auth/login/");
     }
 
     async function handleOfferDraw() {
         try {
-            await sendOffer(id, "draw", player?.playerId!, player?.opponentId!);
+            await sendOffer(id, "draw", player?.id!, opponent?.id!);
             toast.info("Draw offer sent to opponent.");
         } catch (err) {
             console.error("Error offering draw:", err);

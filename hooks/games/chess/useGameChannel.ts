@@ -15,7 +15,7 @@ export function useGameChannel(
     const opponentOnlineRef = useRef<boolean>(false);
     const supabase = createClient();
     const {
-        state: { player, gameRow },
+        state: { player, opponent, gameRow },
     } = useChessGamePageContext();
 
     const setOnline = usePresenceStore((s) => s.setOnline);
@@ -24,10 +24,10 @@ export function useGameChannel(
 
     useEffect(() => {
         // require only id and player identity to subscribe
-        if (!id || !player || !player.playerId) return;
+        if (!id || !player || !player?.id) return;
 
-        const playerId = player.playerId;
-        const opponentId = player.opponentId; // may be undefined initially
+        const { id: playerId } = player;
+        const opponentId = opponent?.id; // may be undefined initially
 
         const channel = supabase.channel(`game-${id}`, {
             config: {
@@ -123,8 +123,8 @@ export function useGameChannel(
         };
     }, [
         id,
-        player?.playerId,
-        player?.opponentId,
+        player?.id,
+        opponent?.id,
         setOnline,
         setOffline,
         reset,

@@ -12,7 +12,7 @@ import Moves from "@/components/games/chess/Moves";
 import ChessGameSkeleton from "@/components/ui/patterns/ChessGameSkeleton";
 import { ButtonsCard, Heading } from "@/components/ui";
 import { onCommittedMove } from "@/utils/games/chess/helpers";
-import { Color, GameRow, Move, OfferRow } from "@/types/games/chess";
+import { Color, GameRow, Move, OfferRow, Player } from "@/types/games/chess";
 import { useChessGamePageContext } from "@/app/context/ChessGamePageContext";
 import { FaChevronDown, FaChevronUp, FaRegUserCircle } from "react-icons/fa";
 import { toast } from "react-toastify";
@@ -61,15 +61,12 @@ export default function GamePage() {
     const prevOfferRef = useRef<OfferRow | null>(null);
     const [asideOpen, setAsideOpen] = useState(true);
 
-    const isBusy =
-        isLoadingGame ||
-        isLoadingPlayers ||
-        isLoadingMessages ||
-        state.isLoading;
+    const isBusy = isLoadingGame || isLoadingPlayers || isLoadingMessages;
+
     const isError = gameError || playersError;
 
     const isGameLoaded = resetRef.current && initializedRef.current;
-
+    console.log({ isLoadingGame, isLoadingPlayers, isLoadingMessages });
     console.log({ isBusy, isGameLoaded });
 
     useEffect(() => {
@@ -162,62 +159,67 @@ export default function GamePage() {
         if (!gameId || initializedRef.current) {
             return;
         }
-        if (!state.gameRow && game && resetRef.current) {
-            console.log("Initializing game...");
-            dispatch({ type: "INIT_GAME", payload: { gameRow: game } });
-            initializedRef.current = true;
+        if (!state.gameRow && resetRef.current) {
+            if (game) {
+                console.log("Initializing game...");
+                dispatch({ type: "INIT_GAME", payload: { gameRow: game } });
+                initializedRef.current = true;
+            } else if (!game) {
+                console.log("Error. Invalid game row object");
+            }
         }
     }, [gameId, game]);
 
     // initialyzing player
     useEffect(() => {
-        if (!user || !state.gameRow || !playersLoadedRef.current) return;
-
-        const playerId = user.id;
-        let opponentId: string | null = null;
-        let playerColor: Color;
-
-        if (state.gameRow.player_white === playerId) {
-            opponentId = state.gameRow.player_black;
-            playerColor = "White";
-        } else if (state.gameRow.player_black === playerId) {
-            opponentId = state.gameRow.player_white;
-            playerColor = "Black";
-        } else {
-            return; // user not part of this game
+        if (players?.player?.id && !playersLoadedRef.current) {
+            playersLoadedRef.current = true;
+            console.log({ loadedPlayers: players });
         }
+
+        if (!user || !game || !playersLoadedRef.current) return;
+        const { id, avatar_url, username, bio } = players?.player;
+
+        const color = id === game.player_white ? "White" : ("Black" as Color);
+        const player: Player = {
+            id,
+            color,
+            avatar: avatar_url,
+            username,
+            bio,
+        };
+
+        const opponent: Player = {
+            id: players?.opponent ?? null,
+            color: color === "Black" ? "White" : ("Black" as Color),
+            avatar: players?.opponent?.avatar_url ?? null,
+            username: players?.opponent?.username ?? null,
+            bio: players?.opponent?.bio ?? null,
+        };
 
         // If state.player doesn't exist, or opponentId has changed
         if (
-            !state.player ||
-            state.opponent?.id !== opponentId ||
-            state.player?.color !== playerColor
+            players &&
+            (!state.player ||
+                state.opponent?.id !== opponentId ||
+                state.player?.color !== color)
         ) {
+            console.log("Initializing players");
             dispatch({
                 type: "INIT_PLAYERS",
                 payload: {
-                    player: {
-                        id: playerId,
-                        color: playerColor,
-                        avatar: players?.player.avatar ?? <FaRegUserCircle />,
-                        username: players?.player.username,
-                        bio: players?.player.bio,
-                    },
-                    opponent: {
-                        id: players?.opponent.id,
-                        color: playerColor === "Black" ? "White" : "Black",
-                        avatar: players?.opponent.avatar ?? <FaRegUserCircle />,
-                        username: players?.opponent.username,
-                        bio: players?.opponent.bio,
-                    },
+                    player,
+                    opponent,
                 },
             });
         }
     }, [
         user?.id,
-        state.gameRow?.player_white,
-        state.gameRow?.player_black,
+        game?.id,
+        players?.player?.id,
+        opponentId,
         state.player,
+        state.opponent,
         dispatch,
     ]);
 
@@ -243,10 +245,6 @@ export default function GamePage() {
     if (isBusy || !isGameReady) return <ChessGameSkeleton repeatPattern={3} />;
     if (!game || !gameRow)
         return <Heading as={Headings.H3}>Game not found</Heading>;
-    if (players?.player && players?.opponent) {
-        playersLoadedRef.current = true;
-        console.log({ loadedPlayers: players });
-    }
     if (!state.player)
         return <Heading as={Headings.H3}>Player not found</Heading>;
     if (isError)
@@ -272,12 +270,12 @@ export default function GamePage() {
     const waitingForOpponent = playerAbsent && gameRow.status === "waiting";
     // game status handling
     return (
-        <section className='flex lg:mt-8 lg:flex-row items-center justify-around flex-col w-full'>
+        <section className='mx-auto flex gap-6 lg:mt-8 lg:flex-row items-center justify-around flex-col w-full'>
             <CustomToastContainer />
 
             {/* Board */}
             <div
-                className={`w-full flex-col items-center relative lg:self-center transition-opacity duration-300 flex ${
+                className={`w-full flex-col items-center relative mt-12 lg:mt-0 mx-auto lg:self-center transition-opacity duration-300 flex ${
                     waitingForOpponent ? "opacity-50 pointer-events-none" : ""
                 }`}
             >
@@ -303,7 +301,7 @@ export default function GamePage() {
                     </ChessBoard>
                 </div>
             </div>
-            <div className='mx-auto w-[30vw] rounded-2xl shadow-lg p-6 header-gradient-light dark:header-gradient-dark'>
+            <div className='flex flex-col items-center self-center mx-auto rounded-2xl shadow-lg lg:p-6 header-gradient-light dark:header-gradient-dark'>
                 {/* Collapsible sidebar */}
                 <ChessHeader id={gameId}>
                     <div className='mt-4 flex gap-2 justify-evenly'>

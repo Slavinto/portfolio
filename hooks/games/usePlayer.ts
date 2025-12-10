@@ -13,7 +13,7 @@ export function usePlayer(playerId: string | null) {
             if (!playerId) return null;
 
             const { data, error } = await supabase
-                .from("profiles")
+                .from("players")
                 .select("*")
                 .eq("id", playerId)
                 .single();

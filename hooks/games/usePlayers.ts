@@ -1,30 +1,34 @@
 "use client";
-// fetches player and opponent at once
 
 import { useQuery } from "@tanstack/react-query";
 import { createClient } from "@/lib/supabase/client";
 
 export function usePlayers(playerId: string | null, opponentId: string | null) {
     const supabase = createClient();
-    const enabled = !!playerId && !!opponentId;
+
+    // Only include non-null IDs
+    const ids = [playerId, opponentId].filter((id) => !!id) as string[];
+
+    // Enable only if there is at least 1 valid ID
+    const enabled = ids.length > 0;
 
     return useQuery({
-        queryKey: ["players", playerId, opponentId],
+        queryKey: ["players", ...ids],
         enabled,
         queryFn: async () => {
-            if (!enabled) return null;
+            if (!enabled) return { player: null, opponent: null };
 
             const { data, error } = await supabase
-                .from("profiles")
+                .from("players")
                 .select("*")
-                .in("id", [playerId, opponentId]); // 🚀 one query
+                .in("id", ids);
 
             if (error) throw error;
 
-            const player = data.find((p) => p.id === playerId) || null;
-            const opponent = data.find((p) => p.id === opponentId) || null;
-
-            return { player, opponent };
+            return {
+                player: data.find((p) => p.id === playerId) || null,
+                opponent: data.find((p) => p.id === opponentId) || null,
+            };
         },
         staleTime: 1000 * 60 * 5,
         retry: 1,

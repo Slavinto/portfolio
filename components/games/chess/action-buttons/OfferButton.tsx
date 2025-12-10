@@ -15,20 +15,21 @@ type OfferButtonProps = {
 
 export default function OfferButton({ type }: OfferButtonProps) {
     const {
-        state: { player, gameRow },
+        state: { player, gameRow, opponent },
     } = useChessGamePageContext();
     const router = useRouter();
     const { data: user } = useUser();
 
     const opponentIsOnline = usePresenceStore((s) => {
-        if (!player || !gameRow) {
+        if (!player || !gameRow || !opponent) {
             console.info("Invalid player or gameRow data: ", {
                 player,
+                opponent,
                 gameRow,
             });
             return false;
         }
-        const { opponentId } = player;
+        const { id: opponentId } = opponent;
         return s.onlinePlayers[opponentId ?? ""] === true;
     });
 
@@ -38,11 +39,12 @@ export default function OfferButton({ type }: OfferButtonProps) {
         return null;
     }
 
-    if (!player || !gameRow) {
+    if (!player || !gameRow || !opponent) {
         console.info("Invalid player or game data: ", { player, gameRow });
         return null;
     }
-    const { playerId, opponentId } = player;
+    const { id: playerId } = player;
+    const { id: opponentId } = opponent;
 
     if (!playerId || !opponentId) {
         console.info("Invalid player or opponent id");

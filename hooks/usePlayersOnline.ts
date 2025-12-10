@@ -4,21 +4,21 @@ import { useEffect, useState } from "react";
 
 export function usePlayersOnline() {
     const {
-        state: { player },
+        state: { player, opponent },
     } = useChessGamePageContext();
     const onlinePlayers = usePresenceStore((s) => s.onlinePlayers);
-
     const [playerOnline, setPlayerOnline] = useState(false);
     const [opponentOnline, setOpponentOnline] = useState(false);
 
     useEffect(() => {
-        if (!player) {
+        if (!player || !opponent) {
             return;
         }
-        const { playerId, opponentId } = player;
+        const { id: playerId } = player;
+        const { id: opponentId } = opponent;
         setPlayerOnline(!!playerId && onlinePlayers[playerId] === true);
         setOpponentOnline(!!opponentId && onlinePlayers[opponentId] === true);
-    }, [onlinePlayers, player]);
+    }, [onlinePlayers, player, opponent]);
 
     return { playerOnline, opponentOnline };
 }

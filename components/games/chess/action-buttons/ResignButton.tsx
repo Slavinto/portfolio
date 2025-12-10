@@ -8,12 +8,12 @@ import { finishGame } from "@/lib/services/chess-db";
 function ResignButton() {
     const { state } = useChessGamePageContext();
     const router = useRouter();
-    const { gameRow, player } = state;
-    if (!gameRow || !player || !player.playerId) {
+    const { gameRow, player, opponent } = state;
+    if (!gameRow || !player || !opponent || !opponent?.id) {
         return null;
     }
     const { id } = gameRow;
-    const { opponentId } = player;
+    const { id: opponentId } = opponent;
 
     async function handleResign() {
         try {

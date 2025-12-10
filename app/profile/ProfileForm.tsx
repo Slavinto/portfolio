@@ -1,7 +1,6 @@
 "use client";
 
 import { updatePlayerProfile } from "@/actions/profile/updatePlayerProfile";
-import { usePlayer } from "@/hooks/games/usePlayer";
 import { User } from "@supabase/supabase-js";
 import { useState } from "react";
 import CustomInput from "../../components/ui/CustomInput";
@@ -14,17 +13,14 @@ import ProfileHeader from "./ProfileHeader";
 import { toast } from "react-toastify";
 import CustomToastContainer from "@/components/ui/CustomToastContainer";
 import PlayerStats from "./PlayerStats";
-import { IPlayer } from "@/types/interfaces";
+import { usePlayers } from "@/hooks/games/usePlayers";
 
 export default function ProfileForm({ user }: { user: User }) {
-    const { data: player, isLoading } = usePlayer(user.id) as {
-        data: IPlayer;
-        isLoading: boolean;
-    };
-    console.log({ Player: player });
+    const { data: players, isLoading } = usePlayers(user.id, null);
+
+    const player = players?.player;
     const [bio, setBio] = useState<string>(player?.bio ?? "");
     const [username, setUsername] = useState<string>(player?.username ?? "");
-
     if (isLoading)
         return (
             <div className='w-full'>

@@ -17,7 +17,7 @@ export interface IBoardInitializer {
 export interface Player {
     id: string | null;
     color: Color | null;
-    avatar: string | ReactNode;
+    avatar: string;
     username: string | null;
     bio: string | null;
 }

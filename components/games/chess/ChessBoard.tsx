@@ -35,7 +35,11 @@ export default function ChessBoard({
     }
 
     const waitingForOpponent = !game.player_white || !game.player_black;
-    const { playerColor } = player;
+    const { color } = player;
+
+    if (!color) {
+        return null;
+    }
 
     // Sync from server if provided
 
@@ -44,7 +48,7 @@ export default function ChessBoard({
             return;
         }
         const piece = board.getPieceAtPosition(position);
-        if (piece && !selected && piece.color !== player?.playerColor) {
+        if (piece && !selected && piece.color !== player?.color) {
             console.info("Can not select opponent's piece");
             return;
         }
@@ -53,14 +57,14 @@ export default function ChessBoard({
         if (
             selected &&
             piece?.position.equals(selected) &&
-            piece.color === playerColor
+            piece.color === color
         ) {
             dispatch({ type: "UNSELECT_PIECE" });
         }
         // selecting own piece while another piece is selected -> select current target piece
         if (
             selected &&
-            piece?.color === playerColor &&
+            piece?.color === color &&
             !piece.position.equals(selected)
         ) {
             dispatch({
@@ -94,7 +98,7 @@ export default function ChessBoard({
 
             {Array.from({ length: 8 }).map((_, row) =>
                 Array.from({ length: 8 }).map((_, col) => {
-                    const pos = getPositionForCell(row, col, playerColor);
+                    const pos = getPositionForCell(row, col, color);
                     const piece = board.getPieceAtPosition(pos);
 
                     const isSelected =

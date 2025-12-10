@@ -7,7 +7,6 @@ const ChessGameStatus = () => {
         state: { gameRow, isLoading },
     } = useChessGamePageContext();
     const { playerOnline, opponentOnline } = usePlayersOnline();
-
     if (isLoading) {
         return "Loading...";
     }

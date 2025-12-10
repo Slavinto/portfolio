@@ -4,17 +4,20 @@ import { uploadAvatar } from "@/actions/profile/updateAvatar";
 import { ButtonsCard } from "@/components/ui";
 import CustomInput from "@/components/ui/CustomInput";
 import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
-import { getAvatarUrl } from "./getAvatarUrl";
 import CustomButton from "@/components/ui/CustomButton";
 import { toast } from "react-toastify";
+import { useQueryClient } from "@tanstack/react-query";
 
 export default function AvatarUploader({
-    setAvatar,
+    prevPath,
+    setAvatarPath,
 }: {
-    setAvatar: Dispatch<SetStateAction<string | null>>;
+    prevPath: string | null;
+    setAvatarPath: Dispatch<SetStateAction<string | null>>;
 }) {
     const inputRef = useRef<HTMLInputElement | null>(null);
     const [file, setFile] = useState<File | null>(null);
+    const queryClient = useQueryClient();
 
     useEffect(() => {}, [inputRef.current]);
 
@@ -24,8 +27,12 @@ export default function AvatarUploader({
             return;
         }
         const { path } = await uploadAvatar(file);
-        const newAvatar = await getAvatarUrl(path);
-        setAvatar(newAvatar);
+        // const newAvatar = await getAvatarUrl(path);
+        setAvatarPath(path);
+        queryClient.invalidateQueries({
+            queryKey: ["playerAvatar", prevPath],
+        });
+        console.log("setting avatar to: ", path);
     }
 
     return (
@@ -43,7 +50,8 @@ export default function AvatarUploader({
             <CustomInput
                 disabled={true}
                 classNames='text-muted-foreground !bg-muted'
-                placeholder='Selected file'
+                value={file?.name ?? "No files selected"}
+                // placeholder='Selected file'
             />
             <ButtonsCard onClick={handleUpload} className='px-4 py-2'>
                 Upload

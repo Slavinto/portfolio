@@ -22,7 +22,7 @@ const PlayerColor = () => {
         return null;
     }
 
-    const { playerColor: color } = player;
+    const { color } = player;
     const { turn } = gameRow;
 
     return (
