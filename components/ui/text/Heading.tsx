@@ -1,31 +1,5 @@
 import { Headings } from "@/types/enums";
-import React, { ReactNode, useEffect } from "react";
-
-// const HeadingWrapper = ({heading}:{heading: Headings}) => {
-// props.as === Headings.H1
-//     ? css`
-//           font-size: 3rem;
-//           font-weight: 600;
-//       `
-//     : props.as === Headings.H2
-//     ? css`
-//           font-size: 2rem;
-//           font-weight: 600;
-//       `
-//     : props.as === Headings.H3
-//     ? css`
-//           font-size: 2rem;
-//           font-weight: 500;
-//       `
-//     : props.as === Headings.H4
-//     ? css`
-//           font-size: 3rem;
-//           font-weight: 600;
-//           text-align: center;
-
-// return heading === Headings.H1 ? <h1 className="">{children}</h1>
-
-// }
+import React, { ReactNode } from "react";
 
 const Heading = ({
     children,
@@ -57,7 +31,7 @@ const Heading = ({
         </h3>
     ) : as === Headings.H4 ? (
         <h4
-            className={`text-sm md:text-lg lg:text-2xl xl:text-4xl font-medium text-center ${classNames}`}
+            className={`text-2xs 2xs:text-xs xs:text-sm md:text-lg lg:text-2xl xl:text-4xl font-medium text-center ${classNames}`}
         >
             {children}
         </h4>

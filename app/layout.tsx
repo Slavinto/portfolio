@@ -58,7 +58,7 @@ export default async function RootLayout({
                 {/* <link rel='manifest' href='/site.webmanifest' /> */}
             </head>
             {/* className={`${poppins.className} h-full`} */}
-            <body className={`${poppins.variable} !h-full !w-full`}>
+            <body className={`${poppins.variable} !h-full !w-full flex flex-1`}>
                 <QueryProvider>
                     <ThemeProvider
                         attribute='class'
@@ -66,7 +66,7 @@ export default async function RootLayout({
                         enableSystem={true}
                     >
                         <GlobalModalProvider>
-                            <main className='font-poppins relative px-4 w-full flex flex-col flex-grow text-foreground bg-background'>
+                            <main className='font-poppins relative px-4 w-full flex flex-1 min-w-0 flex-col self-center text-foreground bg-background'>
                                 <ThemeToggleButton />
                                 <ModalMenu />
                                 <ProfileButton />

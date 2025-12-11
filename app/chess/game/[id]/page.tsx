@@ -171,10 +171,11 @@ export default function GamePage() {
 
     // initialyzing player
     useEffect(() => {
-        if (!players || !players.player || !players.opponent) return;
+        if (!players || !players.player) return;
         if (!user || !game) return;
 
-        const { player: p1, opponent: p2 } = players;
+        const { player: p1 } = players;
+        const p2 = players?.opponent ?? null;
 
         const color: Color = p1.id === game.player_white ? "White" : "Black";
 
@@ -187,11 +188,11 @@ export default function GamePage() {
         };
 
         const opponent: Player = {
-            id: p2.id,
+            id: p2?.id ?? null,
             color: color === "White" ? "Black" : "White",
-            avatar: p2.avatar_url,
-            username: p2.username,
-            bio: p2.bio,
+            avatar: p2?.avatar_url ?? null,
+            username: p2?.username ?? null,
+            bio: p2?.bio ?? null,
         };
 
         // Run only if something truly changed
@@ -261,30 +262,35 @@ export default function GamePage() {
     const waitingForOpponent = playerAbsent && gameRow.status === "waiting";
     // game status handling
     return (
-        <section className='mx-auto flex gap-6 lg:mt-8 lg:flex-row items-center justify-around flex-col w-full'>
+        <section
+            className='w-full max-w-screen-xl mx-auto px-2 sm:px-4 py-4 
+        grid grid-cols-1 lg:flex lg:flex-1 gap-4 lg:gap-6
+        '
+        >
             <CustomToastContainer />
 
-            {/* Board */}
+            {/* BOARD COLUMN */}
             <div
-                className={`w-full flex-col items-center relative mt-12 lg:mt-0 mx-auto lg:self-center transition-opacity duration-300 flex ${
+                className={`relative w-full min-w-0 flex flex-col items-center transition-opacity duration-300 ${
                     waitingForOpponent ? "opacity-50 pointer-events-none" : ""
                 }`}
             >
                 <PlayerColor />
-                <div className='w-full px-2 flex justify-center items-start'>
+
+                <div className='w-full flex justify-center min-w-0 px-1'>
                     <ChessBoard
                         gameId={gameId}
                         onCommittedMove={onCommittedMove}
                     >
                         {(waitingForOpponent || !canPlay) && (
-                            <ButtonsCard className='absolute z-10 w-[20rem] h-16 top-1/2 left-1/2 !-translate-x-1/2 !-translate-y-1/2'>
-                                <p className='text-center px-4 py-2'>
+                            <ButtonsCard className='!center-absolute z-10 w-64 h-16'>
+                                <p className='text-center text-middle px-4'>
                                     {waitingForOpponent
-                                        ? "Waiting for opponent to join…"
+                                        ? "Waiting for opponent..."
                                         : gameStatus === "layed-off"
-                                        ? "Game was layed off. Please send the resume offer"
+                                        ? "Game was layed off"
                                         : !canPlay
-                                        ? `Game over. ${""}`
+                                        ? "Game over"
                                         : "Waiting..."}
                                 </p>
                             </ButtonsCard>
@@ -292,17 +298,19 @@ export default function GamePage() {
                     </ChessBoard>
                 </div>
             </div>
-            <div className='flex flex-col items-center self-center mx-auto rounded-2xl shadow-lg lg:p-6 header-gradient-light dark:header-gradient-dark'>
-                {/* Collapsible sidebar */}
+
+            {/* RIGHT SIDEBAR */}
+            <div className='flex gap-2 md:gap-4 flex-col w-full min-w-0 items-center rounded-2xl shadow-lg header-gradient-light max-w-md mx-auto  dark:header-gradient-dark 2xs:py-2 xs:p-4 lg:p-6'>
+                {/* Header */}
                 <ChessHeader id={gameId}>
-                    <div className='mt-4 flex gap-2 justify-evenly'>
+                    <div className='mt-4 flex w-full gap-2 justify-evenly'>
                         {waitingForOpponent ? (
                             <InvitePlayersCard
                                 inviteUrl={`${process.env.NEXT_PUBLIC_APP_URL}/chess/game/${gameId}`}
                             />
                         ) : (
                             <>
-                                <OfferButton type={"draw"} />
+                                <OfferButton type='draw' />
                                 <OfferButton
                                     type={
                                         gameStatus === "layed-off"
@@ -314,27 +322,28 @@ export default function GamePage() {
                             </>
                         )}
                     </div>
-                    {/* Toggle Button */}
+
+                    {/* Toggle aside */}
                     <ButtonsCard
                         onClick={() => setAsideOpen((prev) => !prev)}
-                        className='mt-4 w-full h-12 flex items-center justify-start cursor-pointer p-2 rounded-lg bg-card transition'
-                        contentClassNames='mx-auto'
+                        className='mt-4 w-full h-12 flex items-center justify-center cursor-pointer bg-card'
                     >
-                        {asideOpen ? (
-                            <FaChevronUp className='w-full h-5' />
-                        ) : (
-                            <FaChevronDown className='w-5 h-5' />
-                        )}
+                        {asideOpen ? <FaChevronUp /> : <FaChevronDown />}
                     </ButtonsCard>
                 </ChessHeader>
+
+                {/* ASIDE */}
                 <aside
-                    className={`mt-2 flex flex-col w-full gap-2 items-center transition-all duration-400 overflow-hidden ${
-                        asideOpen ? "h-full opacity-100" : "h-0 opacity-0"
-                    }`}
+                    className={`flex flex-col gap-2 md:gap-4 transition-all duration-300 overflow-hidden w-full
+                ${
+                    asideOpen
+                        ? "max-h-[900px] opacity-100"
+                        : "max-h-0 opacity-0"
+                }`}
                 >
                     {asideOpen && (
                         <>
-                            {game ? <Room /> : null}
+                            {game && <Room />}
                             <Moves />
                         </>
                     )}

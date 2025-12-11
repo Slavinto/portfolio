@@ -16,7 +16,7 @@ const ChatInput = () => {
 
     const { id: gameId } = gameRow;
     const { id: playerId } = player;
-    const { id: opponentId } = opponent;
+    // const { id: opponentId } = opponent;
     return (
         <form
             onSubmit={async (e) => {
@@ -28,6 +28,7 @@ const ChatInput = () => {
             className='absolute bottom-0 w-[96%] self-center flex gap-2 mt-2 p-1'
         >
             <CustomInput
+                classNames='text-middle'
                 value={text}
                 handler={(e) => {
                     if (e.target instanceof HTMLInputElement) {
@@ -35,7 +36,9 @@ const ChatInput = () => {
                     }
                 }}
             />
-            <ButtonsCard className='px-4 py-1'>Send</ButtonsCard>
+            <ButtonsCard className='text-middle p-1 2xs:px-2 2xs:py-1 sm:px-4 sm:py-1'>
+                Send
+            </ButtonsCard>
         </form>
     );
 };

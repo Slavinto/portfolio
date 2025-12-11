@@ -48,20 +48,20 @@ const ChatMessages = () => {
                     chatMessages.map((msg) => (
                         <div
                             key={msg.id}
-                            className={`flex gap-2 p-2 rounded-lg max-w-[80%] opacity-90 items-center justify-between ${
+                            className={`flex gap-2 p-2 rounded-lg max-w-[80%] text-middle opacity-90 items-center justify-between ${
                                 msg.sender === playerId
                                     ? "ml-auto dark:bg-skeleton !text-white"
                                     : "mr-auto bg-secondary"
                             }`}
                         >
-                            <p className='text-sm'>{msg.message}</p>
+                            <p className='text-middle'>{msg.message}</p>
                             <span className='text-[10px] opacity-50 block text-right mt-1'>
                                 {new Date(msg.created_at).toLocaleTimeString()}
                             </span>
                         </div>
                     ))
                 ) : (
-                    <span className='text-sm text-background/90'>
+                    <span className='text-middle text-background/90'>
                         Nothing here yet
                     </span>
                 )}

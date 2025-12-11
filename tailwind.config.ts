@@ -144,6 +144,18 @@ module.exports = {
                 "card-2": "url(/images/grid-bg-5.jpg)",
                 "card-3": "url(/images/computer-screen.jpg)",
             },
+            screens: {
+                "2xs": "400px",
+                xs: "500px",
+            },
+            fontSize: {
+                md: ["1.2rem", { lineHeight: "1.65rem", fontWeight: 400 }],
+                xs: ["0.975rem", { lineHeight: "1.115rem", fontWeight: 300 }],
+                "2xs": [
+                    "0.675rem",
+                    { lineHeight: "0.955rem", fontWeight: 200 },
+                ],
+            },
         },
     },
     plugins: [

@@ -3,6 +3,8 @@ import ChatPanel from "./chat/ChatPanel";
 import { useChessGamePageContext } from "@/app/context/ChessGamePageContext";
 import { FaChessKing } from "react-icons/fa";
 import PlayerCard from "@/components/ui/cards/PlayerCard";
+import { Headings } from "@/types/enums";
+import { Heading } from "@/components/ui";
 
 const Room = () => {
     const { state } = useChessGamePageContext();
@@ -17,7 +19,9 @@ const Room = () => {
 
     return (
         <div className='flex flex-col rounded-xl p-4 border border-border bg-card w-full'>
-            <h2 className='font-semibold mb-3'>Room</h2>
+            <Heading as={Headings.H4} classNames='font-semibold mb-3'>
+                Room
+            </Heading>
             <div className='flex gap-8 w-full justify-center'>
                 <PlayerCard
                     icon={<FaChessKing fill={playerColor} />}

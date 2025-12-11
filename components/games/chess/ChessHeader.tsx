@@ -22,7 +22,7 @@ const ChessHeader = ({ id, children }: { id: string; children: ReactNode }) => {
         <div className='rounded-xl p-4 border border-border bg-card w-full text-xl'>
             <Heading
                 as={Headings.H4}
-                classNames='!text-lg w-full h-14 flex items-center justify-between px-4 border-b border-border bg-card/40 backdrop-blur-sm'
+                classNames='w-full h-14 flex items-center justify-between bg-card/40 backdrop-blur-sm'
             >
                 <span className='block max-w-xs overflow-hidden text-ellipsis whitespace-nowrap'>
                     <FaChessKing className='inline -rotate-12 mr-1 mb-1' />
@@ -35,7 +35,7 @@ const ChessHeader = ({ id, children }: { id: string; children: ReactNode }) => {
             <ButtonsCard
                 icon={<HiArrowTurnLeftUp className='mb-2' />}
                 iconPosition='left'
-                className='rounded-xl p-2 cursor-pointer gap-1 mt-2'
+                className='rounded-xl p-2 cursor-pointer gap-1 mt-2 text-middle'
                 onClick={() => router.push("/chess")}
             >
                 Browse my games

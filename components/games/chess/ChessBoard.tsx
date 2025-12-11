@@ -93,7 +93,7 @@ export default function ChessBoard({
     }
 
     return (
-        <div className='relative w-full max-w-[95vw] sm:max-w-[28rem] md:max-w-[32rem] lg:max-w-[36rem] xl:max-w-[40rem] aspect-square rounded-xl overflow-hidden border-2 border-white/30 cursor-pointer grid grid-cols-8'>
+        <div className='relative w-full max-w-[95vw] sm:max-w-[36rem] aspect-square rounded-xl overflow-hidden border-2 border-white/30 cursor-pointer grid grid-cols-8'>
             {children}
 
             {Array.from({ length: 8 }).map((_, row) =>
@@ -116,7 +116,7 @@ export default function ChessBoard({
                                           )
                                     : () => handleSquareClick(pos)
                             }
-                            className={`flex items-center justify-center aspect-square select-none ${
+                            className={`relative flex items-center justify-center aspect-square select-none ${
                                 isSelected ? "shadow-inner shadow-black/40" : ""
                             } ${
                                 (row + col) % 2 === 0
@@ -126,11 +126,11 @@ export default function ChessBoard({
                         >
                             {piece ? (
                                 <span
-                                    className={`text-center select-nones ${
+                                    className={`center-absolute text-center select-nones ${
                                         piece.color === "White"
                                             ? "text-white"
                                             : "text-black"
-                                    } text-5xl md:text-6xl `}
+                                    } text-3xl 2xs:text-4xl xs:text-5xl sm:text-6xl lg:text-7xl `}
                                 >
                                     {piece.getUnicodeSymbol()}
                                 </span>

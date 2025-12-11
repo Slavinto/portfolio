@@ -12,12 +12,12 @@ const PieceMove = ({ move }: { move: Move }) => {
                 key={moveNumber}
                 className='flex justify-between py-1 border-b border-border/50 max-w-32'
             >
-                №{moveNumber}{" "}
+                <span className='text-middle'>№{moveNumber} </span>
                 <span
                     className={
                         piece.color === "White"
-                            ? "text-gray-300"
-                            : "text-gray-600"
+                            ? "!text-gray-300 text-middle"
+                            : "!text-gray-800 text-middle"
                     }
                 >
                     {Piece.fromPersisted(
@@ -26,12 +26,16 @@ const PieceMove = ({ move }: { move: Move }) => {
                         pieceClasses
                     ).getUnicodeSymbol()}
                 </span>
-                <span>&#8212;</span>
-                {from?.file}
-                {from?.rank}
-                <span>&#8594;</span>
-                {to?.file}
-                {to?.rank}
+                <span className='text-middle'>&#8212;</span>
+                <span className='text-middle'>
+                    {from?.file}
+                    {from?.rank}
+                </span>
+                <span className='text-middle'>&#8594;</span>
+                <span className='text-middle'>
+                    {to?.file}
+                    {to?.rank}
+                </span>
             </li>
         </div>
     );

@@ -60,14 +60,14 @@ export function InvitePlayersCard({ inviteUrl }: { inviteUrl: string }) {
             animate={{ opacity: 1, y: 0 }}
             className='
                 w-full max-w-md mx-auto mt-6
-                rounded-2xl p-6 shadow-xl
+                rounded-xl p-6 shadow-xl
                 bg-white/10 dark:bg-black/20
                 backdrop-blur-xl border border-white/20
             '
         >
             <Heading
                 as={Headings.H4}
-                classNames='!text-xl uppercase text-center font-semibold mb-4'
+                classNames='uppercase text-center font-semibold mb-4'
             >
                 Invite Opponent
             </Heading>
@@ -78,19 +78,12 @@ export function InvitePlayersCard({ inviteUrl }: { inviteUrl: string }) {
                     readOnly
                     value={inviteUrl}
                     className='
-                        w-full rounded-lg px-3 py-2
-                        bg-white/20 dark:bg-black/30
-                        border border-white/30
-                        text-sm focus:outline-none
+                        w-full rounded-lg px-3 py-2 bg-white/20 dark:bg-black/30 border-common text-middle focus:outline-none
                     '
                 />
                 <ButtonsCard
                     onClick={copyToClipboard}
-                    className='
-                        p-2 rounded-lg bg-white/20 hover:bg-white/30
-                        dark:bg-black/40 dark:hover:bg-black/50
-                        transition
-                    '
+                    className='text-middle p-2 rounded-lg bg-white/20 hover:bg-white/30 dark:bg-black/40 dark:hover:bg-black/50 transition'
                     icon={<FaCopy className='w-4 h-4' />}
                     iconPosition='left'
                 ></ButtonsCard>
@@ -100,10 +93,7 @@ export function InvitePlayersCard({ inviteUrl }: { inviteUrl: string }) {
             <ButtonsCard
                 onClick={shareNative}
                 className='
-                    w-full mb-3 py-2 rounded-lg
-                    flex items-center justify-center gap-2
-                    text-white font-medium
-                    hover:opacity-90 transition
+                    w-full mb-3 py-2 rounded-lg flex items-center justify-center gap-2 text-middle hover:opacity-90 transition
                 '
                 icon={<FaShare className='w-4 h-4' />}
                 iconPosition='left'
@@ -114,11 +104,8 @@ export function InvitePlayersCard({ inviteUrl }: { inviteUrl: string }) {
             {/* Toggle QR */}
             <ButtonsCard
                 onClick={() => setShowQR((s) => !s)}
-                className='
-                    w-full py-2 rounded-lg border border-white/20
-                    bg-white/10 dark:bg-black/20
-                    hover:bg-white/20 dark:hover:bg-black/30
-                    transition flex items-center justify-center gap-2
+                className='text-middle w-full py-2 rounded-lg border-common
+                    bg-white/10 dark:bg-black/20 hover:bg-white/20 dark:hover:bg-black/30 transition flex items-center justify-center gap-2
                 '
                 icon={<FaQrcode className='w-4 h-4' />}
                 iconPosition='left'

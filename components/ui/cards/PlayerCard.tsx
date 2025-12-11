@@ -35,11 +35,14 @@ const PlayerCard = ({ playerId, icon }: PlayerCardProps) => {
     }, [playerId]);
 
     return (
-        <div className='border-common flex items-center gap-4 p-4 rounded-xl'>
-            {<span className='text-3xl'>{icon ?? <></>}</span>}
-            <div className='flex items-center flex-col'>
-                <UserAvatar className='!w-8 !h-8' url={playerAvatar} />
-                <span className='text-sm'>{playerName}</span>
+        <div className='border-common flex items-center p-2 gap-1 xs:gap-4 2xs:p-2 sm:p-4 rounded-xl'>
+            {<div className='text-middle'>{icon ?? <></>}</div>}
+            <div className='flex items-center flex-col gap-1 xs:gap-2'>
+                <UserAvatar
+                    className='!w-6 !h-6 md:!w-8 md:!h-8'
+                    url={playerAvatar}
+                />
+                <span className='text-middle'>{playerName}</span>
             </div>
         </div>
     );

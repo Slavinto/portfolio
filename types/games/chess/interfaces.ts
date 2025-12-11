@@ -8,7 +8,6 @@ import {
 } from "./types";
 import { Position } from "@/lib/games/chess/game-logic/main/position";
 import { Piece } from "@/lib/games/chess/game-logic/main/piece";
-import { ReactNode } from "react";
 
 export interface IBoardInitializer {
     initializeBoard(board: Board): void;
