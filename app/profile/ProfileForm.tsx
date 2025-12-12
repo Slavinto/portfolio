@@ -14,13 +14,26 @@ import { toast } from "react-toastify";
 import CustomToastContainer from "@/components/ui/CustomToastContainer";
 import PlayerStats from "./PlayerStats";
 import { usePlayers } from "@/hooks/games/usePlayers";
+import { useRouter } from "next/navigation";
 
 export default function ProfileForm({ user }: { user: User }) {
+    const router = useRouter();
+    // const {
+    //     data: user,
+    //     isLoading: isLoadingUser,
+    //     error: userError,
+    // } = useUser();
+
     const { data: players, isLoading } = usePlayers(user.id, null);
 
     const player = players?.player;
     const [bio, setBio] = useState<string>(player?.bio ?? "");
     const [username, setUsername] = useState<string>(player?.username ?? "");
+
+    if (!user?.id) {
+        console.info("Failed to load page. Not logged in");
+        router.push("/auth/login");
+    }
     if (isLoading)
         return (
             <div className='w-full'>

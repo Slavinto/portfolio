@@ -34,7 +34,11 @@ import { usePlayers } from "@/hooks/games/usePlayers";
 export default function GamePage() {
     const { id: gameId } = useParams<{ id: string }>();
     const router = useRouter();
-    const { data: user } = useUser();
+    const {
+        data: user,
+        // isLoading: isLoadingUser,
+        // error: userError,
+    } = useUser();
 
     const { game, isLoadingGame, gameError } = useJoinedGame(gameId);
 
@@ -215,6 +219,7 @@ export default function GamePage() {
         game?.id,
         opponentId,
     ]);
+
     useEffect(() => {
         if (
             !isLoadingMessages &&
@@ -341,9 +346,9 @@ export default function GamePage() {
                         : "max-h-0 opacity-0"
                 }`}
                 >
-                    {asideOpen && (
+                    {asideOpen && game && (
                         <>
-                            {game && <Room />}
+                            <Room />
                             <Moves />
                         </>
                     )}
