@@ -84,10 +84,6 @@
         /* @apply border-border !scroll-smooth; */
         @apply dark:text-white-300 text-black-200;
     }
-
-    path {
-        @apply themed-text-icons;
-    }
 }
 
 @layer utilities {
@@ -267,4 +263,65 @@
     .text-balance {
         text-wrap: balance;
     }
+}
+@layer utilities {
+    input,
+    textarea,
+    select {
+        background-color: var(--background) !important;
+    }
+    /* ===============
+   Autofill reset (Chrome + Safari + Firefox)
+   Place this at the *end* of globals.css so it overrides UA rules.
+   =============== */
+
+    /* Chrome / WebKit */
+    input:-webkit-autofill,
+    input:-webkit-autofill:hover,
+    input:-webkit-autofill:focus,
+    textarea:-webkit-autofill,
+    textarea:-webkit-autofill:hover,
+    textarea:-webkit-autofill:focus,
+    select:-webkit-autofill,
+    select:-webkit-autofill:hover,
+    select:-webkit-autofill:focus {
+        -webkit-box-shadow: 0 0 0px 1000px transparent inset !important;
+        box-shadow: 0 0 0px 1000px transparent inset !important;
+        -webkit-text-fill-color: inherit !important;
+        caret-color: auto !important;
+    }
+
+    /* Firefox */
+    input:-moz-autofill,
+    input:-moz-autofill:hover,
+    input:-moz-autofill:focus,
+    textarea:-moz-autofill,
+    textarea:-moz-autofill:hover,
+    textarea:-moz-autofill:focus,
+    select:-moz-autofill,
+    select:-moz-autofill:hover,
+    select:-moz-autofill:focus {
+        box-shadow: 0 0 0px 1000px transparent inset !important;
+        -moz-text-fill-color: inherit !important;
+        background-clip: padding-box !important;
+        caret-color: auto !important;
+    }
+}
+/* Optional: set a custom background and text color for autofill if you want */
+
+input:-moz-autofill {
+    animation-name: _ff_autofill_fix;
+    animation-duration: 0.01s;
+    animation-iteration-count: 1;
+}
+@keyframes _ff_autofill_fix {
+    from {
+    }
+    to {
+    }
+}
+
+html body input:-moz-autofill {
+    box-shadow: 0 0 0px 1000px #0b1220 inset !important;
+    -moz-text-fill-color: #e6eef8 !important;
 }

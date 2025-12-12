@@ -1,7 +1,8 @@
 import { RiHome6Line } from "react-icons/ri";
 import { VscGithubAlt } from "react-icons/vsc";
 import { FaChess, FaRegQuestionCircle, FaRegUserCircle } from "react-icons/fa";
-import { ButtonsCard } from "@/components/ui";
+import { ButtonsCard, Heading } from "@/components/ui";
+import { Headings } from "@/types/enums";
 
 export const menuItems = [
     {
@@ -13,9 +14,13 @@ export const menuItems = [
             <ButtonsCard
                 iconPosition='left'
                 className='flex p-8 gap-4 w-full'
-                icon={<RiHome6Line />}
+                icon={
+                    <Heading as={Headings.H4}>
+                        <RiHome6Line />
+                    </Heading>
+                }
             >
-                Home
+                <Heading as={Headings.H4}>Home</Heading>
             </ButtonsCard>
         ),
     },
@@ -28,9 +33,13 @@ export const menuItems = [
             <ButtonsCard
                 iconPosition='left'
                 className='flex p-8 gap-4 w-full'
-                icon={<FaRegQuestionCircle />}
+                icon={
+                    <Heading as={Headings.H4}>
+                        <FaRegQuestionCircle />
+                    </Heading>
+                }
             >
-                About
+                <Heading as={Headings.H4}>About</Heading>
             </ButtonsCard>
         ),
     },
@@ -43,9 +52,13 @@ export const menuItems = [
             <ButtonsCard
                 iconPosition='left'
                 className='flex p-8 gap-4 w-full'
-                icon={<VscGithubAlt />}
+                icon={
+                    <Heading as={Headings.H4}>
+                        <VscGithubAlt />
+                    </Heading>
+                }
             >
-                Projects
+                <Heading as={Headings.H4}>Projects</Heading>
             </ButtonsCard>
         ),
     },
@@ -58,9 +71,13 @@ export const menuItems = [
             <ButtonsCard
                 iconPosition='left'
                 className='flex p-8 gap-4 w-full'
-                icon={<FaRegUserCircle />}
+                icon={
+                    <Heading as={Headings.H4}>
+                        <FaRegUserCircle />
+                    </Heading>
+                }
             >
-                Sign&nbsp;In
+                <Heading as={Headings.H4}>Sign&nbsp;In</Heading>
             </ButtonsCard>
         ),
     },
@@ -73,9 +90,13 @@ export const menuItems = [
             <ButtonsCard
                 iconPosition='left'
                 className='flex p-8 gap-4 w-full overflow-ellipsis'
-                icon={<FaChess />}
+                icon={
+                    <Heading as={Headings.H4}>
+                        <FaChess />
+                    </Heading>
+                }
             >
-                Play&nbsp;some&nbsp;chess
+                <Heading as={Headings.H4}>Play&nbsp;some&nbsp;chess</Heading>
             </ButtonsCard>
         ),
     },

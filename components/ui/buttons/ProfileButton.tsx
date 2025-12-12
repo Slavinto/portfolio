@@ -1,13 +1,8 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { useAppTheme } from "@/hooks/useAppTheme";
-
-import { LuSunMedium, LuMoon } from "react-icons/lu";
-import { FaRegQuestionCircle, FaRegUserCircle } from "react-icons/fa";
+import { FaRegUserCircle } from "react-icons/fa";
 
 import { ButtonsCard } from "..";
-import { AppTheme } from "@/types/enums";
 import { useRouter } from "next/navigation";
 
 const ProfileButton = () => {

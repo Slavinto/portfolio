@@ -15,7 +15,7 @@ export default function ModalMenu() {
                 <ModalMenuButton />
             </ModalTrigger>
 
-            <ModalBody className='w-full sm:max-w-[50%] ...'>
+            <ModalBody className='w-full xs:max-w-[50%]'>
                 <ModalContent>
                     <MenuItems />
                 </ModalContent>
