@@ -34,11 +34,7 @@ import { usePlayers } from "@/hooks/games/usePlayers";
 export default function GamePage() {
     const { id: gameId } = useParams<{ id: string }>();
     const router = useRouter();
-    const {
-        data: user,
-        // isLoading: isLoadingUser,
-        // error: userError,
-    } = useUser();
+    const { data: user } = useUser();
 
     const { game, isLoadingGame, gameError } = useJoinedGame(gameId);
 

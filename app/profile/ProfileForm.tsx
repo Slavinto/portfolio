@@ -18,14 +18,7 @@ import { useRouter } from "next/navigation";
 
 export default function ProfileForm({ user }: { user: User }) {
     const router = useRouter();
-    // const {
-    //     data: user,
-    //     isLoading: isLoadingUser,
-    //     error: userError,
-    // } = useUser();
-
     const { data: players, isLoading } = usePlayers(user.id, null);
-
     const player = players?.player;
     const [bio, setBio] = useState<string>(player?.bio ?? "");
     const [username, setUsername] = useState<string>(player?.username ?? "");
