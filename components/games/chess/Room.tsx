@@ -22,7 +22,7 @@ const Room = () => {
             <Heading as={Headings.H4} classNames='font-semibold mb-3'>
                 Room
             </Heading>
-            <div className='flex gap-8 w-full justify-center'>
+            <div className='flex flex-col gap-8 w-full justify-center'>
                 <PlayerCard
                     icon={<FaChessKing fill={playerColor} />}
                     playerId={playerId}

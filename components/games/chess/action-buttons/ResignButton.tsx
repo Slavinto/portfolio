@@ -3,7 +3,7 @@ import { ButtonsCard } from "@/components/ui";
 import { ToastModal } from "../../../ui/toast/ToastModal";
 import { toast } from "react-toastify";
 import { useChessGamePageContext } from "@/app/context/ChessGamePageContext";
-import { finishGame } from "@/lib/services/chess-db";
+import { finishGame } from "@/lib/games/chess/actions/finishGame";
 
 function ResignButton() {
     const { state } = useChessGamePageContext();

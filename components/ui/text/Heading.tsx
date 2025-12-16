@@ -31,7 +31,7 @@ const Heading = ({
         </h3>
     ) : as === Headings.H4 ? (
         <h4
-            className={`text-2xs 2xs:text-xs xs:text-sm md:text-lg lg:text-2xl xl:text-4xl font-medium text-center ${classNames}`}
+            className={`text-middle text-2xs 2xs:text-xs xs:text-sm md:text-lg lg:text-2xl xl:text-4xl font-medium text-center ${classNames}`}
         >
             {children}
         </h4>

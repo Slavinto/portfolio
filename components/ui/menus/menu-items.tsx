@@ -11,40 +11,18 @@ import { createClient } from "@/lib/supabase/client";
 import { useQueryClient } from "@tanstack/react-query";
 import Heading from "../text/Heading";
 import { Headings } from "@/types/enums";
+import SignOutButton from "@/app/auth/SignOutButton";
 
 const MenuItems = () => {
     const router = useRouter();
     const { data: user, isLoading } = useUser();
     const { setOpen } = useModal();
-    const supabase = createClient();
-    const queryClient = useQueryClient();
 
     return (
         <motion.div className='flex flex-col gap-4 lg:gap-8 justify-center px-0 xs:px-0 sm:px-2'>
             {menuItems.map(({ id, sectionId, url, title, icon }) => {
                 return !isLoading && !!user?.id && sectionId === "profile" ? (
-                    <ButtonsCard
-                        onClick={() => {
-                            supabase.auth.signOut();
-                            queryClient.invalidateQueries({
-                                queryKey: ["user"],
-                            });
-                            queryClient.invalidateQueries({
-                                queryKey: ["userGames"],
-                            });
-                            setOpen(false);
-                        }}
-                        key={id}
-                        iconPosition='left'
-                        className='flex flex-1 p-8 w-full cursor-pointer gap-2 items-center uppercase'
-                        icon={
-                            <Heading as={Headings.H4}>
-                                <FaArrowRightToBracket />
-                            </Heading>
-                        }
-                    >
-                        <Heading as={Headings.H4}>Sign Out</Heading>
-                    </ButtonsCard>
+                    <SignOutButton />
                 ) : (
                     <div
                         onClick={() => {

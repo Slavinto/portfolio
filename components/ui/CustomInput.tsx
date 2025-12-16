@@ -11,6 +11,7 @@ type CustomInputProps = {
     classNames?: string;
     disabled?: boolean;
     name?: string;
+    onPaste?: React.ClipboardEventHandler<HTMLInputElement>;
     placeholder?: string;
     ref?: MutableRefObject<HTMLInputElement | null>;
     required?: boolean;
@@ -26,6 +27,7 @@ const CustomInput = ({
     handler,
     classNames,
     name,
+    onPaste,
     placeholder = "Type a message…",
     ref,
     required = false,
@@ -41,6 +43,7 @@ const CustomInput = ({
             disabled={disabled}
             value={value}
             onChange={handler}
+            onPaste={onPaste}
             placeholder={placeholder}
             ref={ref}
             required={required}

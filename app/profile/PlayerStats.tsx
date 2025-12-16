@@ -6,7 +6,7 @@ import React from "react";
 
 const PlayerStats = ({ player }: { player: IPlayer }) => {
     return (
-        <div className='flex flex-col gap-4  max-w-64'>
+        <div className='flex flex-col max-w-64'>
             <Heading
                 as={Headings.H3}
                 classNames='text-muted-foreground text-2xl font-bold w-full'
@@ -48,6 +48,18 @@ const PlayerStats = ({ player }: { player: IPlayer }) => {
                 disabled={true}
                 classNames='text-muted-foreground !bg-muted'
                 defaultValue={player.draws}
+            />
+            <Heading
+                as={Headings.H4}
+                classNames='text-muted-foreground font-thin w-full'
+            >
+                Rating:
+            </Heading>{" "}
+            <CustomInput
+                id={"player-draws"}
+                disabled={true}
+                classNames='text-muted-foreground !bg-muted'
+                defaultValue={player.rating}
             />
         </div>
     );

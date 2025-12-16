@@ -29,14 +29,27 @@ export default function AuthForm() {
                     password,
                 });
                 if (error) throw error;
-                toast.info("Check your email to confirm your account.");
+
+                // toast.info("Check your email to confirm your account.");
             } else {
                 const { error } = await supabase.auth.signInWithPassword({
                     email,
                     password,
                 });
+
                 if (error) throw error;
-                const user = await supabase.auth.getUser();
+                const { data: user } = await supabase.auth.getUser();
+
+                if (!user) throw new Error("Error! User not found");
+
+                await supabase.from("players").insert({
+                    id: user.user?.id,
+                    username: user.user?.email,
+                    bio: "",
+                    rating: 0,
+                    wins: 0,
+                    losses: 0,
+                });
             }
         } catch (err: any) {
             setError(err.message);

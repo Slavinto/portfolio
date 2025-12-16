@@ -6,8 +6,11 @@ import dynamic from "next/dynamic";
 import { GridSkeleton } from "@/components/grid";
 import { ButtonsCard } from "@/components/ui";
 import { useRouter } from "next/navigation";
+import { useEnsurePlayer } from "@/hooks/auth/useEnsurePlayer";
 
 export default function Home() {
+    useEnsurePlayer();
+
     const Hero = dynamic(() => import("@/components/hero"), {
         ssr: false,
         loading: () => <HeroSkeleton repeatPattern={3} />,

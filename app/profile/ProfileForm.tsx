@@ -33,7 +33,7 @@ export default function ProfileForm({ user }: { user: User }) {
                 <ChessGameSkeleton repeatPattern={3} />
             </div>
         );
-    if (!player || !player.bio || !player.username) {
+    if (!player || !player.username) {
         return null;
     }
     async function save() {
@@ -52,7 +52,7 @@ export default function ProfileForm({ user }: { user: User }) {
                     as={Headings.H3}
                     classNames='text-muted-foreground text-2xl font-bold mb-4 w-full'
                 >
-                    {`${player.username}'s`}&nbsp;Profile
+                    {`Player: ${player.username}`}
                 </Heading>
 
                 <div className='md:grid md:grid-cols-3 md:items-end gap-12 flex flex-col mt-8 items-center'>

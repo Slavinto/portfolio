@@ -4,6 +4,7 @@ import { useChessGamePageContext } from "@/app/context/ChessGamePageContext";
 import { Board } from "@/lib/games/chess/game-logic/main/board/board";
 import { Position } from "@/lib/games/chess/game-logic/main/position";
 import { GameStatus, Move } from "@/types/games/chess";
+import { cn } from "@/utils/cn";
 import {
     getPositionForCell,
     isLegalToMoveToPosition,
@@ -74,6 +75,7 @@ export default function ChessBoard({
         }
 
         if (selected) {
+            console.log({ selected });
             const selectedPiece = board.getPieceAtPosition(selected);
             if (!selectedPiece) return;
 
@@ -116,13 +118,20 @@ export default function ChessBoard({
                                           )
                                     : () => handleSquareClick(pos)
                             }
-                            className={`relative flex items-center justify-center aspect-square select-none ${
-                                isSelected ? "shadow-inner shadow-black/40" : ""
-                            } ${
+                            className={cn(
+                                "relative flex items-center justify-center aspect-square select-none transition",
                                 (row + col) % 2 === 0
                                     ? "bg-purple"
-                                    : "icon-bg-dark"
-                            }`}
+                                    : "icon-bg-dark",
+                                isSelected && [
+                                    "ring-2 ring-blue-500",
+                                    "ring-inset",
+                                    "after:absolute after:inset-0",
+                                    "after:bg-blue-500/20",
+                                    "after:pointer-events-none",
+                                    "after:content-['']",
+                                ]
+                            )}
                         >
                             {piece ? (
                                 <span

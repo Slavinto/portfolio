@@ -1,6 +1,6 @@
 export const runtime = "nodejs";
 
-import { finishGame } from "@/lib/services/chess-db";
+import { finishGame } from "@/lib/games/chess/actions/finishGame";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { NextRequest, NextResponse } from "next/server";
 

@@ -10,6 +10,7 @@ import CustomToastContainer from "@/components/ui/CustomToastContainer";
 import { useRouter } from "next/navigation";
 import ChessGameSkeleton from "@/components/ui/patterns/ChessGameSkeleton";
 import { toast } from "react-toastify";
+import JoinGameCard from "@/components/ui/cards/JoinGameCard";
 
 export default function ChessHomePage() {
     const {
@@ -28,7 +29,10 @@ export default function ChessHomePage() {
     const isBusy = isLoadingUser || isLoadingUserGames;
     const isError = userError || gamesError;
 
-    if (isError || !user || !games) {
+    if (isError) {
+        toast.error(
+            `Application encountered an error: ${userError ?? gamesError}`
+        );
         return <ChessGameSkeleton repeatPattern={3} />;
     }
 
@@ -39,19 +43,19 @@ export default function ChessHomePage() {
     return (
         <section className='flex flex-col gap-6 py-16 px-4 w-full max-w-3xl mx-auto'>
             <CustomToastContainer />
-            <header className='flex flex-col-reverse gap-8 sm:flex-row sm:justify-between items-center border-b border-border pb-4'>
-                <Heading as={Headings.H2}>Your Games</Heading>
+            <header className='flex flex-col gap-8 sm:flex-row sm:justify-between items-center border-b border-border pb-4'>
                 <ButtonsCard
                     className='cursor-pointer dark:btn-gradient btn-gradient-light py-2 px-4 md:px-10 md:py-6 gap-1'
                     icon={<FaRegChessKnight className='text-xl' />}
                     iconPosition='left'
                     onClick={() => router.push("/chess/create")}
                 >
-                    <p className='font-normal text-base md:text-md lg:text-lg xl:text-xl'>
-                        Start&nbsp;new&nbsp;Game
-                    </p>
+                    Start&nbsp;new&nbsp;Game
                 </ButtonsCard>
+                <div className='h-32 border border-common hidden sm:flex'></div>
+                <JoinGameCard />
             </header>
+            <Heading as={Headings.H4}>Your Games</Heading>
 
             <ul className='flex flex-col gap-3'>
                 {!games || games.length === 0 ? (

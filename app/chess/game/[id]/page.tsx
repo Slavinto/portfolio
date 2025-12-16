@@ -27,9 +27,10 @@ import { useChessMessages } from "@/hooks/useChessMessages";
 import { useChatChannel } from "@/hooks/games/chess/useChatChannel";
 import { Headings } from "@/types/enums";
 import { Board } from "@/lib/games/chess/game-logic/main/board/board";
-import { finishGame } from "@/lib/services/chess-db";
 import { InvitePlayersCard } from "@/components/ui/cards/InvitePlayersCard";
 import { usePlayers } from "@/hooks/games/usePlayers";
+import { useEnsurePlayer } from "@/hooks/auth/useEnsurePlayer";
+import { finishGame } from "@/lib/games/chess/actions/finishGame";
 
 export default function GamePage() {
     const { id: gameId } = useParams<{ id: string }>();
@@ -85,6 +86,7 @@ export default function GamePage() {
             return;
         }
         prevOfferRef.current = offerRow;
+        console.log({ offerRow });
         if (offerRow.from_player !== state.player?.id) {
             ToastModal(() => acceptOffer(offerRow.id), {
                 message: `Opponent offers a ${offerRow.type}`,
