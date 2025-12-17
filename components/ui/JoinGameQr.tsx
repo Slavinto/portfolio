@@ -31,10 +31,10 @@ export function JoinGameQR({ onClose }: Props) {
                         fps: 10,
                         qrbox: { width: 250, height: 250 },
                     },
-                    (decodedText) => {
+                    (gameId) => {
                         if (!isActive) return;
 
-                        const gameId = extractGameIdFromText(decodedText);
+                        // const gameId = extractGameIdFromText(decodedText);
 
                         if (!gameId) {
                             toast.error("Invalid game QR");

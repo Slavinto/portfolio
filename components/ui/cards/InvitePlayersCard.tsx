@@ -8,6 +8,7 @@ import { FaCopy, FaQrcode, FaShare } from "react-icons/fa";
 import { ButtonsCard } from "../buttons/tailwindcss-buttons";
 import Heading from "../text/Heading";
 import { Headings } from "@/types/enums";
+import { extractGameIdFromText } from "@/lib/helpers";
 
 export function InvitePlayersCard({ inviteUrl }: { inviteUrl: string }) {
     const [showQR, setShowQR] = useState(false);
@@ -124,7 +125,10 @@ export function InvitePlayersCard({ inviteUrl }: { inviteUrl: string }) {
                         className='flex justify-center pt-6'
                     >
                         <div className='p-4 rounded-xl bg-white shadow-md'>
-                            <QRCode value={inviteUrl} size={150} />
+                            <QRCode
+                                value={extractGameIdFromText(inviteUrl) ?? ""}
+                                size={150}
+                            />
                         </div>
                     </motion.div>
                 )}

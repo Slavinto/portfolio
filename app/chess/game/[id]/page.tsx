@@ -70,6 +70,11 @@ export default function GamePage() {
     console.log({ isBusy, isGameLoaded });
 
     useEffect(() => {
+        resetRef.current = false;
+        initializedRef.current = false;
+    }, [gameId]);
+
+    useEffect(() => {
         if (!resetRef.current) {
             console.log("Resetting game");
             dispatch({ type: "RESET_GAME_STATE" });
@@ -157,18 +162,12 @@ export default function GamePage() {
 
     // initialyzing game
     useEffect(() => {
-        if (!gameId || initializedRef.current) {
+        if (!gameId || initializedRef.current || !resetRef.current || !game) {
             return;
         }
-        if (!state.gameRow && resetRef.current) {
-            if (game) {
-                console.log("Initializing game...");
-                dispatch({ type: "INIT_GAME", payload: { gameRow: game } });
-                initializedRef.current = true;
-            } else if (!game) {
-                console.log("Error. Invalid game row object");
-            }
-        }
+
+        dispatch({ type: "INIT_GAME", payload: { gameRow: game } });
+        initializedRef.current = true;
     }, [gameId, game]);
 
     // initialyzing player
