@@ -32,9 +32,7 @@ export const extractTotalPages = (linkHeader: string | null) => {
 export function extractGameIdFromText(text: string): string | null {
     try {
         const url = new URL(text.trim());
-
-        const match = url.pathname.match(/^\/chess\/game\/([a-f0-9-]{36})$/i);
-
+        const match = url.pathname.match(/\/chess\/game\/([a-f0-9-]{36})$/i);
         return match?.[1] ?? null;
     } catch {
         return null;

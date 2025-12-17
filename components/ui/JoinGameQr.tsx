@@ -18,6 +18,7 @@ export function JoinGameQR({ onClose }: Props) {
 
     useEffect(() => {
         let isActive = true;
+        const noopQrError = () => {};
 
         async function startScanner() {
             try {
@@ -47,11 +48,7 @@ export function JoinGameQR({ onClose }: Props) {
                             router.push(`/chess/game/${gameId}`);
                         });
                     },
-                    (errorMessage) => {
-                        // This fires continuously when no QR is detected.
-                        // DO NOT toast here.
-                        // Optionally console.debug(errorMessage);
-                    }
+                    noopQrError
                 );
             } catch (err) {
                 console.error(err);
