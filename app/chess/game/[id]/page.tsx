@@ -61,7 +61,7 @@ export default function GamePage() {
     const prevOfferRef = useRef<OfferRow | null>(null);
     const [asideOpen, setAsideOpen] = useState(true);
 
-    const isBusy = isLoadingGame || isLoadingPlayers || isLoadingMessages;
+    const isBusy = isLoadingGame || isLoadingPlayers;
 
     const isError = gameError || playersError;
 
@@ -233,8 +233,7 @@ export default function GamePage() {
     const { gameRow } = state;
     console.log({ BoardState: state });
 
-    const isGameReady =
-        !!gameRow && !!state?.player && isGameLoaded && !state.isLoading;
+    const isGameReady = !!gameRow && !!state?.player && isGameLoaded;
 
     if (isBusy || !isGameReady) return <ChessGameSkeleton repeatPattern={3} />;
     if (!game || !gameRow)
