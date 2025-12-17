@@ -3,14 +3,18 @@
 import { useQuery } from "@tanstack/react-query";
 import { createClient } from "@/lib/supabase/client";
 
-export function usePlayers(playerId: string | null, opponentId: string | null) {
+export function usePlayers(
+    playerId: string | null,
+    opponentId: string | null,
+    { playersEnabled }: { playersEnabled: boolean }
+) {
     const supabase = createClient();
 
     // Only include non-null IDs
     const ids = [playerId, opponentId].filter((id) => !!id) as string[];
 
     // Enable only if there is at least 1 valid ID
-    const enabled = ids.length > 0;
+    const enabled = ids.length > 0 && playersEnabled;
 
     return useQuery({
         queryKey: ["players", ...ids],

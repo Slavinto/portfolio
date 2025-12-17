@@ -46,11 +46,13 @@ export default function GamePage() {
                 : game.player_white
             : null;
 
+    const playersEnabled = Boolean(user?.id && opponentId);
+
     const {
         data: players,
         isLoading: isLoadingPlayers,
         error: playersError,
-    } = usePlayers(user?.id ?? null, opponentId);
+    } = usePlayers(user?.id ?? null, opponentId, { playersEnabled });
 
     console.log({ players });
     const { chessMessages, isLoadingMessages } = useChessMessages();
