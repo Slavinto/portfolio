@@ -58,8 +58,6 @@ export default function GamePage() {
     const { chessMessages, isLoadingMessages } = useChessMessages();
     const { state, dispatch } = useChessGamePageContext();
 
-    const resetRef = useRef<boolean>(false);
-    const initializedRef = useRef<boolean>(false);
     const prevOfferRef = useRef<OfferRow | null>(null);
     const [asideOpen, setAsideOpen] = useState(true);
 
@@ -67,22 +65,22 @@ export default function GamePage() {
 
     const isError = gameError || playersError;
 
-    const isGameLoaded = resetRef.current && initializedRef.current;
+    const isGameLoaded = !!state.gameRow;
     console.log({ isLoadingGame, isLoadingPlayers, isLoadingMessages });
     console.log({ isBusy, isGameLoaded });
 
-    useEffect(() => {
-        resetRef.current = false;
-        initializedRef.current = false;
-    }, [gameId]);
+    // useEffect(() => {
+    //     resetRef.current = false;
+    //     initializedRef.current = false;
+    // }, [gameId]);
 
-    useEffect(() => {
-        if (!resetRef.current) {
-            console.log("Resetting game");
-            dispatch({ type: "RESET_GAME_STATE" });
-            resetRef.current = true;
-        }
-    }, [gameId]);
+    // useEffect(() => {
+    //     if (!resetRef.current) {
+    //         console.log("Resetting game");
+    //         dispatch({ type: "RESET_GAME_STATE" });
+    //         resetRef.current = true;
+    //     }
+    // }, [gameId]);
 
     // Realtime chat
     useChatChannel();
@@ -164,13 +162,22 @@ export default function GamePage() {
 
     // initialyzing game
     useEffect(() => {
-        if (!gameId || initializedRef.current || !resetRef.current || !game) {
-            return;
-        }
+        if (!game || state.gameRow) return;
 
-        dispatch({ type: "INIT_GAME", payload: { gameRow: game } });
-        initializedRef.current = true;
-    }, [gameId, game]);
+        dispatch({
+            type: "INIT_GAME",
+            payload: { gameRow: game },
+        });
+    }, [game, state.gameRow, dispatch]);
+
+    // useEffect(() => {
+    //     if (!gameId || initializedRef.current || !resetRef.current || !game) {
+    //         return;
+    //     }
+
+    //     dispatch({ type: "INIT_GAME", payload: { gameRow: game } });
+    //     initializedRef.current = true;
+    // }, [gameId, game]);
 
     // initialyzing player
     useEffect(() => {
@@ -235,7 +242,7 @@ export default function GamePage() {
     const { gameRow } = state;
     console.log({ BoardState: state });
 
-    const isGameReady = !!gameRow && !!state?.player && isGameLoaded;
+    const isGameReady = !isBusy && !!gameRow && !!state?.player;
 
     if (isBusy || !isGameReady) return <ChessGameSkeleton repeatPattern={3} />;
     if (!game || !gameRow)
