@@ -13,12 +13,12 @@ import ProfileHeader from "./ProfileHeader";
 import { toast } from "react-toastify";
 import CustomToastContainer from "@/components/ui/CustomToastContainer";
 import PlayerStats from "./PlayerStats";
-import { usePlayers } from "@/hooks/games/usePlayers";
 import { useRouter } from "next/navigation";
+import { usePlayer } from "@/hooks/games/usePlayer";
 
 export default function ProfileForm({ user }: { user: User }) {
     const router = useRouter();
-    const { data: players, isLoading } = usePlayers(user.id, null);
+    const { data: players, isLoading } = usePlayer(user.id);
     const player = players?.player;
     const [bio, setBio] = useState<string>(player?.bio ?? "");
     const [username, setUsername] = useState<string>(player?.username ?? "");
