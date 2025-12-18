@@ -19,24 +19,34 @@ export function JoinGameQR({ onClose }: Props) {
         const reader = new BrowserMultiFormatReader();
         let active = true;
 
-        reader.decodeFromVideoDevice(undefined, videoRef.current!, (result) => {
-            if (!active || !result) return;
+        reader.decodeFromConstraints(
+            {
+                video: {
+                    facingMode: { ideal: "environment" },
+                    width: { ideal: 1280 },
+                    height: { ideal: 720 },
+                },
+            },
+            videoRef.current!,
+            (result) => {
+                if (!active || !result) return;
 
-            const gameId = result.getText().trim();
-            if (!UUID_REGEX.test(gameId)) return;
+                const gameId = result.getText().trim();
+                if (!UUID_REGEX.test(gameId)) return;
 
-            active = false;
-            // @ts-expect-error
-            reader.reset(); // ✅ correct stop
+                active = false;
+                // @ts-expect-error
+                reader.reset();
 
-            onClose();
-            router.push(`/chess/game/${gameId}`);
-        });
+                onClose();
+                router.push(`/chess/game/${gameId}`);
+            }
+        );
 
         return () => {
             active = false;
             // @ts-expect-error
-            reader.reset(); // ✅ cleanup
+            reader.reset();
         };
     }, [router, onClose]);
 
@@ -47,6 +57,7 @@ export function JoinGameQR({ onClose }: Props) {
                 className='w-full h-full object-cover'
                 autoPlay
                 muted
+                playsInline
             />
         </div>
     );
