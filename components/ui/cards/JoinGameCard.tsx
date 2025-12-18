@@ -36,13 +36,6 @@ const JoinGameCard = () => {
             >
                 Join Game
             </CustomButton>
-
-            <CustomButton
-                handler={() => setShowQR(true)}
-                classNames='btn-secondary w-full'
-            >
-                Join via QR
-            </CustomButton>
         </div>
     );
 };
