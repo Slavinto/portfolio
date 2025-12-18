@@ -1,83 +1,53 @@
 "use client";
 
+import { BrowserMultiFormatReader } from "@zxing/browser";
 import { useEffect, useRef } from "react";
-import { Html5Qrcode } from "html5-qrcode";
-import { extractGameIdFromText } from "@/lib/helpers";
 import { useRouter } from "next/navigation";
-import { toast } from "react-toastify";
 
 type Props = {
     onClose: () => void;
 };
 
-const QR_REGION_ID = "join-game-qr-region";
+const UUID_REGEX =
+    /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
 export function JoinGameQR({ onClose }: Props) {
+    const videoRef = useRef<HTMLVideoElement>(null);
     const router = useRouter();
-    const qrRef = useRef<Html5Qrcode | null>(null);
 
     useEffect(() => {
-        let isActive = true;
-        const noopQrError = () => {};
+        const reader = new BrowserMultiFormatReader();
+        let active = true;
 
-        async function startScanner() {
-            try {
-                const qr = new Html5Qrcode(QR_REGION_ID);
-                qrRef.current = qr;
-                const qrBoxSize = 180;
-                await qr.start(
-                    { facingMode: "environment" },
-                    {
-                        fps: 12,
-                        qrbox: { width: qrBoxSize, height: qrBoxSize },
-                        aspectRatio: 1,
-                        disableFlip: false,
-                    },
-                    (gameId) => {
-                        if (!isActive) return;
+        reader.decodeFromVideoDevice(undefined, videoRef.current!, (result) => {
+            if (!active || !result) return;
 
-                        // const gameId = extractGameIdFromText(decodedText);
+            const gameId = result.getText().trim();
+            if (!UUID_REGEX.test(gameId)) return;
 
-                        if (!gameId) {
-                            toast.error("Invalid game QR");
-                            return;
-                        }
+            active = false;
+            // @ts-expect-error
+            reader.reset(); // ✅ correct stop
 
-                        isActive = false;
-
-                        qr.stop().finally(() => {
-                            onClose();
-                            router.push(`/chess/game/${gameId}`);
-                        });
-                    },
-                    noopQrError
-                );
-            } catch (err) {
-                console.error(err);
-                toast.error("Failed to access camera");
-                onClose();
-            }
-        }
-
-        startScanner();
+            onClose();
+            router.push(`/chess/game/${gameId}`);
+        });
 
         return () => {
-            isActive = false;
-            if (qrRef.current?.isScanning) {
-                qrRef.current.stop().catch(() => {});
-            }
+            active = false;
+            // @ts-expect-error
+            reader.reset(); // ✅ cleanup
         };
-    }, [onClose, router]);
+    }, [router, onClose]);
 
     return (
-        <div className='flex flex-col gap-4 w-full'>
-            <div
-                id={QR_REGION_ID}
-                className='w-full aspect-square rounded-xl overflow-hidden bg-black'
+        <div className='w-full aspect-square rounded-xl overflow-hidden bg-black'>
+            <video
+                ref={videoRef}
+                className='w-full h-full object-cover'
+                autoPlay
+                muted
             />
-            <p className='text-sm text-muted-foreground text-center'>
-                Point your camera at the game QR code
-            </p>
         </div>
     );
 }
