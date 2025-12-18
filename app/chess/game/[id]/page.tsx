@@ -45,14 +45,14 @@ export default function GamePage() {
                 ? game.player_black
                 : game.player_white
             : null;
-
-    const playersEnabled = Boolean(user?.id && opponentId);
+    // console.log(user?.id, opponentId)
+    // const playersEnabled = Boolean(user?.id && opponentId);
 
     const {
         data: players,
         isLoading: isLoadingPlayers,
         error: playersError,
-    } = usePlayers(user?.id ?? null, opponentId, { playersEnabled });
+    } = usePlayers(user?.id ?? null, opponentId);
 
     console.log({ players });
     const { chessMessages, isLoadingMessages } = useChessMessages();
@@ -242,7 +242,7 @@ export default function GamePage() {
     const { gameRow } = state;
     console.log({ BoardState: state });
 
-    const isGameReady = !isBusy && !!gameRow && !!state?.player;
+    const isGameReady = !isBusy && !!gameRow && !!state.player;
 
     if (isBusy || !isGameReady) return <ChessGameSkeleton repeatPattern={3} />;
     if (!game || !gameRow)

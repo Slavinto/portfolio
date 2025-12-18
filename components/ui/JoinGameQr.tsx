@@ -24,12 +24,14 @@ export function JoinGameQR({ onClose }: Props) {
             try {
                 const qr = new Html5Qrcode(QR_REGION_ID);
                 qrRef.current = qr;
-
+                const qrBoxSize = 180;
                 await qr.start(
                     { facingMode: "environment" },
                     {
-                        fps: 10,
-                        qrbox: { width: 250, height: 250 },
+                        fps: 12,
+                        qrbox: { width: qrBoxSize, height: qrBoxSize },
+                        aspectRatio: 1,
+                        disableFlip: false,
                     },
                     (gameId) => {
                         if (!isActive) return;

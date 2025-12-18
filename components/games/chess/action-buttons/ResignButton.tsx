@@ -18,7 +18,7 @@ function ResignButton() {
     async function handleResign() {
         try {
             await finishGame(id, "resigned", opponentId);
-            router.push("/games"); // go back to games list
+            router.push("/chess"); // go back to games list
         } catch (err) {
             console.error("Failed to resign game:", err);
             toast.error("Error resigning the game.");

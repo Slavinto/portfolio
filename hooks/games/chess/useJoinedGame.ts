@@ -50,6 +50,7 @@ export function useJoinedGame(gameId: string) {
     /* ---------------- Auto-join logic ---------------- */
 
     useEffect(() => {
+        console.log({ userInUseJoinedGame: user, gameInUseJoinedGame: game });
         if (!user || !game || attemptedJoinRef.current) return;
 
         const alreadyJoined =

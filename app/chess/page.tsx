@@ -37,6 +37,9 @@ export default function ChessHomePage() {
     }
 
     if (isBusy) {
+        toast.info(
+            isLoadingUser ? "Loading user details" : "Loading user games"
+        );
         return <ChessGameSkeleton repeatPattern={3} />;
     }
 
