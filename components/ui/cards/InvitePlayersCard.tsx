@@ -125,10 +125,7 @@ export function InvitePlayersCard({ inviteUrl }: { inviteUrl: string }) {
                         className='flex justify-center pt-6'
                     >
                         <div className='p-4 rounded-xl bg-white shadow-md'>
-                            <QRCode
-                                value={extractGameIdFromText(inviteUrl) ?? ""}
-                                size={150}
-                            />
+                            <QRCode value={inviteUrl} size={150} />
                         </div>
                     </motion.div>
                 )}
