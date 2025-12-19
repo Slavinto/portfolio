@@ -50,7 +50,11 @@ export const ModalTrigger = ({
 }) => {
     const { setOpen } = useModal();
     return (
-        <button className={cn(className)} onClick={() => setOpen(true)}>
+        <button
+            key={Math.random()}
+            className={cn(className)}
+            onClick={() => setOpen(true)}
+        >
             {children}
         </button>
     );

@@ -8,6 +8,7 @@ import { ToastModal } from "../../../ui/toast/ToastModal";
 import { sendOffer } from "@/lib/services/chess-offers";
 import { useChessGamePageContext } from "@/app/context/ChessGamePageContext";
 import { usePresenceStore } from "@/data/games/chess/store/presence";
+import { useEffect } from "react";
 
 type OfferButtonProps = {
     type: OfferType;
@@ -33,11 +34,12 @@ export default function OfferButton({ type }: OfferButtonProps) {
         return s.onlinePlayers[opponentId ?? ""] === true;
     });
 
-    if (!user || !user.id) {
-        router.push("/auth/login");
-        toast.error("Must be logged in to send offers");
-        return null;
-    }
+    useEffect(() => {
+        if (!user || !user.id) {
+            toast.error("Must be logged in to send offers");
+            router.replace("/auth/login");
+        }
+    }, [user?.id]);
 
     if (!player || !gameRow || !opponent) {
         console.info("Invalid player or game data: ", { player, gameRow });

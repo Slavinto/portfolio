@@ -36,7 +36,18 @@ export default function ChessHomePage() {
     /* ---------- EFFECTS ---------- */
 
     useEffect(() => {
+        if (user === null && !isLoadingUser) {
+            router.replace("/auth/login");
+        }
+    }, [user, isLoadingUser, router]);
+
+    useEffect(() => {
         if (isError && !toastShownRef.current) {
+            console.error(
+                `Application encountered an error: ${
+                    userError?.message ?? gamesError?.message
+                }`
+            );
             toast.error(
                 `Application encountered an error: ${
                     userError?.message ?? gamesError?.message
@@ -48,7 +59,7 @@ export default function ChessHomePage() {
 
     useEffect(() => {
         if (isBusy && !toastShownRef.current) {
-            console.log("Showing toast");
+            console.info("Component is busy loading user and user games");
             toast.info(
                 isLoadingUser ? "Loading user details" : "Loading user games"
             );

@@ -1,4 +1,3 @@
-// src/hooks/useUser.ts
 "use client";
 
 import { createClient } from "@/lib/supabase/client";
@@ -12,24 +11,31 @@ export function useUser() {
     const query = useQuery({
         queryKey: ["user"],
         queryFn: async () => {
-            const { data, error } = await supabase.auth.getUser();
-            if (error) throw error;
+            const {
+                data: { user },
+                error,
+            } = await supabase.auth.getUser();
 
-            return data.user ?? null;
+            if (error) throw error;
+            return user; // user | null
         },
-        staleTime: 0,
-        gcTime: 0,
-        initialData: null,
+
+        // IMPORTANT
+        initialData: undefined,
+        staleTime: 5 * 60 * 1000, // cache auth state
+        gcTime: 10 * 60 * 1000,
+        retry: false,
     });
 
-    // Listen for auth state changes and invalidate query if session changes
     useEffect(() => {
-        const { data: subscription } = supabase.auth.onAuthStateChange(() => {
-            queryClient.invalidateQueries({ queryKey: ["user"] });
+        const {
+            data: { subscription },
+        } = supabase.auth.onAuthStateChange((_event, session) => {
+            queryClient.setQueryData(["user"], session?.user ?? null);
         });
 
-        return () => subscription.subscription.unsubscribe();
-    }, [queryClient, supabase.auth]);
+        return () => subscription.unsubscribe();
+    }, [queryClient, supabase]);
 
     return query;
 }

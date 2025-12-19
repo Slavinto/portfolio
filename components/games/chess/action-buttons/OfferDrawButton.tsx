@@ -4,6 +4,7 @@ import { toast } from "react-toastify";
 import { useUser } from "@/hooks/auth/useUser";
 import { sendOffer } from "@/lib/services/chess-offers";
 import { useChessGamePageContext } from "@/app/context/ChessGamePageContext";
+import { useEffect } from "react";
 
 function OfferDrawButton() {
     const { id } = useParams<{ id: string }>();
@@ -13,10 +14,12 @@ function OfferDrawButton() {
         state: { player, opponent },
     } = useChessGamePageContext();
 
-    if (!player || !player?.id || !opponent || !opponent?.id) {
-        toast.error("Invalid player data");
-        router.push("/auth/login/");
-    }
+    useEffect(() => {
+        if (!player || !player?.id || !opponent || !opponent?.id) {
+            toast.error("Invalid player data");
+            router.push("/auth/login/");
+        }
+    }, [player, player?.id, opponent?.id]);
 
     async function handleOfferDraw() {
         try {

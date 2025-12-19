@@ -24,7 +24,8 @@ export default function SignupPage() {
         }
 
         // If email confirmation is disabled:
-        router.push("/auth/login");
+        // router.replace("/auth/login");
+        router.replace("/");
 
         // If enabled -> redirect to "check your inbox" page
         // router.push("/auth/verify");

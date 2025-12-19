@@ -2,7 +2,7 @@
 
 import { updatePlayerProfile } from "@/actions/profile/updatePlayerProfile";
 import { User } from "@supabase/supabase-js";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import CustomInput from "../../components/ui/CustomInput";
 import CustomButton from "../../components/ui/CustomButton";
 import Heading from "../../components/ui/text/Heading";
@@ -23,10 +23,13 @@ export default function ProfileForm({ user }: { user: User }) {
     const [bio, setBio] = useState<string>(player?.bio ?? "");
     const [username, setUsername] = useState<string>(player?.username ?? "");
 
-    if (!user?.id) {
-        console.info("Failed to load page. Not logged in");
-        router.push("/auth/login");
-    }
+    useEffect(() => {
+        if (!user?.id) {
+            console.info("Failed to load page. Not logged in");
+            router.replace("/auth/login");
+        }
+    }, [user?.id]);
+
     if (isLoading)
         return (
             <div className='w-full'>

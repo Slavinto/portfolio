@@ -12,26 +12,22 @@ import { usePathname, useRouter } from "next/navigation";
 const SignOutButton = () => {
     const { setOpen } = useModal();
     const supabase = createClient();
-    const queryClient = useQueryClient();
-    const router = useRouter();
-    const path = usePathname();
+    // const queryClient = useQueryClient();
+    // const router = useRouter();
+    // const path = usePathname();
+    const handleSignOut = async () => {
+        // optimistically clear user cache
+        // queryClient.setQueryData(["user"], null);
+        // queryClient.removeQueries({ queryKey: ["userGames"] });
+
+        setOpen(false);
+
+        await supabase.auth.signOut();
+    };
 
     return (
         <ButtonsCard
-            onClick={() => {
-                queryClient.invalidateQueries({
-                    queryKey: ["user"],
-                });
-                queryClient.invalidateQueries({
-                    queryKey: ["userGames"],
-                });
-                setOpen(false);
-                supabase.auth.signOut();
-
-                if (path !== "/") {
-                    router.push("/");
-                }
-            }}
+            onClick={handleSignOut}
             key={Math.random()}
             iconPosition='left'
             className='flex flex-1 p-8 w-full cursor-pointer gap-2 items-center uppercase'
