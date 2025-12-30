@@ -10,6 +10,28 @@ export const NowPaymentsStatusSchema = z.enum([
     "refunded",
 ]);
 
+export const OrderStatusSchema = z.enum([
+    "pending", // created, awaiting payment
+    "paid", // payment completed successfully
+    "expired", // payment window expired
+    "cancelled", // manually cancelled or payment failed
+    "refunded", // payment refunded after success
+]);
+
+export type OrderStatus = z.infer<typeof OrderStatusSchema>;
+
+export const OrderSchema = z.object({
+    id: z.string(),
+    user_id: z.string(),
+    amount_usd: z.number(),
+    currency: z.string(),
+    status: NowPaymentsStatusSchema,
+    created_at: z.string(),
+    updated_at: z.string(),
+});
+
+export type Order = z.infer<typeof OrderSchema>;
+
 export type NowPaymentsStatus = z.infer<typeof NowPaymentsStatusSchema>;
 
 export const NowPaymentsCurrenciesResponseSchema = z.array(z.string());

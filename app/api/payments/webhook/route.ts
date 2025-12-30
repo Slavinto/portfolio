@@ -1,14 +1,35 @@
 import { NextRequest, NextResponse } from "next/server";
 import crypto from "crypto";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
-import { allowedTransitions } from "@/types/nowpayments/types";
+import {
+    paymentAllowedTransitions,
+    NowPaymentsStatus,
+    PAYMENT_TERMINAL_STATES,
+    ORDER_TERMINAL_STATES,
+} from "@/types/nowpayments/types";
 import { supabaseAdmin } from "@/lib/supabase/admin";
+import { Payment } from "@/types/supabase/database.types";
+import {
+    NowPaymentsPayment,
+    NowPaymentsStatusSchema,
+    OrderStatus,
+} from "@/lib/nowpayments/schemas";
 
 export async function POST(req: NextRequest) {
     try {
         const supabase = supabaseAdmin;
         const rawBody = await req.text();
         const signature = req.headers.get("x-nowpayments-sig");
+
+        async function updateOrder(order_id: string, status: OrderStatus) {
+            await supabase
+                .from("orders")
+                .update({
+                    status,
+                    updated_at: new Date().toISOString(),
+                })
+                .eq("id", order_id);
+        }
 
         if (!signature) {
             return NextResponse.json(
@@ -23,6 +44,7 @@ export async function POST(req: NextRequest) {
             .update(rawBody)
             .digest("hex");
 
+        // verify signature
         if (expectedSignature !== signature) {
             return NextResponse.json(
                 { error: "Invalid signature" },
@@ -30,15 +52,30 @@ export async function POST(req: NextRequest) {
             );
         }
 
-        const payload = JSON.parse(rawBody);
-        const { payment_id, payment_status } = payload;
+        // parse payload
+        const payload = JSON.parse(rawBody) as NowPaymentsPayment;
+        const parsedStatus = NowPaymentsStatusSchema.safeParse(
+            payload.payment_status
+        );
 
-        const { data: payment } = await supabase
+        if (!parsedStatus.success) {
+            return NextResponse.json(
+                { error: "Unknown payment status" },
+                { status: 400 }
+            );
+        }
+
+        const payment_status = parsedStatus.data;
+        const { payment_id } = payload;
+
+        // fetch payment row
+        const { data: payment } = (await supabase
             .from("payments")
-            .select("status")
+            .select("status, order_id")
             .eq("payment_id", payment_id)
-            .single();
+            .single()) as unknown as { data: Payment };
 
+        // check payment existence
         if (!payment) {
             return NextResponse.json(
                 { error: "Payment not found" },
@@ -46,41 +83,46 @@ export async function POST(req: NextRequest) {
             );
         }
 
+        const { order_id } = payment;
         const currentPaymentStatus = payment.status;
 
-        // checking status
+        // checking whether payment is terminal state or whether state transition is not allowed
+        if (PAYMENT_TERMINAL_STATES.has(currentPaymentStatus)) {
+            // validate payment terminal state
+            return NextResponse.json({ ok: true });
+        }
         if (
-            !allowedTransitions[currentPaymentStatus].includes(payment_status)
+            !paymentAllowedTransitions[currentPaymentStatus].includes(
+                payment_status
+            )
         ) {
+            // validate payment state transition
             return NextResponse.json({ ok: true });
         }
 
-        // building idempotency key
+        // compute event hash
         const eventHash = crypto
             .createHash("sha256")
             .update(`${payment_id}:${payment_status}`)
             .digest("hex");
 
-        // checking if the event already processed
-        const { data: existingEvent } = await supabase
-            .from("payment_events")
-            .select("id")
-            .eq("event_hash", eventHash)
-            .single();
-
-        if (existingEvent) {
-            // idempotency exit
-            return NextResponse.json({ ok: true });
-        }
-
         // store event
-        await supabase.from("payment_events").insert({
+        const { error } = await supabase.from("payment_events").insert({
             payment_id,
             status: payment_status,
             event_hash: eventHash,
         });
 
-        //update payment state
+        if (error) {
+            if (error.code === "23505") {
+                // duplicate event
+                return NextResponse.json({ ok: true });
+            }
+            // otherwise
+            throw error;
+        }
+
+        // update payment state
         await supabase
             .from("payments")
             .update({
@@ -88,6 +130,45 @@ export async function POST(req: NextRequest) {
                 updated_at: new Date().toISOString(),
             })
             .eq("payment_id", payment_id);
+
+        // fetch corresponding order status
+        const { data: orderStatus, error: orderStatusError } = await supabase
+            .from("orders")
+            .select("status")
+            .eq("id", order_id)
+            .single();
+
+        if (!orderStatus || orderStatusError) {
+            NextResponse.json(
+                { error: "Invalid order status" },
+                { status: 500 }
+            );
+        }
+
+        const order_status = orderStatus as unknown as OrderStatus;
+
+        // check whether order is not in terminal state
+        if (!ORDER_TERMINAL_STATES.has(order_status)) {
+            // map order status
+            switch (payment_status) {
+                case "expired":
+                    await updateOrder(order_id, "expired");
+                    break;
+                case "failed":
+                    await updateOrder(order_id, "cancelled");
+                    break;
+                case "finished":
+                    await updateOrder(order_id, "paid");
+                    break;
+                case "refunded":
+                    await updateOrder(order_id, "refunded");
+                    break;
+            }
+        }
+
+        if (payment_status === "finished") {
+            // update order logic here
+        }
         return NextResponse.json({ ok: true });
     } catch (error) {
         return NextResponse.json({ error }, { status: 500 });

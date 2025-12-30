@@ -1,4 +1,6 @@
+import { OrderStatus } from "@/lib/nowpayments/schemas";
 import { PersistedMove, PersistedState } from "../games/chess";
+import { NowPaymentsStatus } from "../nowpayments/types";
 
 export type Json =
     | string
@@ -10,6 +12,9 @@ export type Json =
 
 export type GameTableData = Tables<"games">;
 export type MoveTableData = Tables<"moves">;
+export type Order = Tables<"orders">;
+export type Payment = Tables<"payments">;
+export type PaymentEvent = Tables<"payment_events">;
 
 export type Database = {
     // Allows to automatically instantiate createClient with right options
@@ -44,11 +49,42 @@ export type Database = {
     };
     public: {
         Tables: {
+            chess_messages: {
+                Row: {
+                    created_at: string | null;
+                    game_id: string;
+                    id: number;
+                    message: string;
+                    sender: string;
+                };
+                Insert: {
+                    created_at?: string | null;
+                    game_id: string;
+                    id?: never;
+                    message: string;
+                    sender: string;
+                };
+                Update: {
+                    created_at?: string | null;
+                    game_id?: string;
+                    id?: never;
+                    message?: string;
+                    sender?: string;
+                };
+                Relationships: [
+                    {
+                        foreignKeyName: "chess_messages_game_id_fkey";
+                        columns: ["game_id"];
+                        isOneToOne: false;
+                        referencedRelation: "games";
+                        referencedColumns: ["id"];
+                    }
+                ];
+            };
             games: {
                 Row: {
                     created_at: string;
                     creator_id: string | null;
-                    draw_offered_by: string | null;
                     id: string;
                     player_black: string | null;
                     player_white: string | null;
@@ -61,7 +97,6 @@ export type Database = {
                 Insert: {
                     created_at?: string;
                     creator_id?: string | null;
-                    draw_offered_by?: string | null;
                     id?: string;
                     player_black?: string | null;
                     player_white?: string | null;
@@ -74,7 +109,6 @@ export type Database = {
                 Update: {
                     created_at?: string;
                     creator_id?: string | null;
-                    draw_offered_by?: string | null;
                     id?: string;
                     player_black?: string | null;
                     player_white?: string | null;
@@ -121,12 +155,196 @@ export type Database = {
                     }
                 ];
             };
+            offers: {
+                Row: {
+                    created_at: string | null;
+                    expires_at: string | null;
+                    from_player: string;
+                    game_id: string | null;
+                    id: string;
+                    status: string | null;
+                    to_player: string;
+                    type: string;
+                };
+                Insert: {
+                    created_at?: string | null;
+                    expires_at?: string | null;
+                    from_player: string;
+                    game_id?: string | null;
+                    id?: string;
+                    status?: string | null;
+                    to_player: string;
+                    type: string;
+                };
+                Update: {
+                    created_at?: string | null;
+                    expires_at?: string | null;
+                    from_player?: string;
+                    game_id?: string | null;
+                    id?: string;
+                    status?: string | null;
+                    to_player?: string;
+                    type?: string;
+                };
+                Relationships: [
+                    {
+                        foreignKeyName: "offers_game_id_fkey";
+                        columns: ["game_id"];
+                        isOneToOne: false;
+                        referencedRelation: "games";
+                        referencedColumns: ["id"];
+                    }
+                ];
+            };
+            orders: {
+                Row: {
+                    amount_usd: number;
+                    created_at: string;
+                    currency: string;
+                    id: string;
+                    status: OrderStatus;
+                    updated_at: string;
+                    user_id: string;
+                };
+                Insert: {
+                    amount_usd: number;
+                    created_at?: string;
+                    currency?: string;
+                    id?: string;
+                    status?: OrderStatus;
+                    updated_at?: string;
+                    user_id: string;
+                };
+                Update: {
+                    amount_usd?: number;
+                    created_at?: string;
+                    currency?: string;
+                    id?: string;
+                    status?: OrderStatus;
+                    updated_at?: string;
+                    user_id?: string;
+                };
+                Relationships: [];
+            };
+            payment_events: {
+                Row: {
+                    event_hash: string;
+                    id: number;
+                    payment_id: string;
+                    received_at: string;
+                    status: string;
+                };
+                Insert: {
+                    event_hash: string;
+                    id?: number;
+                    payment_id: string;
+                    received_at?: string;
+                    status: string;
+                };
+                Update: {
+                    event_hash?: string;
+                    id?: number;
+                    payment_id?: string;
+                    received_at?: string;
+                    status?: string;
+                };
+                Relationships: [
+                    {
+                        foreignKeyName: "fk_payment";
+                        columns: ["payment_id"];
+                        isOneToOne: false;
+                        referencedRelation: "payments";
+                        referencedColumns: ["payment_id"];
+                    }
+                ];
+            };
+            payments: {
+                Row: {
+                    created_at: string;
+                    order_id: string;
+                    pay_amount: number | null;
+                    pay_currency: string | null;
+                    payment_id: string;
+                    price_amount: number;
+                    price_currency: string;
+                    provider: string;
+                    status: NowPaymentsStatus;
+                    updated_at: string;
+                };
+                Insert: {
+                    created_at?: string;
+                    order_id: string;
+                    pay_amount?: number | null;
+                    pay_currency?: string | null;
+                    payment_id: string;
+                    price_amount: number;
+                    price_currency: string;
+                    provider?: string;
+                    status: NowPaymentsStatus;
+                    updated_at?: string;
+                };
+                Update: {
+                    created_at?: string;
+                    order_id?: string;
+                    pay_amount?: number | null;
+                    pay_currency?: string | null;
+                    payment_id?: string;
+                    price_amount?: number;
+                    price_currency?: string;
+                    provider?: string;
+                    status?: NowPaymentsStatus;
+                    updated_at?: string;
+                };
+                Relationships: [];
+            };
+            players: {
+                Row: {
+                    avatar_url: string | null;
+                    bio: string | null;
+                    created_at: string | null;
+                    draws: number | null;
+                    id: string;
+                    losses: number | null;
+                    rating: number | null;
+                    updated_at: string | null;
+                    username: string | null;
+                    wins: number | null;
+                };
+                Insert: {
+                    avatar_url?: string | null;
+                    bio?: string | null;
+                    created_at?: string | null;
+                    draws?: number | null;
+                    id: string;
+                    losses?: number | null;
+                    rating?: number | null;
+                    updated_at?: string | null;
+                    username?: string | null;
+                    wins?: number | null;
+                };
+                Update: {
+                    avatar_url?: string | null;
+                    bio?: string | null;
+                    created_at?: string | null;
+                    draws?: number | null;
+                    id?: string;
+                    losses?: number | null;
+                    rating?: number | null;
+                    updated_at?: string | null;
+                    username?: string | null;
+                    wins?: number | null;
+                };
+                Relationships: [];
+            };
         };
         Views: {
             [_ in never]: never;
         };
         Functions: {
-            [_ in never]: never;
+            increment_player_stats: {
+                Args: { p_player_id: string; p_result: string };
+                Returns: undefined;
+            };
         };
         Enums: {
             [_ in never]: never;

@@ -12,20 +12,24 @@ const PaymentsPage = () => {
 
     const handleCreatePayment = async () => {
         try {
-            const res = await fetch(
+            const order = await fetch("/api/orders", {
+                method: "POST",
+                body: JSON.stringify({ amount_usd: minPaymentUsdt }),
+            }).then((r) => r.json());
+
+            const payment = (await fetch(
                 `${process.env.NEXT_PUBLIC_APP_URL}/api/payments/create`,
                 {
                     method: "POST",
-                    body: JSON.stringify({ amount: minPaymentUsdt }),
+                    body: JSON.stringify({ order_id: order.id }),
                 }
-            );
-            if (!res.ok) {
+            ).then((r) => r.json())) as NowPaymentsPayment;
+
+            if (!payment) {
                 throw new Error("Failed to make payment request");
             }
 
-            const data = (await res.json()) as NowPaymentsPayment;
-
-            setResponsePayment(data);
+            setResponsePayment(payment);
         } catch (error) {
             console.error({ error });
         }
